@@ -290,8 +290,8 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         float lowerHexX = (float) (Math.sin(Math.toRadians(36.0)) * (float) maximum);
         float lowerHexY = (float) (Math.cos(Math.toRadians(36.0)) * (float) maximum);
 
-        float hexCenterX = this.leftPos + (this.imageWidth / 2.0F) + 40;
-        float hexCenterY = this.topPos + (this.imageHeight / 2.0F) - 14;
+        float hexCenterX = this.leftPos + (this.imageWidth / 2.0F) + 47;
+        float hexCenterY = this.topPos + (this.imageHeight / 2.0F) - 13;
 
         float coolRatio = Math.max(0.0F, Math.min(1.0F, (float)  cvs.getCool()/ (float)MAX_STATS))+ 0.05f;
         float beautyRatio = Math.max(0.0F, Math.min(1.0F, (float)  cvs.getBeauty()/ (float)MAX_STATS))+ 0.05f;
@@ -317,29 +317,19 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
     }
 
     private void drawTriangle(Vector3f colour, Vector2f v1, Vector2f v2, Vector2f v3) {
-        //CobblemonResources.INSTANCE.getWHITE().let(RenderSystem::setShaderTexture);
-
         RenderSystem.setShaderTexture(0, CobblemonResources.INSTANCE.getWHITE());
-        //RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        RenderSystem.setShaderColor(colour.x, 1, colour.z, 0.2F);
+        RenderSystem.setShaderColor(colour.x, colour.y, colour.z, 0.6F);
+        RenderSystem.enableBlend();
 
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuilder();
 
-        //RenderSystem.setShaderColor(colour.x, colour.y, colour.z, 1.0F);
         bufferBuilder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION);
-        //bufferBuilder.color(0x2d, 0xed, 0x60, 0x66);
         bufferBuilder.vertex(v1.x, v1.y, 10.0D).endVertex();//.color(0x2d, 0xed, 0x60, 0x66)
-        bufferBuilder.vertex(v2.x, v2.y, 10.0D).endVertex();//.color(0x2d, 0xed, 0x60, 0x66)
-        bufferBuilder.vertex(v3.x, v3.y, 10.0D).endVertex();//.color(0x2d, 0xed, 0x60, 0x66)
-        //bufferBuilder.vertex(v1.x, v1.y, 10.0).next();
-        //bufferBuilder.vertex(v2.x, v2.y, 10.0).next();
-        //bufferBuilder.vertex(v3.x, v3.y, 10.0).next();
-        //BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
+        bufferBuilder.vertex(v2.x, v2.y, 10.0D).endVertex();
+        bufferBuilder.vertex(v3.x, v3.y, 10.0D).endVertex();
         bufferBuilder.nextElement();
         tessellator.end();
-        //RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        //RenderSystem.setShaderColor(colour.x, colour.y, colour.z, 1.0F);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
     }
 

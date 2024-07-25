@@ -52,8 +52,8 @@ public class ItemInit {
     public static final RegistryObject<Item> SOUR_BITTER_POFFIN = ITEMS.register("sour_bitter_poffin", () -> new PoffinItem(new Item.Properties()));
 
 
-    public static final RegistryObject<Item> POFFIN_CASE = ITEMS.register("poffin_case", () -> new PoffinItem(new Item.Properties()));
-    public static final RegistryObject<Item> CONTEST_CARD = ITEMS.register("contest_card", () -> new ContestWallet(new Item.Properties()));
+    public static final RegistryObject<Item> POFFIN_CASE = ITEMS.register("poffin_case", () -> new PoffinItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> CONTEST_CARD = ITEMS.register("contest_card", () -> new ContestWallet(new Item.Properties().stacksTo(1)));
 
 
     public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CobbleContestsForge.CREATIVE_MODE_TABS.register("cobble_contests_tab", () -> CreativeModeTab.builder()
