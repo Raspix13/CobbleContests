@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "X#X",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:magenta_wool"
+    },
+    "#": {
+      "item": "minecraft:rotten_flesh"
+    }
+  },
+  "result": {
+    "item": "cobble_contests:contest_block",
+    "count": 1
+  }
+}
+
+
+

@@ -1,0 +1,32 @@
+modLoader = "javafml"
+loaderVersion = "[47,)"
+license = "MIT"
+
+[[mods]]
+modId = "cobble_contests"
+version = "1.0.0"
+displayName = "Cobble Contests"
+description = '''
+
+'''
+
+[[dependencies.cobble_contests]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.1]"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.cobble_contests]]
+modId = "forge"
+mandatory = true
+versionRange = "[47,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.cobble_contests]]
+modId = "cobblemon"
+mandatory = true
+versionRange = "[1.5.2,)"
+ordering = "NONE"
+side = "BOTH"
