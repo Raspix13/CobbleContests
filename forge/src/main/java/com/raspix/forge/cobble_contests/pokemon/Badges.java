@@ -140,4 +140,29 @@ public class Badges {
         return this.rankedTough[i];
     }
 
+    public int getNextContestLevel(int contestType){
+        int result = 0;
+        switch (contestType){
+            case 0 -> result = highestContest(rankedCool);
+            case 1 -> result = highestContest(rankedBeauty);
+            case 2 -> result = highestContest(rankedCute);
+            case 3 -> result = highestContest(rankedSmart);
+            case 4 -> result = highestContest(rankedTough);
+            default -> {
+            }
+        }
+        return result;
+
+
+    }
+
+    private int highestContest(boolean[] selected){
+        for (int i = 0; i < selected.length; i++){
+            if(!selected[i]){
+                return i;
+            }
+        }
+        return selected.length;
+    }
+
 }

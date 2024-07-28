@@ -58,7 +58,31 @@ public class PokemonInfoSlotButton extends ImageButton {
         if (pokemon != null) {
             float halfScale = 0.5f;
             PoseStack poses = guiGraphics.pose();
+            drawScaledText(guiGraphics, pokemon.getDisplayName().getVisualOrderText(),
+             (Number) (this.getX() + 4),
+             (Number) (this.getY() + 20),
+             0.5f, 0.5f, 1f, 0x00FFFFFF, false, false);
 
+             poses.translate(this.getX() + (PORTRAIT_DIAMETER / 2.0), this.getY()-10 + 6, 0f);
+             poses.pushPose();
+             drawProfilePokemon(pokemon.getSpecies().getResourceIdentifier(), pokemon.getAspects(),
+             poses, new Quaternionf().rotationXYZ((float) Math.toRadians(13f), (float) Math.toRadians(35f), 0F),
+             new PokemonFloatingState(), 2.42f, 12f);
+
+             poses.popPose();
+             poses.translate(-(this.getX() + (PORTRAIT_DIAMETER / 2.0)), -(this.getY()-10 + 6), 0f);
+
+
+             drawScaledText(
+             guiGraphics, null,
+             lang("ui.lv.number", pokemon.getLevel()),
+             getX() + 31,
+             getY() + 13,
+             halfScale,
+             1F, Integer.MAX_VALUE, 0xFFFFFFFF,
+             true,
+             true, null, null
+             );
             ResourceLocation stateIcon = pokemon.getState().getIcon(pokemon);
             if (stateIcon != null) {
                 blitk(
@@ -93,7 +117,7 @@ public class PokemonInfoSlotButton extends ImageButton {
             float barWidth = hpRatio * barWidthMax;
             Pair<Float, Float> cols = getDepletableRedGreen(hpRatio, 0.5f, 0.2f);
 
-            blitk(
+             blitk(
                     poses,
                     CobblemonResources.INSTANCE.getWHITE(),
                     getX() + 4,
@@ -109,59 +133,6 @@ public class PokemonInfoSlotButton extends ImageButton {
                     0.27F, 1, true, 1
             );
 
-
-            drawScaledText(guiGraphics, pokemon.getDisplayName().getVisualOrderText(),
-                    (Number) (this.getX() + 4),
-                    (Number) (this.getY() + 20),
-                    0.5f, 0.5f, 1f, 0x00FFFFFF, false, false);
-
-
-
-
-            poses.translate(this.getX() + (PORTRAIT_DIAMETER / 2.0), this.getY()-10, 0f);
-            poses.pushPose();
-            drawProfilePokemon(pokemon.getSpecies().getResourceIdentifier(), pokemon.getAspects(),
-                    poses, new Quaternionf().rotationXYZ((float) Math.toRadians(13f), (float) Math.toRadians(35f), 0F),
-                    new PokemonFloatingState(), 2.42f, 12f);
-
-            poses.popPose();
-            poses.translate(-(this.getX() + (PORTRAIT_DIAMETER / 2.0)), -(this.getY()-10), 0f);
-
-            /**if (pokemon.getGender() != Gender.GENDERLESS) {
-                blitk(
-                        poses, (pokemon.getGender() == Gender.MALE)? genderIconMale : genderIconFemale,
-                        (getX() + 40) / halfScale, (getY() + 20) / halfScale, height = 7, width = 5,
-                        0, 0, 5, 7, 0, 1, 1, 1, 1, true,
-                        halfScale
-                );
-            }*/
-
-            drawScaledText(
-                    guiGraphics, null,
-                    lang("ui.lv.number", pokemon.getLevel()),
-                    getX() + 31,
-                    getY() + 13,
-                    halfScale,
-                    1F, Integer.MAX_VALUE, 0x00FFFFFF,
-                    true,
-                    true, null, null
-            );
-
-            /**drawScaledText(
-                    guiGraphics,
-                    null,
-                    lang("ui.lv.number", pokemon.getLevel()),
-                    //Component.translatable("ui.lv.number", pokemon.getLevel()),
-                    getX() + 31,
-                    getY() + 13,
-                     halfScale,
-                    1f,
-                    Integer.MAX_VALUE,
-                    0x00FFFFFF,
-                    true,
-                    true
-            );*/
-
             // Held Item
             ItemStack heldItem = pokemon.heldItem();
             if (!heldItem.isEmpty()) {
@@ -176,159 +147,25 @@ public class PokemonInfoSlotButton extends ImageButton {
             }
 
 
+
+
+
+
+            /**if (pokemon.getGender() != Gender.GENDERLESS) {
+             blitk(
+             poses, (pokemon.getGender() == Gender.MALE)? genderIconMale : genderIconFemale,
+             (getX() + 40) / halfScale, (getY() + 20) / halfScale, height = 7, width = 5,
+             0, 0, 5, 7, 0, 1, 1, 1, 1, true,
+             halfScale
+             );
+             }*/
+
+
+
+
         }
 
 
     }
 
-
-    /**private fun getSlotVOffset(pokemon: Pokemon?, isHovered: Boolean, isSelected: Boolean): Int {
-        if (isHovered || isSelected) {
-            if (pokemon == null) {
-                if (partyWidget.swapEnabled) return height
-                return 0
-            }
-            return height
-        }
-        return 0
-    }
-
-
-    override fun renderButton(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-        hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
-        val matrices = context.matrices
-        val isDraggedSlot = partyWidget.swapEnabled && partyWidget.swapSource == index
-        val slotPokemon = if (isDraggedSlot) null else pokemon
-        val isSelected = this.isClientPartyMember && this.summary.selectedPokemon.uuid == slotPokemon?.uuid
-
-        blitk(
-                matrixStack = matrices,
-                texture = getSlotTexture(slotPokemon),
-                x = x,
-                y = y,
-                width = width,
-                height = height,
-                vOffset = getSlotVOffset(slotPokemon, isHovered, isSelected),
-                textureHeight = height * 2,
-                )
-
-        if (slotPokemon != null) {
-            val halfScale = 0.5F
-
-            val stateIcon = slotPokemon.state.getIcon(slotPokemon)
-            if (stateIcon != null) {
-                blitk(
-                        matrixStack = matrices,
-                        texture = stateIcon,
-                        x = (x + 24.5) / halfScale,
-                        y = (y + 3) / halfScale,
-                        height = 17,
-                        width = 24,
-                        scale = halfScale
-                )
-            }
-
-            val ballIcon = cobblemonResource("textures/gui/ball/" + slotPokemon.caughtBall.name.path + ".png")
-            val ballHeight = 22
-            blitk(
-                    matrixStack = matrices,
-                    texture = ballIcon,
-                    x = (x - 2) / halfScale,
-                    y = (y - 3) / halfScale,
-                    height = ballHeight,
-                    width = 18,
-                    textureHeight = ballHeight * 2,
-                    scale = halfScale
-            )
-
-            val status = slotPokemon.status?.status
-            if (!slotPokemon.isFainted() && status != null) {
-                val statusName = status.showdownName
-                blitk(
-                        matrixStack = matrices,
-                        texture = cobblemonResource("textures/gui/party/status_$statusName.png"),
-                        x = x + 42,
-                        y = y + 5,
-                        height = 14,
-                        width = 4
-                )
-            }
-
-            val hpRatio = slotPokemon.currentHealth / slotPokemon.hp.toFloat()
-            val barWidthMax = 37
-            val barWidth = hpRatio * barWidthMax
-            val (red, green) = getDepletableRedGreen(hpRatio)
-
-            blitk(
-                    matrixStack = matrices,
-                    texture = CobblemonResources.WHITE,
-                    x = x + 4,
-                    y = y + 25,
-                    width = barWidth,
-                    height = 1,
-                    textureWidth = barWidth / hpRatio,
-                    uOffset = barWidthMax - barWidth,
-                    red = red * 0.8F,
-                    green = green * 0.8F,
-                    blue = 0.27F
-            )
-
-            // Render Pokémon
-            matrices.push()
-            matrices.translate(x + (PORTRAIT_DIAMETER / 2.0), y - 3.0, 0.0)
-            matrices.scale(2.5F, 2.5F, 1F)
-            drawProfilePokemon(
-                    species = slotPokemon.species.resourceIdentifier,
-                    aspects = slotPokemon.aspects.toSet(),
-                    matrixStack = matrices,
-                    rotation = Quaternionf().fromEulerXYZDegrees(Vector3f(13F, 35F, 0F)),
-                    state = null,
-                    scale = 4.5F,
-                    partialTicks = delta
-            )
-            matrices.pop()
-
-            drawScaledText(
-                    context = context,
-                    text = slotPokemon.getDisplayName(),
-                    x = x + 4,
-                    y = y + 20,
-                    scale = halfScale
-            )
-
-            if (slotPokemon.gender != Gender.GENDERLESS) {
-                blitk(
-                        matrixStack = matrices,
-                        texture = if (slotPokemon.gender == Gender.MALE) genderIconMale else genderIconFemale,
-                        x = (x + 40) / halfScale,
-                        y = (y + 20) / halfScale,
-                        height = 7,
-                        width = 5,
-                        scale = halfScale
-                )
-            }
-
-            drawScaledText(
-                    context = context,
-                    text = lang("ui.lv.number", slotPokemon.level),
-                    x = x + 31,
-                    y = y + 13,
-                    centered = true,
-                    shadow = true,
-                    scale = halfScale
-            )
-
-            // Held Item
-            val heldItem = slotPokemon.heldItemNoCopy()
-            if (!heldItem.isEmpty) {
-                renderScaledGuiItemIcon(
-                        itemStack = heldItem,
-                        x = x + 14.0,
-                        y = y + 9.5,
-                        scale = 0.5,
-                        matrixStack = matrices
-                )
-            }
-        }
-    }*/
 }

@@ -149,15 +149,22 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
         }
     }
 
-    public void runStatAssesment(UUID id, int pokeIdx, int contestType, int contestLevel){
+    public void runStatAssesment(UUID id, int pokeIdx, int contestType, int contestLevel1){
         try {
             Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(id).get(pokeIdx);
+            CompoundTag badgeTag = poke.getPersistentData().getCompound("Badges");
+            int contestLevel = getNextContestLevel(badgeTag, contestType);
             boolean result = runContest(poke, contestType, contestLevel);
 
         }catch (NoPokemonStoreException e){
 
         }
 
+    }
+
+    private int getNextContestLevel(CompoundTag badgeTag, int contestType) {
+        Badges badges = Badges.getFromTag(badgeTag);
+        return badges.getNextContestLevel(contestType);
     }
 
     private boolean runContest(Pokemon poke, int contestType, int contestLevel) {
@@ -211,7 +218,8 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
     private int[] thresholds = {30, 75, 140, 200, 245};
     private boolean runAppContest(Pokemon poke, int level, int typeVal){
         boolean result = false;
-        if (typeVal >= thresholds[level]){
+        if (level < 5 &&
+                typeVal >= thresholds[level]){
             result = true;
         }
         return result;

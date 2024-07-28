@@ -13,7 +13,7 @@ public class BlockEntityInit {
 
     public static final RegistryObject<BlockEntityType<ContestBlockEntity>> CONTEST_BLOCK_ENTITY =
             BLOCK_ENTITIES.register("contest_block", () -> BlockEntityType.Builder.of
-                            (ContestBlockEntity::new, BlockInit.CONTEST_BLOCK.get())
+                            (ContestBlockEntity::new, BlockInit.CONTEST_BOOTH.get())
                     .build(null));
 
     public static final RegistryObject<BlockEntityType<PoffinPotBlockEntity>> POFFIN_POT_BLOCK_ENTITY =

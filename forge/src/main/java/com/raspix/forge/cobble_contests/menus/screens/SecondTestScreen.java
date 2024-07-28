@@ -2,6 +2,7 @@ package com.raspix.forge.cobble_contests.menus.screens;
 
 import com.cobblemon.mod.common.client.CobblemonClient;
 import com.cobblemon.mod.common.client.storage.ClientParty;
+import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.forge.cobble_contests.menus.ContestMenu;
 import com.raspix.forge.cobble_contests.menus.widgets.PokemonContestSlotButton;
@@ -31,11 +32,15 @@ public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
     private final int CONTEST_TYPE_SELECTION = 1; // The page the user sees if trying to host
     private final int CONTEST_WAITING_PAGE = 2; // The page all users see before the contest begins
     private final int POKEMON_SELECTION_PAGE = 3; // The page users trying to join a contest see when joining
+    private final int CONTEST_LEVEL_SELECTION_PAGE = 4;
     private final int RESULTS_PAGE = 4;
 
     private int pageIndex;
     private int pokemonIndex;
+    private int contestLevel;
     private int colorIndex;
+
+    private int contestRunningType = -1; //0 is rank, 1 is host, 2 is participant
 
 
     private ClientParty clientParty;
@@ -43,6 +48,7 @@ public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
     private List<Button> waitButtons;
     private List<Button> typeButtons;
     private List<Button> partyButtons;
+    private Button confirmationButton;
 
     private ResourceLocation baseResource = cobblemonResource("textures/gui/summary/summary_base.png");
     private ResourceLocation portraitBackgroundResource = cobblemonResource("textures/gui/summary/portrait_background.png");
@@ -91,18 +97,25 @@ public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
         createWaitingButtons();
         createTypeButtons();
         createPartyButtons();
+        this.confirmationButton = this.addRenderableWidget(new ImageButton(this.leftPos + 80, this.topPos + 40, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+            setContestLevel();
+        }));
 
         setPageIndex(0);
     }
 
     private void createHomeButtons(){
         homeButtons = new ArrayList<>();
-        this.homeButtons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 60, this.topPos + 80, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+        this.homeButtons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 80, this.topPos + 40, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+            this.contestRunningType = 0;
+            setPageIndex(CONTEST_TYPE_SELECTION);
+        })));
+        /**this.homeButtons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 60, this.topPos + 80, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
             setPageIndex(CONTEST_TYPE_SELECTION);
         })));
         this.homeButtons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 130, this.topPos + 80, 64, 18, 353, 43, 18, TEXTURE, 1000, 750, btn -> {
             setPageIndex(POKEMON_SELECTION_PAGE);
-        })));
+        })));*/
     }
 
     private void createWaitingButtons(){
@@ -142,10 +155,16 @@ public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
                 int buttonY = this.topPos + 36 + (81 * (i / 3));
                 int finalI = i;
                 this.partyButtons.add(this.addRenderableWidget(new PokemonContestSlotButton(buttonX, buttonY, 20, 20, 289, 0, 21, TEXTURE, 1000, 750, btn -> {
-                    joinContestWithPokemon(finalI);
+                    //joinContestWithPokemon(finalI);
+                    selectContestPokemon(finalI);
                 }, clientParty.get(i))));
             }
         }
+    }
+
+    private void selectContestPokemon(int pokeIndex) {
+        this.pokemonIndex = pokeIndex;
+        setPageIndex(CONTEST_LEVEL_SELECTION_PAGE);
     }
 
     @Override
@@ -196,11 +215,24 @@ public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
         for (Button partyButton : partyButtons) {
             partyButton.visible = index == POKEMON_SELECTION_PAGE;
         }
+
+        confirmationButton.visible = index == CONTEST_LEVEL_SELECTION_PAGE;
     }
 
     private void setContestType(int type){
         colorIndex = type;
-        if(menu.hostSelectType(playerID, type)){
+        setPageIndex(POKEMON_SELECTION_PAGE);
+        /**if(menu.hostSelectType(playerID, type)){
+            setPageIndex(CONTEST_WAITING_PAGE);
+        }else {
+            setPageIndex(STARTING_PAGE);
+        }*/
+        //should have packet type
+    }
+
+    private void setContestLevel(){
+        //this.contestLevel = this;
+        if(menu.hostSelectType(playerID, colorIndex)){
             setPageIndex(CONTEST_WAITING_PAGE);
         }else {
             setPageIndex(STARTING_PAGE);
@@ -210,7 +242,7 @@ public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
 
     private void startContest(){
         menu.startContest(colorIndex, pokemonIndex, playerInv.player.getUUID());
-        menu.startStatAssesment(playerInv.player.getUUID(), pokemonIndex, colorIndex, 0);
+        menu.startStatAssesment(playerInv.player.getUUID(), pokemonIndex, colorIndex);
         // should have packet
     }
 

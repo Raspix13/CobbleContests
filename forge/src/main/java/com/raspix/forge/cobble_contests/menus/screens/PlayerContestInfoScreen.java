@@ -118,8 +118,8 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         if(clientParty != null && clientParty.getSlots().size() > 0 && clientParty.get(pokemonIndex) != null){
             Pokemon poke = clientParty.get(pokemonIndex);
             modelWidget = new ModelWidget(
-                    this.leftPos + 6,
-                    this.topPos + 27,
+                    this.leftPos + 6 + 15,
+                    this.topPos + 27 -5,
                     66,
                     66,
                     poke.asRenderablePokemon(),
@@ -278,7 +278,7 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
 
     public void drawContestStats(GuiGraphics guiGraphics, Pokemon pokemon){
         List<Move> moves = pokemon.getMoveSet().getMoves();
-        int xPos = getGuiLeft() + 15;
+        int xPos = getGuiLeft() + 95;
         int yPos = getGuiTop()  + 20;
         int xInc = 0;
         int yInc = 40;
@@ -288,7 +288,7 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
                 drawMovePanel(guiGraphics, move, xPos, yPos + (i * yInc));
 
             }else {
-                guiGraphics.blit(MOVE_PANELS, xPos, yPos + (i * yInc), 0, 0, 262, 32, 291, 400);
+                guiGraphics.blit(MOVE_PANELS, xPos, yPos + (i * yInc), 0, 0, 186, 32, 291, 400);
             }
         }
     }
@@ -326,23 +326,23 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
             }
             appeal = data.getAppeal();
         }
-        guiGraphics.blit(MOVE_PANELS, xPos, yPos, 0, panelOffset, 262, 32, 291, 400);
+        guiGraphics.blit(MOVE_PANELS, xPos, yPos, 0, panelOffset, 186, 32, 291, 400);
         drawScaledText(guiGraphics, null, lang("move." + moveName),
                 (Number) (xPos + 15),
                 (Number) (yPos + 5),
                 1f, 1f, 2147483647, 0x00FFFFFF, false, true, null, null);
         //System.out.println(lang("move", moveName));
-        guiGraphics.blit(MOVE_PANELS, xPos + 110 - (1 + appeal * 8), yPos + 21, 1, 193, 1 + appeal * 8, 9, 291, 400);
+        guiGraphics.blit(MOVE_PANELS, xPos + 80 - (1 + appeal * 8), yPos + 21, 1, 193, 1 + appeal * 8, 9, 291, 400);
 
         poses.pushPose();
         poses.scale(0.5f, 0.5f, 1F);
         MultiLineLabelK.Companion.create(
                 Component.translatable("cobble_contests.move_info." + description),
-                145 / 0.5f,
+                100 / 0.5f,
                 5
         ).renderLeftAligned(
                 guiGraphics,
-                (xPos + 120) / 0.5f,
+                (xPos + 80) / 0.5f,
                 (yPos + 3) / 0.5f,
                 5.5 / 0.5f,
                 ColourLibrary.WHITE,

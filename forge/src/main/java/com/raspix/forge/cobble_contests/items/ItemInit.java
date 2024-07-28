@@ -20,7 +20,7 @@ public class ItemInit {
     private ItemInit(){}
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, CobbleContestsForge.MOD_ID);
 
-    public static final RegistryObject<BlockItem> CONTEST_BLOCK = ITEMS.register("contest_block", () -> new BlockItem(BlockInit.CONTEST_BLOCK.get(), new Item.Properties()));
+    public static final RegistryObject<BlockItem> CONTEST_BOOTH = ITEMS.register("contest_booth", () -> new BlockItem(BlockInit.CONTEST_BOOTH.get(), new Item.Properties()));
     public static final RegistryObject<BlockItem> POFFIN_POT = ITEMS.register("poffin_pot", () -> new BlockItem(BlockInit.POFFIN_POT.get(), new Item.Properties()));
 
     public static final RegistryObject<Item> POFFIN_DOUGH_BASE = ITEMS.register("poffin_dough_base", () -> new Item(new Item.Properties()));
@@ -59,9 +59,9 @@ public class ItemInit {
     public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CobbleContestsForge.CREATIVE_MODE_TABS.register("cobble_contests_tab", () -> CreativeModeTab.builder()
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .title(Component.translatable("creativetab.cobble_contests"))
-            .icon(() -> SPICY_POFFIN.get().getDefaultInstance())
+            .icon(() -> CONTEST_CARD.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
-                output.accept(CONTEST_BLOCK.get());
+                output.accept(CONTEST_BOOTH.get());
                 output.accept(CONTEST_CARD.get());
                 output.accept(POFFIN_POT.get());
                 output.accept(POFFIN_CASE.get());

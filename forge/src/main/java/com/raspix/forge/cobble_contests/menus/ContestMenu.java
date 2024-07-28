@@ -74,7 +74,7 @@ public class ContestMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return stillValid(this.levelAccess, player, BlockInit.CONTEST_BLOCK.get());
+        return stillValid(this.levelAccess, player, BlockInit.CONTEST_BOOTH.get());
     }
 
     /**public ContestBlockEntity getBlockEntity() {
@@ -109,7 +109,7 @@ public class ContestMenu extends AbstractContainerMenu {
         return this.blockEntity.getContestResults();
     }
 
-    public void startStatAssesment(UUID player, int pokemonIdx, int contestType, int contestLevel){
-        PacketHandler.sendToServer(new CBERunContest(player, pokemonIdx, blockEntity.getBlockPos(), contestType, contestLevel));
+    public void startStatAssesment(UUID player, int pokemonIdx, int contestType){
+        PacketHandler.sendToServer(new CBERunContest(player, pokemonIdx, blockEntity.getBlockPos(), contestType, 0));
     }
 }
