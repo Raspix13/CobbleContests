@@ -210,7 +210,7 @@ public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
 
     private void startContest(){
         menu.startContest(colorIndex, pokemonIndex, playerInv.player.getUUID());
-
+        menu.startStatAssesment(playerInv.player.getUUID(), pokemonIndex, colorIndex, 0);
         // should have packet
     }
 

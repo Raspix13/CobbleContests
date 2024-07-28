@@ -127,8 +127,7 @@ public class CobbleContestsMoves implements JsonDataRegistry<ContestMoves.MoveDa
                     }
                 }
         );
-        allMoves.put("tackle", new ContestMoves.MoveData("tackle", "Cute", 1));
-        CobbleContestsForge.LOGGER.info("MEOW RIGHT HERE or something");
+        //allMoves.put("tackle", new ContestMoves.MoveData("tackle", "Cute", 1));
         CobbleContestsForge.LOGGER.info("Loaded {} contest moves", this.allMoves.size());
         this.getObservable().emit();
     }

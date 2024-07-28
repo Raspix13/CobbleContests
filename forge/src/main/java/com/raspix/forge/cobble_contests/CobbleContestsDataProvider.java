@@ -61,7 +61,7 @@ public class CobbleContestsDataProvider implements DataProvider {
     @Override
     public <T extends DataRegistry> T register(@NotNull T registry) {
         if (this.registries.isEmpty()) {
-            CobbleContestsForge.LOGGER.info("Note: Hello.");
+            //CobbleContestsForge.LOGGER.info("Note: Hello.");
         }
         this.registries.add(registry);
         CobbleContestsForge.LOGGER.info("Registered the {} registry", registry.getId().toString());

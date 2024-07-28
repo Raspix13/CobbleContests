@@ -1,7 +1,13 @@
 package com.raspix.forge.cobble_contests.blocks.entity;
 
+import com.cobblemon.mod.common.Cobblemon;
+import com.cobblemon.mod.common.api.reactive.SimpleObservable;
+import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
+import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.forge.cobble_contests.menus.ContestMenu;
+import com.raspix.forge.cobble_contests.pokemon.Badges;
+import com.raspix.forge.cobble_contests.pokemon.CVs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -16,6 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -141,6 +148,91 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
             System.out.println("Running contest");
         }
     }
+
+    public void runStatAssesment(UUID id, int pokeIdx, int contestType, int contestLevel){
+        try {
+            Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(id).get(pokeIdx);
+            boolean result = runContest(poke, contestType, contestLevel);
+
+        }catch (NoPokemonStoreException e){
+
+        }
+
+    }
+
+    private boolean runContest(Pokemon poke, int contestType, int contestLevel) {
+        boolean result = false;
+        CVs cvs = CVs.getFromTag(poke.getPersistentData().getCompound("CVs"));
+        Badges badges = Badges.getFromTag(poke.getPersistentData().getCompound("Badges"));
+        switch (contestType) {
+            case 0:
+                if(runAppContest(poke, contestLevel, cvs.getCool()))
+                    badges.setRankedCool(contestLevel, true);
+                break;
+            case 1:
+                if(runAppContest(poke, contestLevel, cvs.getBeauty()))
+                    badges.setRankedBeauty(contestLevel, true);
+                break;
+            case 2:
+                if(runAppContest(poke, contestLevel, cvs.getCute()))
+                    badges.setRankedCute(contestLevel, true);
+                break;
+            case 3:
+                if(runAppContest(poke, contestLevel, cvs.getSmart()))
+                    badges.setRankedSmart(contestLevel, true);
+                break;
+            case 4:
+                if(runAppContest(poke, contestLevel, cvs.getTough()))
+                    badges.setRankedTough(contestLevel, true);
+                break;
+            default:
+                break;
+        }
+        Map<String, CompoundTag> myData = new HashMap<String, CompoundTag>() {};
+        myData.put("Badges", badges.saveToNBT());
+        saveBadges(poke, myData);
+        return result;
+    }
+
+    private void saveBadges(final Pokemon pokemon, final Map<String, CompoundTag> myData) {
+        final CompoundTag tag = pokemon.getPersistentData();
+        myData.forEach((key, value) -> {
+            tag.put(key, value);
+        });
+        // basically a vanilla "markAsDirty"
+        if (pokemon.getChangeObservable() instanceof SimpleObservable<Pokemon>) { //TODO
+            ((SimpleObservable<Pokemon>) pokemon.getChangeObservable()).emit(pokemon);
+        }else {
+            System.out.println("error, not simple observable (ContestBlockEntity)");
+        }
+    }
+
+
+    private int[] thresholds = {30, 75, 140, 200, 245};
+    private boolean runAppContest(Pokemon poke, int level, int typeVal){
+        boolean result = false;
+        if (typeVal >= thresholds[level]){
+            result = true;
+        }
+        return result;
+    }
+
+    private boolean runBeautyContest(Pokemon poke, int level) {
+        boolean result = false;
+        CVs cvs = CVs.getFromTag(poke.getPersistentData().getCompound("CVs"));
+        if (cvs.getBeauty() >= thresholds[level]){
+            result = true;
+            Badges badges = Badges.getFromTag(poke.getPersistentData().getCompound("Badges"));
+            badges.setRankedBeauty(level, true);
+            Map<String, CompoundTag> myData = new HashMap<String, CompoundTag>() {};
+            //CompoundTag dat = cvs.saveToNBT();
+            myData.put("Badges", badges.saveToNBT());
+            saveBadges(poke, myData);
+
+        }
+        return result;
+    }
+
 
 
 }

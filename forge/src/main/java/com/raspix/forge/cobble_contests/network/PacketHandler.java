@@ -28,11 +28,11 @@ public class PacketHandler {
 
     public static void register() {
         int id = 0;
-        INSTANCE.messageBuilder(SSendPartyPacket.class, id++)
+        /**INSTANCE.messageBuilder(SSendPartyPacket.class, id++)
                 .encoder(SSendPartyPacket::encode)
                 .decoder(SSendPartyPacket::new)
                 .consumerNetworkThread(SSendPartyPacket.Handler::handle)
-                .add();
+                .add();*/
 
         INSTANCE.messageBuilder(CBInfoScreenParty.class, id++)
                 .encoder(CBInfoScreenParty::encode)
@@ -44,6 +44,12 @@ public class PacketHandler {
                 .encoder(SBInfoScreenParty::encode)
                 .decoder(SBInfoScreenParty::new)
                 .consumerNetworkThread(SBInfoScreenParty.Handler::handle)
+                .add();
+
+        INSTANCE.messageBuilder(CBERunContest.class, id++)
+                .encoder(CBERunContest::encode)
+                .decoder(CBERunContest::new)
+                .consumerNetworkThread(CBERunContest.Handler::handle)
                 .add();
         /**INSTANCE.messageBuilder(SKeyPressSpawnEntityPacket.class, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(SKeyPressSpawnEntityPacket::encode)

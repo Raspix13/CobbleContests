@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
 import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.forge.cobble_contests.menus.screens.PlayerContestInfoScreen;
+import com.raspix.forge.cobble_contests.pokemon.Badges;
 import com.raspix.forge.cobble_contests.pokemon.CVs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -51,9 +52,12 @@ public class SBInfoScreenParty {
                     List<Pokemon> poke = pps.toGappyList();
                     for(int i = 0; i < 6; i++){
                         if(poke.size() > i && poke.get(i) != null){
-                            tag.put("poke" +i, poke.get(i).getPersistentData().getCompound("CVs"));
+                            CompoundTag pers = poke.get(i).getPersistentData();
+                            tag.put("poke" +i, pers.getCompound("CVs"));
+                            tag.put("poke" +i + "badges", pers.getCompound("Badges"));
                         }else{
                             tag.put("poke" +i, new CVs().saveToNBT());
+                            tag.put("poke" +i + "badges", new Badges().saveToNBT());
                         }
 
                     }

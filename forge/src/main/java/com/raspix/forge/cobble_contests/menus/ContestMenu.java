@@ -7,6 +7,9 @@ import com.cobblemon.mod.common.client.CobblemonClient;
 import com.cobblemon.mod.common.client.storage.ClientParty;
 import com.raspix.forge.cobble_contests.blocks.BlockInit;
 import com.raspix.forge.cobble_contests.blocks.entity.ContestBlockEntity;
+import com.raspix.forge.cobble_contests.network.CBERunContest;
+import com.raspix.forge.cobble_contests.network.PacketHandler;
+import com.raspix.forge.cobble_contests.network.SBInfoScreenParty;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -104,5 +107,9 @@ public class ContestMenu extends AbstractContainerMenu {
 
     public String getContestResults(){
         return this.blockEntity.getContestResults();
+    }
+
+    public void startStatAssesment(UUID player, int pokemonIdx, int contestType, int contestLevel){
+        PacketHandler.sendToServer(new CBERunContest(player, pokemonIdx, blockEntity.getBlockPos(), contestType, contestLevel));
     }
 }
