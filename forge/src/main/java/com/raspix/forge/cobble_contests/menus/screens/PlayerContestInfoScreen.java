@@ -370,9 +370,9 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         }
         guiGraphics.blit(MOVE_PANELS, xPos, yPos, 0, panelOffset, 186, 32, 291, 400);
         drawScaledText(guiGraphics, null, lang("move." + moveName),
-                (Number) (xPos + 15),
+                (Number) (xPos + 37),
                 (Number) (yPos + 5),
-                1f, 1f, 2147483647, 0x00FFFFFF, false, true, null, null);
+                1f, 1f, 2147483647, 0x00FFFFFF, true, true, null, null);
         //System.out.println(lang("move", moveName));
         guiGraphics.blit(MOVE_PANELS, xPos + 75 - (1 + appeal * 8), yPos + 21, 1, 193, 1 + appeal * 8, 9, 291, 400);
 
@@ -455,7 +455,7 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         Flavor dis = pokemon.getNature().getDislikedFlavor();
         drawScaledText(guiGraphics, Component.literal("Favorite: " + ((fav != null)? fav.name(): "none")).getVisualOrderText(),
                 (Number) (this.leftPos + 15),
-                (Number) (this.topPos + 90),
+                (Number) (this.topPos + 95),
                 1f, 1f, 1f, 0x00FFFFFF, false, false);
         drawScaledText(guiGraphics, Component.literal("Disliked: " + ((dis != null)? dis.name(): "none")).getVisualOrderText(),
                 (Number) (this.leftPos + 15),

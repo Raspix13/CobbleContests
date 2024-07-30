@@ -36,7 +36,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import org.slf4j.Logger;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 
-/**TODO:
+/**TODO future:
  * -texture booth
  * -finish booth gui
  * -clean up all print statements

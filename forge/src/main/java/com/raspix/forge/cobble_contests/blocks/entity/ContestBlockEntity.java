@@ -196,6 +196,17 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
         };
     }
 
+    public static String getContestTypeString1(int contestType){
+        return switch (contestType) {
+            case 0 -> "Cool";
+            case 1 -> "Beauty";
+            case 2 -> "Cute";
+            case 3 -> "Smart";
+            case 4 -> "Tough";
+            default -> "ERROR";
+        };
+    }
+
     public String getContestLevelString(int contestLevel){
         return switch (contestLevel) {
             case 0 -> "Normal";

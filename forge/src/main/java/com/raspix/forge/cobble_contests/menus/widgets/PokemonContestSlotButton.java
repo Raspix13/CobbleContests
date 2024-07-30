@@ -91,21 +91,21 @@ public class PokemonContestSlotButton extends ImageButton {
 
 
             drawScaledText(guiGraphics, pokemon.getDisplayName().getVisualOrderText(),
-                    (Number) (this.getX() + 15),
-                    (Number) (this.getY() + 60),
-                    1f, 1f, 1f, 0x00918b99, false, false);
+                    (Number) (this.getX() + 32),
+                    (Number) (this.getY() + 55),
+                    1f, 1f, 1f, 0x00918b99, true, false);
 
 
 
 
-            poses.translate(this.getX() + (PORTRAIT_DIAMETER / 2.0), this.getY()-10, 0f);
+            poses.translate(this.getX() + 20 + (PORTRAIT_DIAMETER / 2.0), this.getY()+10, 0f);
             poses.pushPose();
             drawProfilePokemon(pokemon.getSpecies().getResourceIdentifier(), pokemon.getAspects(),
                     poses, new Quaternionf().rotationXYZ((float) Math.toRadians(13f), (float) Math.toRadians(35f), 0F),
                     new PokemonFloatingState(), 2.42f, 24f);
 
             poses.popPose();
-            poses.translate(-(this.getX() + (PORTRAIT_DIAMETER / 2.0)), -(this.getY()-10), 0f);
+            poses.translate(-(this.getX() + 20 + (PORTRAIT_DIAMETER / 2.0)), -(this.getY()+10), 0f);
 
             /**if (pokemon.getGender() != Gender.GENDERLESS) {
                 blitk(
@@ -132,7 +132,7 @@ public class PokemonContestSlotButton extends ImageButton {
             );*/
 
             // Held Item
-            ItemStack heldItem = pokemon.heldItem();
+            /**ItemStack heldItem = pokemon.heldItem();
             if (!heldItem.isEmpty()) {
                 renderScaledGuiItemIcon(
                         heldItem,
@@ -142,7 +142,7 @@ public class PokemonContestSlotButton extends ImageButton {
                         100f,
                         poses
                 );
-            }
+            }*/
 
         }
 
