@@ -4,7 +4,7 @@
   "container.cobble_contests.contest_block": "Example Menu Block",
   "container.cobble_contests.poffin_pot": "Poffin Pot",
 
-  "block.cobble_contests.contest_block": "Contest Booth",
+  "block.cobble_contests.contest_booth": "Contest Booth",
   "block.cobble_contests.poffin_pot": "Poffin Pot",
 
   "item.cobble_contests.contest_card": "Contest Card",
@@ -56,6 +56,9 @@
   "cobble_contests.sheen_name.sheen": "Sheen",
 
   "cobble_contests.poffin_pot_instructions": "Add poffin dough to pot, fuel and 1-4 berries. Using duplicate berries will result in a foul poffin. Result stats based on berries used",
+  "cobble_contests.contest_text.start": "Start",
+  "cobble_contests.contest_text.select_type": "Select Type",
+  "cobble_contests.contest_text.pokemon_select": "Choose Pokemon",
   "cobble_contests.contest_result.not_implemented": "This feature is not yet implemented, sorry"
 
 

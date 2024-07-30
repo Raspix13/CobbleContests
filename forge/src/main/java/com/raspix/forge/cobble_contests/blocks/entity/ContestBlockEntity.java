@@ -8,10 +8,14 @@ import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.forge.cobble_contests.menus.ContestMenu;
 import com.raspix.forge.cobble_contests.pokemon.Badges;
 import com.raspix.forge.cobble_contests.pokemon.CVs;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.OutgoingChatMessage;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -22,10 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class ContestBlockEntity extends BlockEntity implements MenuProvider {
 
@@ -150,16 +151,61 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     public void runStatAssesment(UUID id, int pokeIdx, int contestType, int contestLevel1){
+        String contestOutput = "";
         try {
+            System.out.println("Hello there, you should see this in CBE");
             Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(id).get(pokeIdx);
             CompoundTag badgeTag = poke.getPersistentData().getCompound("Badges");
+            String pokeName = poke.getDisplayName().getString();
             int contestLevel = getNextContestLevel(badgeTag, contestType);
-            boolean result = runContest(poke, contestType, contestLevel);
+            if(contestLevel < 5) {
+                boolean result = runContest(poke, contestType, contestLevel);
+                if (result) {
+                    contestOutput = pokeName + " Won the " + getContestLevelString(contestLevel) + " " + getContestTypeString(contestType) + " Contest";
+                } else {
+                    contestOutput = pokeName + " Lost the " + getContestLevelString(contestLevel) + " " + getContestTypeString(contestType) + " Contest";
+                }
+            }else{
+                contestOutput = pokeName + " has already beaten all " + getContestTypeString(contestType) + " Contests";
+            }
+            System.out.println("do you see this");
+            ServerPlayer sPlayer = poke.getOwnerPlayer();
+            if (!sPlayer.level().isClientSide()) {
+                //sPlayer.sendSystemMessage(Component.literal(contestOutput));
+                System.out.println("Is server side");
+                //sPlayer.displayClientMessage(Component.literal(contestOutput), true);
+                sPlayer.displayClientMessage(Component.literal(contestOutput).withStyle(ChatFormatting.LIGHT_PURPLE), false);
+                System.out.println("after message");
+            }
 
+
+            //Objects.requireNonNull().sendSystemMessage(Component.literal(contestOutput));
         }catch (NoPokemonStoreException e){
-
         }
 
+
+    }
+
+    public String getContestTypeString(int contestType){
+        return switch (contestType) {
+            case 0 -> "Cool";
+            case 1 -> "Beauty";
+            case 2 -> "Cute";
+            case 3 -> "Smart";
+            case 4 -> "Tough";
+            default -> "ERROR";
+        };
+    }
+
+    public String getContestLevelString(int contestLevel){
+        return switch (contestLevel) {
+            case 0 -> "Normal";
+            case 1 -> "Super";
+            case 2 -> "Hyper";
+            case 3 -> "Ultra";
+            case 4 -> "Master";
+            default -> "ERROR";
+        };
     }
 
     private int getNextContestLevel(CompoundTag badgeTag, int contestType) {
@@ -215,7 +261,7 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
     }
 
 
-    private int[] thresholds = {30, 75, 140, 200, 245};
+    private int[] thresholds = {5, 40, 100, 175, 245};
     private boolean runAppContest(Pokemon poke, int level, int typeVal){
         boolean result = false;
         if (level < 5 &&

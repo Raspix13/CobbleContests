@@ -87,32 +87,13 @@ public class PokemonContestSlotButton extends ImageButton {
                 );
             }
 
-            float hpRatio = pokemon.getCurrentHealth() / (float)pokemon.getHp();
-            int barWidthMax = 37;
-            float barWidth = hpRatio * barWidthMax;
-            Pair<Float, Float> cols = getDepletableRedGreen(hpRatio, 0.5f, 0.2f);
 
-            blitk(
-                    poses,
-                    CobblemonResources.INSTANCE.getWHITE(),
-                    getX() + 4,
-                    getY() + 25,
-                    1,
-                    barWidth,
-                    barWidthMax - barWidth, 0,
-                    barWidth / hpRatio,
-                    10,
-                    0,
-                    cols.component1() * 0.8F,
-                    cols.component2() * 0.8F,
-                    0.27F, 1, true, 1
-            );
 
 
             drawScaledText(guiGraphics, pokemon.getDisplayName().getVisualOrderText(),
-                    (Number) (this.getX() + 4),
-                    (Number) (this.getY() + 20),
-                    0.5f, 0.5f, 1f, 0x00FFFFFF, false, false);
+                    (Number) (this.getX() + 15),
+                    (Number) (this.getY() + 60),
+                    1f, 1f, 1f, 0x00918b99, false, false);
 
 
 
@@ -121,7 +102,7 @@ public class PokemonContestSlotButton extends ImageButton {
             poses.pushPose();
             drawProfilePokemon(pokemon.getSpecies().getResourceIdentifier(), pokemon.getAspects(),
                     poses, new Quaternionf().rotationXYZ((float) Math.toRadians(13f), (float) Math.toRadians(35f), 0F),
-                    new PokemonFloatingState(), 2.42f, 12f);
+                    new PokemonFloatingState(), 2.42f, 24f);
 
             poses.popPose();
             poses.translate(-(this.getX() + (PORTRAIT_DIAMETER / 2.0)), -(this.getY()-10), 0f);
@@ -135,7 +116,7 @@ public class PokemonContestSlotButton extends ImageButton {
                 );
             }*/
 
-            drawScaledText(
+            /**drawScaledText(
                     guiGraphics,
                     null,
                     lang("ui.lv.number", pokemon.getLevel()),
@@ -148,7 +129,7 @@ public class PokemonContestSlotButton extends ImageButton {
                     0x00FFFFFF,
                     true,
                     true, null, null
-            );
+            );*/
 
             // Held Item
             ItemStack heldItem = pokemon.heldItem();

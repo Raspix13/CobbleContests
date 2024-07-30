@@ -104,8 +104,6 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         this.buttons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 48, this.topPos -13, 17, 14, 326, 0, 16, TEXTURE, 1000, 750, btn -> {
             setPageIndex(2);
         })));
-
-
         pokemonIndex = 0;
         pageIndex = 0;
 
@@ -143,16 +141,12 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         List<Pokemon> partyPoke = this.clientParty.getSlots();//playerPartyStore.toGappyList();// contestInfoMenu.getPartyStore().toGappyList(); //
         for(int i = 0; i < 6; i++){
             Pokemon poke = partyPoke.get(i);
-
-            //System.out.println("PokemonParty");
             int finalI = i;
             this.buttons.add(this.addRenderableWidget(new PokemonInfoSlotButton(startingX + (i * xOffset),
                     startingY + (i * yOffset),
                     46, 27, 0, 0, 27, getSlotTexture(poke), 46, 54, btn -> {
                     setPokemonPage(finalI);
                 }, poke)));
-
-
         }
     }
 
@@ -181,20 +175,18 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
     public void render(GuiGraphics guiGraphics, int xMousePos, int yMousePos, float partialTick) {
         //this.renderBackground(guiGraphics);
         super.render(guiGraphics, xMousePos, yMousePos, partialTick);
-        //renderTooltip(guiGraphics, xMousePos, yMousePos);
+        renderTooltip(guiGraphics, xMousePos, yMousePos);
 
         if(pageIndex == 0){ //stat page
             if(clientParty != null && clientParty.getSlots().size() > 0 && clientParty.get(pokemonIndex) != null && cvList != null){
                 Pokemon poke = clientParty.get(pokemonIndex);
                 assert poke != null;
-                drawStatHexagon(new Vector3f(45f/255f, 237f/255f, 96f/255f), cvList.get(pokemonIndex), guiGraphics);//CVs.getFromTag(poke.getPersistentData().getCompound(PoffinItem.cvsKey)));
-
+                drawStatHexagon(new Vector3f(45f/255f, 237f/255f, 96f/255f), cvList.get(pokemonIndex), guiGraphics);
             }
         }else if (pageIndex == 1){// stats page
             if(clientParty != null && clientParty.getSlots().size() > 0 && clientParty.get(pokemonIndex) != null){
                 Pokemon poke = clientParty.get(pokemonIndex);
                 drawContestStats(guiGraphics, poke);
-
             }
         }else if(pageIndex == 2){ // badge page
             if(clientParty != null && clientParty.getSlots().size() > 0 && clientParty.get(pokemonIndex) != null){
@@ -204,15 +196,11 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
                 drawSmartContestBadges(guiGraphics);
                 drawToughContestBadges(guiGraphics);
             }
-        }else {
         }
         if(modelWidget != null) {
             modelWidget.visible = true;
             modelWidget.render(guiGraphics, xMousePos, yMousePos, partialTick);
         }
-
-        //drawTriangle(new Vector3f(45, 237, 96), new Vector2f(this.leftPos + 5, this.topPos + 10), new Vector2f(this.leftPos+ 50, this.topPos+50), new Vector2f(this.leftPos+25, this.topPos));
-
         PoseStack poses = guiGraphics.pose();
     }
 
@@ -286,13 +274,6 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
     }
 
     public void drawSmartContestBadges(GuiGraphics guiGraphics){
-        /**if(this.badgeList != null && this.badgeList.size() == 6){
-            for(int i = 0; i < 5; i++){
-                if(this.badgeList.get(pokemonIndex).getSmartRanked(i)){
-                    guiGraphics.blit(RANK_BADGES, this.leftPos + 20 + (16 * i), this.topPos + 20 + 48, (16 * i), 48, 16, 16, 80, 80);
-                }
-            }
-        }*/
         int yPos = this.topPos + 97 + 54;
         int xPos = this.leftPos + 19;
         if(this.badgeList != null && this.badgeList.size() == 6){
@@ -316,13 +297,6 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
     }
 
     public void drawToughContestBadges(GuiGraphics guiGraphics){
-        /**if(this.badgeList != null && this.badgeList.size() == 6){
-            for(int i = 0; i < 5; i++){
-                if(this.badgeList.get(pokemonIndex).getToughRanked(i)){
-                    guiGraphics.blit(RANK_BADGES, this.leftPos + 20 + (16 * i), this.topPos + 20 + 64, (16 * i), 64, 16, 16, 80, 80);
-                }
-            }
-        }*/
         int yPos = this.topPos + 97 + 72;
         int xPos = this.leftPos + 19;
         if(this.badgeList != null && this.badgeList.size() == 6){
@@ -355,7 +329,6 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
             if(moves.size() > i && moves.get(i) != null){
                 Move move = moves.get(i);
                 drawMovePanel(guiGraphics, move, xPos, yPos + (i * yInc));
-
             }else {
                 guiGraphics.blit(MOVE_PANELS, xPos, yPos + (i * yInc), 0, 0, 186, 32, 291, 400);
             }
@@ -364,13 +337,11 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
 
     private void drawMovePanel(GuiGraphics guiGraphics, Move move, int xPos, int yPos){
         String moveName = move.getName();
-        //System.out.println("Move name is " + moveName);
         int panelOffset = 0;
         int appeal = 1;
         PoseStack poses = guiGraphics.pose();
         String description = "placeholder";
         Map<String, ContestMoves.MoveData> contestMoves = CobbleContestsMoves.INSTANCE.allMoves;//CobbleContestsForge.contestMoves;'
-        //System.out.println("length of moves is: " + contestMoves.size());
         if(contestMoves.containsKey(moveName)) {
             ContestMoves.MoveData data = contestMoves.get(moveName);
             String type = data.getType();
@@ -401,7 +372,7 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
                 (Number) (yPos + 5),
                 1f, 1f, 2147483647, 0x00FFFFFF, false, true, null, null);
         //System.out.println(lang("move", moveName));
-        guiGraphics.blit(MOVE_PANELS, xPos + 80 - (1 + appeal * 8), yPos + 21, 1, 193, 1 + appeal * 8, 9, 291, 400);
+        guiGraphics.blit(MOVE_PANELS, xPos + 75 - (1 + appeal * 8), yPos + 21, 1, 193, 1 + appeal * 8, 9, 291, 400);
 
         poses.pushPose();
         poses.scale(0.5f, 0.5f, 1F);
@@ -418,7 +389,6 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
                 true
         );
         poses.popPose();
-
 
         //display description
     }
@@ -451,7 +421,6 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         Vector2f smartPoint = new Vector2f(hexCenterX - (lowerHexX * smartRatio), hexCenterY + (lowerHexY * smartRatio));
         Vector2f toughPoint = new Vector2f(hexCenterX - (upperHexX * toughRatio), hexCenterY - (upperHexY * toughRatio));
 
-
         drawTriangle(colour, coolPoint, centerPoint, beautyPoint); // upper right cool to beauty
         drawTriangle(colour, beautyPoint, centerPoint, cutePoint); // bottom right cute to beauty
         drawTriangle(colour, cutePoint, centerPoint, smartPoint); // bottom center cute to smart
@@ -462,7 +431,6 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
     }
 
     private void drawTriangle(Vector3f colour, Vector2f v1, Vector2f v2, Vector2f v3) {
-
         RenderSystem.setShaderTexture(0, CobblemonResources.INSTANCE.getWHITE());
         RenderSystem.setShaderColor(colour.x, colour.y, colour.z, 0.6F);
         RenderSystem.enableBlend();
@@ -480,11 +448,9 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
     }
 
-
     @Override
     protected void renderLabels(GuiGraphics arg, int i, int j) {
     }
-
 
     private void setPokemonPage(int index){
         pokemonIndex = index;
@@ -495,12 +461,9 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         pageIndex = index;
     }
 
-
     public void setParty(PlayerPartyStore pps){
         this.playerPartyStore = pps;
-        //renderParty();
     }
-
 
     public void setCVs(CompoundTag tag) {
         cvList = new ArrayList<>();

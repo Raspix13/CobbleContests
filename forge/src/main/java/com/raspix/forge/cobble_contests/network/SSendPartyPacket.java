@@ -9,7 +9,6 @@ import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.forge.cobble_contests.menus.ContestMenu;
 import com.raspix.forge.cobble_contests.menus.screens.SecondTestScreen;
-import com.raspix.forge.cobble_contests.menus.screens.TestMenuScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;

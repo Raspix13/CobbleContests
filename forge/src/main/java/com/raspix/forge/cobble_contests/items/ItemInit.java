@@ -52,7 +52,7 @@ public class ItemInit {
     public static final RegistryObject<Item> SOUR_BITTER_POFFIN = ITEMS.register("sour_bitter_poffin", () -> new PoffinItem(new Item.Properties()));
 
 
-    public static final RegistryObject<Item> POFFIN_CASE = ITEMS.register("poffin_case", () -> new PoffinItem(new Item.Properties().stacksTo(1)));
+    //public static final RegistryObject<Item> POFFIN_CASE = ITEMS.register("poffin_case", () -> new PoffinItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> CONTEST_CARD = ITEMS.register("contest_card", () -> new ContestWallet(new Item.Properties().stacksTo(1)));
 
 
@@ -64,7 +64,7 @@ public class ItemInit {
                 output.accept(CONTEST_BOOTH.get());
                 output.accept(CONTEST_CARD.get());
                 output.accept(POFFIN_POT.get());
-                output.accept(POFFIN_CASE.get());
+                //output.accept(POFFIN_CASE.get());
                 output.accept(POFFIN_DOUGH_BASE.get());
                 output.accept(FOUL_POFFIN.get());
                 output.accept(SPICY_POFFIN.get());

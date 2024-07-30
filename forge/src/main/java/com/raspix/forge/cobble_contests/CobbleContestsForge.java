@@ -11,7 +11,6 @@ import com.raspix.forge.cobble_contests.menus.MenuInit;
 import com.raspix.forge.cobble_contests.menus.screens.PlayerContestInfoScreen;
 import com.raspix.forge.cobble_contests.menus.screens.PoffinPotScreen;
 import com.raspix.forge.cobble_contests.menus.screens.SecondTestScreen;
-import com.raspix.forge.cobble_contests.menus.screens.TestMenuScreen;
 import com.raspix.forge.cobble_contests.network.PacketHandler;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -41,6 +40,11 @@ import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
  * -make sure poffins dissapear on use in survival
  * -figure out how to make hexagon translusent
  * -clean up all print statements
+ * -make contests tell result
+ * -make poffins tell if full
+ * -make default values for creative poffins
+ * -make sure nature eating poffin bonus is properly applied
+ * -fix up poffins with unclear colors
  *
  */
 

@@ -93,7 +93,7 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
             System.out.println(cvs.getAsString());
         }
 
-        if(cvs.getSheen() < 255) {
+        if(cvs.getSheen() < 255 || itemStack.getItem() == ItemInit.FOUL_POFFIN.get()) {
             // TODO: spicy, dry, sweet, bitter, sour, sheen placeholder for poffin flavors until get CVs/poffin vals working
             int[] flavors = {0, 0, 0, 0, 0, 0};
             if (itemStack.getTag() != null) {
@@ -142,6 +142,8 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
             }
             //CVs testCVs = CVs.getFromTag(dat);
             return InteractionResultHolder.success(itemStack);
+        }else {
+            serverPlayer.displayClientMessage(Component.literal(pokemon.getDisplayName().getString() + " already has max sheen and can not eat any more").withStyle(ChatFormatting.LIGHT_PURPLE), false);
         }
         return InteractionResultHolder.fail(itemStack);
     }
