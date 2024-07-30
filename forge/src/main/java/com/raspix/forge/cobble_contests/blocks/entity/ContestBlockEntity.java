@@ -146,14 +146,14 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
     public void runStubContest(){
         assert Minecraft.getInstance().level != null;
         if (!Minecraft.getInstance().level.isClientSide){
-            System.out.println("Running contest");
+            //System.out.println("Running contest");
         }
     }
 
     public void runStatAssesment(UUID id, int pokeIdx, int contestType, int contestLevel1){
-        String contestOutput = "";
+        //String contestOutput = "";
+        Component componentOutput;
         try {
-            System.out.println("Hello there, you should see this in CBE");
             Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(id).get(pokeIdx);
             CompoundTag badgeTag = poke.getPersistentData().getCompound("Badges");
             String pokeName = poke.getDisplayName().getString();
@@ -161,21 +161,20 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
             if(contestLevel < 5) {
                 boolean result = runContest(poke, contestType, contestLevel);
                 if (result) {
-                    contestOutput = pokeName + " Won the " + getContestLevelString(contestLevel) + " " + getContestTypeString(contestType) + " Contest";
+                    componentOutput = Component.translatable("cobble_contests.contest_result.won_ranked", pokeName, getContestLevelString(contestLevel), getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
+                    //contestOutput = pokeName + " Won the " + getContestLevelString(contestLevel) + " " + getContestTypeString(contestType) + " Contest";
                 } else {
-                    contestOutput = pokeName + " Lost the " + getContestLevelString(contestLevel) + " " + getContestTypeString(contestType) + " Contest";
+                    componentOutput = Component.translatable("cobble_contests.contest_result.lost_ranked", pokeName, getContestLevelString(contestLevel), getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
+                    //contestOutput = pokeName + " Lost the " + getContestLevelString(contestLevel) + " " + getContestTypeString(contestType) + " Contest";
                 }
             }else{
-                contestOutput = pokeName + " has already beaten all " + getContestTypeString(contestType) + " Contests";
+                componentOutput = Component.translatable("cobble_contests.contest_result.maxed_ranked", pokeName, getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
+                //contestOutput = pokeName + " has already beaten all " + getContestTypeString(contestType) + " Contests";
             }
-            System.out.println("do you see this");
             ServerPlayer sPlayer = poke.getOwnerPlayer();
             if (!sPlayer.level().isClientSide()) {
-                //sPlayer.sendSystemMessage(Component.literal(contestOutput));
-                System.out.println("Is server side");
-                //sPlayer.displayClientMessage(Component.literal(contestOutput), true);
-                sPlayer.displayClientMessage(Component.literal(contestOutput).withStyle(ChatFormatting.LIGHT_PURPLE), false);
-                System.out.println("after message");
+                sPlayer.displayClientMessage(componentOutput, false);
+                //sPlayer.displayClientMessage(Component.literal(contestOutput).withStyle(ChatFormatting.LIGHT_PURPLE), false);
             }
 
 
@@ -219,24 +218,34 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
         Badges badges = Badges.getFromTag(poke.getPersistentData().getCompound("Badges"));
         switch (contestType) {
             case 0:
-                if(runAppContest(poke, contestLevel, cvs.getCool()))
+                if(runAppContest(poke, contestLevel, cvs.getCool())) {
                     badges.setRankedCool(contestLevel, true);
+                    result = true;
+                }
                 break;
             case 1:
-                if(runAppContest(poke, contestLevel, cvs.getBeauty()))
+                if(runAppContest(poke, contestLevel, cvs.getBeauty())) {
                     badges.setRankedBeauty(contestLevel, true);
+                    result = true;
+                }
                 break;
             case 2:
-                if(runAppContest(poke, contestLevel, cvs.getCute()))
+                if(runAppContest(poke, contestLevel, cvs.getCute())) {
                     badges.setRankedCute(contestLevel, true);
+                    result = true;
+                }
                 break;
             case 3:
-                if(runAppContest(poke, contestLevel, cvs.getSmart()))
+                if(runAppContest(poke, contestLevel, cvs.getSmart())) {
                     badges.setRankedSmart(contestLevel, true);
+                    result = true;
+                }
                 break;
             case 4:
-                if(runAppContest(poke, contestLevel, cvs.getTough()))
+                if(runAppContest(poke, contestLevel, cvs.getTough())) {
                     badges.setRankedTough(contestLevel, true);
+                    result = true;
+                }
                 break;
             default:
                 break;

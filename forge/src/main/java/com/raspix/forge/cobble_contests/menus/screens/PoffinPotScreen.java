@@ -13,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractFurnaceMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.widget.ExtendedButton;
@@ -90,6 +91,7 @@ public class PoffinPotScreen extends AbstractContainerScreen<PoffinPotMenu> {
     @Override
     public void render(GuiGraphics guiGraphics, int xMousePos, int yMousePos, float partialTick) {
         super.render(guiGraphics, xMousePos, yMousePos, partialTick);
+        renderTooltip(guiGraphics, xMousePos, yMousePos);
         drawInstructions(guiGraphics);
     }
 

@@ -93,13 +93,13 @@ public class ContestBlock extends Block implements EntityBlock {
                     throw new RuntimeException(e);
                 }*/
 
-                try {
+                /**try {
                     PCStore pc = Cobblemon.INSTANCE.getStorage().getPC(((ServerPlayer) player).getUUID());
-                    System.out.println("tried finding pc");
+                    //System.out.println("tried finding pc");
                 } catch (NoPokemonStoreException e) {
-                    System.out.println("error finding pc");
+                    //System.out.println("error finding pc");
                     throw new RuntimeException(e);
-                }
+                }*/
 
                 //PacketHandler.INSTANCE.sendToServer(new SSendPartyPacket(player.getUUID(), pos));
                 //OpenPCPacket(pc.uuid).sendToPlayer(player);

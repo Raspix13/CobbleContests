@@ -41,7 +41,6 @@ public class ContestWallet extends Item {
 
     public MenuProvider getMenuProvider(Player player1) {
         PlayerPartyStore playerPartyStore = null;
-        System.out.println("test 2");
         /**try {
             playerPartyStore = Cobblemon.INSTANCE.getStorage().getParty(player1.getUUID());
             System.out.println("test 3");

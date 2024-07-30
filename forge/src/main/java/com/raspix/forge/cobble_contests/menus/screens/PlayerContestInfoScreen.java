@@ -1,5 +1,6 @@
 package com.raspix.forge.cobble_contests.menus.screens;
 
+import com.cobblemon.mod.common.api.berry.Flavor;
 import com.cobblemon.mod.common.api.gui.ColourLibrary;
 import com.cobblemon.mod.common.api.gui.MultiLineLabelK;
 import com.cobblemon.mod.common.api.moves.Move;
@@ -131,7 +132,6 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
     }
 
     private void renderParty(){
-        System.out.println("rendering party");
         int startingX = this.leftPos - 42;
         int xOffset = 0;
         int startingY = this.topPos + 10;
@@ -181,9 +181,11 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
             if(clientParty != null && clientParty.getSlots().size() > 0 && clientParty.get(pokemonIndex) != null && cvList != null){
                 Pokemon poke = clientParty.get(pokemonIndex);
                 assert poke != null;
+
                 drawStatHexagon(new Vector3f(45f/255f, 237f/255f, 96f/255f), cvList.get(pokemonIndex), guiGraphics);
+                writeFlavors(guiGraphics, poke);
             }
-        }else if (pageIndex == 1){// stats page
+        }else if (pageIndex == 1){// moves page
             if(clientParty != null && clientParty.getSlots().size() > 0 && clientParty.get(pokemonIndex) != null){
                 Pokemon poke = clientParty.get(pokemonIndex);
                 drawContestStats(guiGraphics, poke);
@@ -446,6 +448,19 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         bufferBuilder.nextElement();
         tessellator.end();
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+    }
+
+    private void writeFlavors(GuiGraphics guiGraphics, Pokemon pokemon){
+        Flavor fav = pokemon.getNature().getFavoriteFlavor();
+        Flavor dis = pokemon.getNature().getDislikedFlavor();
+        drawScaledText(guiGraphics, Component.literal("Favorite: " + ((fav != null)? fav.name(): "none")).getVisualOrderText(),
+                (Number) (this.leftPos + 15),
+                (Number) (this.topPos + 90),
+                1f, 1f, 1f, 0x00FFFFFF, false, false);
+        drawScaledText(guiGraphics, Component.literal("Disliked: " + ((dis != null)? dis.name(): "none")).getVisualOrderText(),
+                (Number) (this.leftPos + 15),
+                (Number) (this.topPos + 105),
+                1f, 1f, 1f, 0x00FFFFFF, false, false);
     }
 
     @Override

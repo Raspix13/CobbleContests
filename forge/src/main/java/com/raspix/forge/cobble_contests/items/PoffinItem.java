@@ -41,9 +41,22 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
 
     public static final String cvsKey = "CVs";
     private final String coolKey = "cool";
+    private int mainFlavor = -1;
+    private int secFlavor = -1;
 
     public PoffinItem(Properties properties) {
         super(properties);
+        this.mainFlavor = -1;
+        this.secFlavor = -1;
+    }
+
+    public PoffinItem(Properties properties, int mainFlavor, int secFlavor) {
+        super(properties);
+        this.mainFlavor = mainFlavor;
+        this.secFlavor = secFlavor;
+    }
+
+    private void setBasicFlavors(){
     }
 
     @Nullable
@@ -82,7 +95,6 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
     @Nullable
     @Override
     public InteractionResultHolder<ItemStack> applyToPokemon(@NotNull ServerPlayer serverPlayer, @NotNull ItemStack itemStack, @NotNull Pokemon pokemon) {
-        System.out.println("Used item");
         CVs cvs;
         CompoundTag tag = pokemon.getPersistentData();
         if(tag.getCompound(cvsKey) == null){
@@ -94,7 +106,7 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
         }
 
         if(cvs.getSheen() < 255 || itemStack.getItem() == ItemInit.FOUL_POFFIN.get()) {
-            // TODO: spicy, dry, sweet, bitter, sour, sheen placeholder for poffin flavors until get CVs/poffin vals working
+            // spicy, dry, sweet, bitter, sour, sheen
             int[] flavors = {0, 0, 0, 0, 0, 0};
             if (itemStack.getTag() != null) {
                 for (String tagInfo : itemStack.getTag().getAllKeys()) {
@@ -112,21 +124,32 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
                         }
                     }
                 }
+            }else {
+                flavors = getBaseFlavors();
             }
             System.out.println("Applying: " + Arrays.toString(flavors));
 
             Nature nature = pokemon.getNature();
             int disliked = getIndexFromFlavor(nature.getDislikedFlavor());
             int liked = getIndexFromFlavor(nature.getFavoriteFlavor());
+            float valMultiplier = 1.0f;
+            if(this.mainFlavor == liked && mainFlavor >= 0 && mainFlavor != secFlavor){
+                valMultiplier = 1.1f;
+            }
+            if(this.mainFlavor == disliked && mainFlavor >= 0 && mainFlavor != secFlavor){
+                valMultiplier = 0.9f;
+            }
 
             // need to change this so that all get buff if the primary flavor of the poffin is fav/hated
             for (int i = 0; i < 5; i++) {
-                int valBonus = flavors[i];
+                int valBonus = (int) ((float)flavors[i] * valMultiplier);
+                /**int valBonus = flavors[i];
                 if (i == liked) {
                     valBonus = (int) ((float) valBonus * 1.1f);
                 } else if (i == disliked) {
                     valBonus = (int) ((float) valBonus * 0.9f);
-                }
+                }*/
+
                 cvs.increaseCVFromFlavorIndex(i, valBonus);
             }
             cvs.increaseSheen(flavors[5]);
@@ -233,17 +256,8 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
     @NotNull
     @Override
     public InteractionResultHolder<ItemStack> use(@NotNull ServerPlayer serverPlayer, @NotNull ItemStack itemStack) {
-        System.out.println("use");
-
-        //PokemonSelectingItem.super.use(serverPlayer, itemStack);
         InteractionResultHolder<ItemStack> result = interactGeneral(serverPlayer, itemStack);//use(serverPlayer, itemStack);
         return result;
-        /**if (result.result != ActionResult.PASS) {
-            return result;
-        }
-        return InteractionResultHolder.success(itemStack);*/
-        //return InteractionResultHolder.success(itemStack);
-        //return TypedActionResult.success(user.getStackInHand(hand))
     }
 
     @Override
@@ -251,9 +265,6 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
         if(context.getLevel().isClientSide()){
             return super.useOn(context);
         }
-        /**if(context.getPlayer() instanceof ServerPlayer){
-            System.out.println("is server player");
-        }*/
         ServerPlayer player = (ServerPlayer) context.getPlayer();
         ItemStack itemStack = context.getItemInHand();
 
@@ -265,7 +276,6 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level arg, Player player, InteractionHand hand) {
         if(player instanceof ServerPlayer){
-            System.out.println("is server player");
             this.use((ServerPlayer) player, player.getItemInHand(hand));
         }
         return InteractionResultHolder.success(player.getItemInHand(hand));
@@ -274,7 +284,6 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
     @NotNull
     @Override
     public InteractionResultHolder<ItemStack> interactGeneral(@NotNull ServerPlayer serverPlayer, @NotNull ItemStack itemStack) {
-        System.out.println("interactGeneral");
         try {
             List<Pokemon> pokeList1 = Cobblemon.INSTANCE.getStorage().getParty(serverPlayer.getUUID()).toGappyList();
             if(pokeList1.isEmpty()){
@@ -286,8 +295,6 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
                     pokeList.add(poke);
                 }
             }
-
-
             PartySelectCallbacks.INSTANCE.createFromPokemon(
                     serverPlayer,
                     pokeList,
@@ -299,28 +306,22 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
                                     new PokemonInteractContext(
                                             pk.getSpecies().resourceIdentifier, ItemInit.POFFIN_DOUGH_BASE.getId()));// Registries.ITEM.getId(itemStack.getItem())  itemStack.getItem().
                         }
-                        //itemStack.getItem().
-                        //Registries.ITEM..getId(stack.item
                         return null;
                     }
             );
         } catch (NoPokemonStoreException e) {
             throw new RuntimeException(e);
         }
-
         return InteractionResultHolder.success(itemStack);
     }
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-            //pTooltipComponents.add(Component.translatable("tooltip.snekcraft.snake_bag.tooltip.has_snakes", (snakeNum + "")).withStyle(ChatFormatting.GRAY));
-
         if(pStack.getTag() != null) {
             for (String tagInfo : pStack.getTag().getAllKeys()) {
                 if (tagInfo.contains("Flavors")) {
                     CompoundTag poffinTag = pStack.getTag().getCompound(tagInfo);
-
                     try {
                         int spicy = poffinTag.getInt("spicy");
                         int dry = poffinTag.getInt("dry");
@@ -330,16 +331,33 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
                         int smoothness = poffinTag.getInt("sheen");
                         pTooltipComponents.add(Component.translatable("tooltip.cobble_contests.poffin_item.tooltip.poffin_stats", spicy, dry, sweet, bitter, sour, smoothness).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.LIGHT_PURPLE));
                     } catch (ClassCastException e) {
-
                     }
-
                 }
             }
-
-
         }else {
-            pTooltipComponents.add(Component.translatable("tooltip.cobble_contests.poffin_item.tooltip.poffin_stats", 0, 0, 0, 0, 0).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.LIGHT_PURPLE));
+            int[] baseFlavors = getBaseFlavors();
+            pTooltipComponents.add(Component.translatable("tooltip.cobble_contests.poffin_item.tooltip.poffin_stats", baseFlavors[0], baseFlavors[1], baseFlavors[2], baseFlavors[3], baseFlavors[4], baseFlavors[5]).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.LIGHT_PURPLE));
         }
 
+    }
+
+    /**
+     * For poffins that were not assigned data, like those in creative
+     * @return
+     */
+    private int[] getBaseFlavors(){
+        int[] baseFlavors = {0, 0, 0, 0, 0, 20};
+        if(mainFlavor >= 0 && mainFlavor <6 && secFlavor == -1){ // only one flavor
+            baseFlavors[mainFlavor] = 15;
+        }else if(mainFlavor >= 0 && mainFlavor <6){ //main flavor with sec
+            baseFlavors[mainFlavor] = 10;
+        }
+        if(secFlavor >= 0 && secFlavor <6){ //sec flavor
+            baseFlavors[secFlavor] = 5;
+        }
+        if(mainFlavor == -1 && secFlavor == -1){ //foul
+            baseFlavors = new int[]{-10, -10, -10, -10, -10, -30};
+        }
+        return baseFlavors;
     }
 }

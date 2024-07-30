@@ -45,11 +45,6 @@ public class ContestMenu extends AbstractContainerMenu {
         /**}catch (NoPokemonStoreException e){
             System.out.println("you failed");
         }*/
-        if(playerPartyClient == null){
-            System.out.println("is null");
-        }else {
-            System.out.println("not null");
-        }
 
 
         //System.out.println("hewwo");

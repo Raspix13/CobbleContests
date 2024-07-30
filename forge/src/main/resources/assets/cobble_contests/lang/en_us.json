@@ -46,7 +46,7 @@
 
   "tooltip.cobble_contests.poffin_item.tooltip.poffin_stats": "Spicy: %1$s Dry: %2$s Sweet: %3$s Bitter: %4$s Sour: %5$s Smoothness: %6$s",
 
-  "cobble_contests.move_info.placeholder": "Move Effects not yet implemented, sorry. Now the rest of this is to test the length and layout of the box so I need to have a lot of words, so here is nyan cat. Nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan Nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan Nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan Nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan nyan",
+  "cobble_contests.move_info.placeholder": "Move Effects not yet implemented, sorry.",
 
   "cobble_contests.contest_type.cool": "Cool",
   "cobble_contests.contest_type.beauty": "Beauty",
@@ -55,11 +55,21 @@
   "cobble_contests.contest_type.tough": "Tough",
   "cobble_contests.sheen_name.sheen": "Sheen",
 
+  "cobble_contests.contest_level.0": "Normal",
+  "cobble_contests.contest_level.1": "Super",
+  "cobble_contests.contest_level.2": "Hyper",
+  "cobble_contests.contest_level.3": "Ultra",
+  "cobble_contests.contest_level.4": "Master",
+
   "cobble_contests.poffin_pot_instructions": "Add poffin dough to pot, fuel and 1-4 berries. Using duplicate berries will result in a foul poffin. Result stats based on berries used",
   "cobble_contests.contest_text.start": "Start",
   "cobble_contests.contest_text.select_type": "Select Type",
   "cobble_contests.contest_text.pokemon_select": "Choose Pokemon",
-  "cobble_contests.contest_result.not_implemented": "This feature is not yet implemented, sorry"
+
+  "cobble_contests.contest_result.not_implemented": "This feature is not yet implemented, sorry",
+  "cobble_contests.contest_result.won_ranked": "%1$s Won the %2$s %3$s Contest",
+  "cobble_contests.contest_result.lost_ranked": "%1$s Lost the %2$s %3$s Contest",
+  "cobble_contests.contest_result.maxed_ranked": "%1$s has already beaten all %2$s Contests"
 
 
 }

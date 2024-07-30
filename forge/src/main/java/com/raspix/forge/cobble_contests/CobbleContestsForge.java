@@ -37,14 +37,22 @@ import org.slf4j.Logger;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 
 /**TODO:
- * -make sure poffins dissapear on use in survival
- * -figure out how to make hexagon translusent
+ * -texture booth
+ * -finish booth gui
  * -clean up all print statements
- * -make contests tell result
- * -make poffins tell if full
- * -make default values for creative poffins
- * -make sure nature eating poffin bonus is properly applied
- * -fix up poffins with unclear colors
+ * -make sure contest results are fully translatable
+ *
+ *
+ * DONE:
+ *  -make contests tell result
+ *  -make poffins tell if full
+ *  -figure out how to make hexagon translusent + fix color issue
+ *  -make default values for creative poffins
+ *  -make sure nature eating poffin bonus is properly applied
+ *  -make sure poffins dissapear on use in survival
+ *  -get tooltips to show up on poffinpot
+ *  -fix up poffins with unclear colors
+ *
  *
  */
 
