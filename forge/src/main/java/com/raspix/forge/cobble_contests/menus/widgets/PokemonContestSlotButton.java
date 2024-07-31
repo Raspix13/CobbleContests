@@ -58,14 +58,14 @@ public class PokemonContestSlotButton extends ImageButton {
             float halfScale = 0.5f;
             PoseStack poses = guiGraphics.pose();
 
-            ResourceLocation stateIcon = pokemon.getState().getIcon(pokemon);
+            /**ResourceLocation stateIcon = pokemon.getState().getIcon(pokemon);
             if (stateIcon != null) {
                 blitk(
                         poses, stateIcon, (Number)((getX() + 24.5) / halfScale), (Number)((getY() + 3) / halfScale),
                         (Number)17, (Number)24, (Number)0, (Number)0, (Number) width, (Number) height, (Number)0,
                         (Number)1f, (Number)1, (Number)1, (Number)1, true, halfScale
                 );
-            }
+            }*/
 
             ResourceLocation ballIcon = cobblemonResource("textures/gui/ball/" + pokemon.getCaughtBall().getName().getPath() + ".png");
             int ballHeight = 22;
@@ -77,7 +77,7 @@ public class PokemonContestSlotButton extends ImageButton {
 
 
             PersistentStatusContainer status = pokemon.getStatus();
-            if (!pokemon.isFainted() && status != null) {
+            /**if (!pokemon.isFainted() && status != null) {
                 String statusName = status.getStatus().getShowdownName();
                 blitk(
                         poses, cobblemonResource("textures/gui/party/status_$statusName.png"),
@@ -85,7 +85,7 @@ public class PokemonContestSlotButton extends ImageButton {
                         4,(Number)0, (Number)0, (Number) width, (Number) height, (Number)0,
                         (Number)1f, (Number)1, (Number)1, (Number)1, true, 1f
                 );
-            }
+            }*/
 
 
 

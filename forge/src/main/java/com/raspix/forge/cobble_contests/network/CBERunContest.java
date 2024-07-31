@@ -1,24 +1,13 @@
 package com.raspix.forge.cobble_contests.network;
 
-import com.cobblemon.mod.common.Cobblemon;
-import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
-import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
-import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.forge.cobble_contests.blocks.entity.ContestBlockEntity;
-import com.raspix.forge.cobble_contests.pokemon.Badges;
-import com.raspix.forge.cobble_contests.pokemon.CVs;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.ConduitBlockEntity;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 

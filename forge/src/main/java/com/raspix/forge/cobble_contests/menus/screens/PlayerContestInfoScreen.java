@@ -19,7 +19,7 @@ import com.raspix.forge.cobble_contests.menus.PlayerContestInfoMenu;
 import com.raspix.forge.cobble_contests.menus.widgets.PokemonInfoSlotButton;
 import com.raspix.forge.cobble_contests.network.PacketHandler;
 import com.raspix.forge.cobble_contests.network.SBInfoScreenParty;
-import com.raspix.forge.cobble_contests.pokemon.Badges;
+import com.raspix.forge.cobble_contests.pokemon.Ribbons;
 import com.raspix.forge.cobble_contests.pokemon.CVs;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -52,7 +52,7 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
     private int pokemonIndex;
     private int pageIndex;
     private List<CVs> cvList;
-    private List<Badges> badgeList;
+    private List<Ribbons> ribbonList;
 
     private List<Button> buttons;
 
@@ -73,7 +73,7 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(CobbleContests.MOD_ID, "textures/gui/contest_profile.png");
     private static final ResourceLocation MOVE_PANELS = new ResourceLocation(CobbleContests.MOD_ID, "textures/gui/move_panels.png");
-    private static final ResourceLocation RANK_BADGES = new ResourceLocation(CobbleContests.MOD_ID, "textures/gui/badges.png");
+    private static final ResourceLocation RANK_RIBBONS = new ResourceLocation(CobbleContests.MOD_ID, "textures/gui/badges.png");
     private Inventory playerInv;
     private PlayerPartyStore playerPartyStore;
     private ClientParty clientParty;
@@ -153,7 +153,7 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int xMousePos, int yMousePos) {
         //renderBackground(guiGraphics);
-        if(pageIndex == 1){ // badge page
+        if(pageIndex == 1){ // ribbon page
             guiGraphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 194, this.imageWidth, this.imageHeight, 1000, 750);
         }else if(pageIndex == 0) { //stat page
             guiGraphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 1000, 750);
@@ -184,19 +184,20 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
 
                 drawStatHexagon(new Vector3f(45f/255f, 237f/255f, 96f/255f), cvList.get(pokemonIndex), guiGraphics);
                 writeFlavors(guiGraphics, poke);
+                drawFriendshipHeart(guiGraphics, poke);
             }
         }else if (pageIndex == 1){// moves page
             if(clientParty != null && clientParty.getSlots().size() > 0 && clientParty.get(pokemonIndex) != null){
                 Pokemon poke = clientParty.get(pokemonIndex);
                 drawContestStats(guiGraphics, poke);
             }
-        }else if(pageIndex == 2){ // badge page
+        }else if(pageIndex == 2){ // ribbon page
             if(clientParty != null && clientParty.getSlots().size() > 0 && clientParty.get(pokemonIndex) != null){
-                drawCoolContestBadges(guiGraphics);
-                drawBeautyContestBadges(guiGraphics);
-                drawCuteContestBadges(guiGraphics);
-                drawSmartContestBadges(guiGraphics);
-                drawToughContestBadges(guiGraphics);
+                drawCoolContestRibbons(guiGraphics);
+                drawBeautyContestRibbons(guiGraphics);
+                drawCuteContestRibbons(guiGraphics);
+                drawSmartContestRibbons(guiGraphics);
+                drawToughContestRibbons(guiGraphics);
             }
         }
         if(modelWidget != null) {
@@ -206,116 +207,124 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         PoseStack poses = guiGraphics.pose();
     }
 
-    public void drawCoolContestBadges(GuiGraphics guiGraphics){
+    private void drawFriendshipHeart(GuiGraphics guiGraphics, Pokemon poke) {
+        int friendship = poke.getFriendship();
+        int heartPixels = (int)((((float)friendship)/255f)*33f);
+
+        guiGraphics.blit(TEXTURE, this.leftPos + 33, this.topPos + 95 + 33 - heartPixels, 293, 67 + (33 - heartPixels), 37, heartPixels + 1, 1000, 750);
+        //guiGraphics.blit(TEXTURE, this.leftPos + 34, this.topPos + 96, 293, 67, 37, 34, 1000, 750);
+    }
+
+    public void drawCoolContestRibbons(GuiGraphics guiGraphics){
         int yPos = this.topPos + 97;
         int xPos = this.leftPos + 19;
-        if(this.badgeList != null && this.badgeList.size() == 6){
-            if(this.badgeList.get(pokemonIndex).getCoolRanked(0)){
-                guiGraphics.blit(RANK_BADGES, xPos, yPos, 0, 0, 16, 16, 80, 80);
+        if(this.ribbonList != null && this.ribbonList.size() == 6){
+            if(this.ribbonList.get(pokemonIndex).getCoolRanked(0)){
+                guiGraphics.blit(RANK_RIBBONS, xPos, yPos, 0, 0, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getCoolRanked(1)){
-                guiGraphics.blit(RANK_BADGES, xPos +11, yPos, 16, 0, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getCoolRanked(1)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +11, yPos, 16, 0, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getCoolRanked(2)){
-                guiGraphics.blit(RANK_BADGES, xPos +27, yPos, 32, 0, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getCoolRanked(2)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +27, yPos, 32, 0, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getCoolRanked(3)){
-                guiGraphics.blit(RANK_BADGES, xPos +45, yPos, 48, 0, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getCoolRanked(3)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +45, yPos, 48, 0, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getCoolRanked(4)){
-                guiGraphics.blit(RANK_BADGES, xPos +63, yPos, 64, 0, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getCoolRanked(4)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +63, yPos, 64, 0, 16, 16, 80, 80);
             }
 
         }
     }
 
-    public void drawBeautyContestBadges(GuiGraphics guiGraphics){
+    public void drawBeautyContestRibbons(GuiGraphics guiGraphics){
         int yPos = this.topPos + 97 + 18;
         int xPos = this.leftPos + 19;
-        if(this.badgeList != null && this.badgeList.size() == 6){
-            if(this.badgeList.get(pokemonIndex).getBeautyRanked(0)){
-                guiGraphics.blit(RANK_BADGES, xPos, yPos, 0, 16, 16, 16, 80, 80);
+        if(this.ribbonList != null && this.ribbonList.size() == 6){
+            if(this.ribbonList.get(pokemonIndex).getBeautyRanked(0)){
+                guiGraphics.blit(RANK_RIBBONS, xPos, yPos, 0, 16, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getBeautyRanked(1)){
-                guiGraphics.blit(RANK_BADGES, xPos +11, yPos, 16, 16, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getBeautyRanked(1)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +11, yPos, 16, 16, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getBeautyRanked(2)){
-                guiGraphics.blit(RANK_BADGES, xPos +27, yPos, 32, 16, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getBeautyRanked(2)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +27, yPos, 32, 16, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getBeautyRanked(3)){
-                guiGraphics.blit(RANK_BADGES, xPos +45, yPos, 48, 16, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getBeautyRanked(3)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +45, yPos, 48, 16, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getBeautyRanked(4)){
-                guiGraphics.blit(RANK_BADGES, xPos +63, yPos, 64, 16, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getBeautyRanked(4)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +63, yPos, 64, 16, 16, 16, 80, 80);
             }
 
         }
     }
 
-    public void drawCuteContestBadges(GuiGraphics guiGraphics){
+    public void drawCuteContestRibbons(GuiGraphics guiGraphics){
         int yPos = this.topPos + 97 + 36;
         int xPos = this.leftPos + 19;
-        if(this.badgeList != null && this.badgeList.size() == 6){
-            if(this.badgeList.get(pokemonIndex).getCuteRanked(0)){
-                guiGraphics.blit(RANK_BADGES, xPos, yPos, 0, 32, 16, 16, 80, 80);
+        if(this.ribbonList != null && this.ribbonList.size() == 6){
+            if(this.ribbonList.get(pokemonIndex).getCuteRanked(0)){
+                guiGraphics.blit(RANK_RIBBONS, xPos, yPos, 0, 32, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getCuteRanked(1)){
-                guiGraphics.blit(RANK_BADGES, xPos +11, yPos, 16, 32, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getCuteRanked(1)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +11, yPos, 16, 32, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getCuteRanked(2)){
-                guiGraphics.blit(RANK_BADGES, xPos +27, yPos, 32, 32, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getCuteRanked(2)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +27, yPos, 32, 32, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getCuteRanked(3)){
-                guiGraphics.blit(RANK_BADGES, xPos +45, yPos, 48, 32, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getCuteRanked(3)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +45, yPos, 48, 32, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getCuteRanked(4)){
-                guiGraphics.blit(RANK_BADGES, xPos +63, yPos, 64, 32, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getCuteRanked(4)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +63, yPos, 64, 32, 16, 16, 80, 80);
             }
 
         }
     }
 
-    public void drawSmartContestBadges(GuiGraphics guiGraphics){
+    public void drawSmartContestRibbons(GuiGraphics guiGraphics){
         int yPos = this.topPos + 97 + 54;
         int xPos = this.leftPos + 19;
-        if(this.badgeList != null && this.badgeList.size() == 6){
-            if(this.badgeList.get(pokemonIndex).getSmartRanked(0)){
-                guiGraphics.blit(RANK_BADGES, xPos, yPos, 0, 48, 16, 16, 80, 80);
+        if(this.ribbonList != null && this.ribbonList.size() == 6){
+            if(this.ribbonList.get(pokemonIndex).getSmartRanked(0)){
+                guiGraphics.blit(RANK_RIBBONS, xPos, yPos, 0, 48, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getSmartRanked(1)){
-                guiGraphics.blit(RANK_BADGES, xPos +11, yPos, 16, 48, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getSmartRanked(1)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +11, yPos, 16, 48, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getSmartRanked(2)){
-                guiGraphics.blit(RANK_BADGES, xPos +27, yPos, 32, 48, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getSmartRanked(2)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +27, yPos, 32, 48, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getSmartRanked(3)){
-                guiGraphics.blit(RANK_BADGES, xPos +45, yPos, 48, 48, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getSmartRanked(3)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +45, yPos, 48, 48, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getSmartRanked(4)){
-                guiGraphics.blit(RANK_BADGES, xPos +63, yPos, 64, 48, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getSmartRanked(4)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +63, yPos, 64, 48, 16, 16, 80, 80);
             }
 
         }
     }
 
-    public void drawToughContestBadges(GuiGraphics guiGraphics){
+    public void drawToughContestRibbons(GuiGraphics guiGraphics){
         int yPos = this.topPos + 97 + 72;
         int xPos = this.leftPos + 19;
-        if(this.badgeList != null && this.badgeList.size() == 6){
-            if(this.badgeList.get(pokemonIndex).getSmartRanked(0)){
-                guiGraphics.blit(RANK_BADGES, xPos, yPos, 0, 64, 16, 16, 80, 80);
+        if(this.ribbonList != null && this.ribbonList.size() == 6){
+            if(this.ribbonList.get(pokemonIndex).getSmartRanked(0)){
+                guiGraphics.blit(RANK_RIBBONS, xPos, yPos, 0, 64, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getSmartRanked(1)){
-                guiGraphics.blit(RANK_BADGES, xPos +11, yPos, 16, 64, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getSmartRanked(1)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +11, yPos, 16, 64, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getSmartRanked(2)){
-                guiGraphics.blit(RANK_BADGES, xPos +27, yPos, 32, 64, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getSmartRanked(2)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +27, yPos, 32, 64, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getSmartRanked(3)){
-                guiGraphics.blit(RANK_BADGES, xPos +45, yPos, 48, 64, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getSmartRanked(3)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +45, yPos, 48, 64, 16, 16, 80, 80);
             }
-            if(this.badgeList.get(pokemonIndex).getSmartRanked(4)){
-                guiGraphics.blit(RANK_BADGES, xPos +63, yPos, 64, 64, 16, 16, 80, 80);
+            if(this.ribbonList.get(pokemonIndex).getSmartRanked(4)){
+                guiGraphics.blit(RANK_RIBBONS, xPos +63, yPos, 64, 64, 16, 16, 80, 80);
             }
 
         }
@@ -455,11 +464,11 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         Flavor dis = pokemon.getNature().getDislikedFlavor();
         drawScaledText(guiGraphics, Component.literal("Favorite: " + ((fav != null)? fav.name(): "none")).getVisualOrderText(),
                 (Number) (this.leftPos + 15),
-                (Number) (this.topPos + 95),
+                (Number) (this.topPos + 135),
                 1f, 1f, 1f, 0x00FFFFFF, false, false);
         drawScaledText(guiGraphics, Component.literal("Disliked: " + ((dis != null)? dis.name(): "none")).getVisualOrderText(),
                 (Number) (this.leftPos + 15),
-                (Number) (this.topPos + 105),
+                (Number) (this.topPos + 145),
                 1f, 1f, 1f, 0x00FFFFFF, false, false);
     }
 
@@ -492,14 +501,14 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         //System.out.println("Set up CVs");
     }
 
-    public void setBadges(CompoundTag tag) {
-        badgeList = new ArrayList<>();
+    public void setRibbons(CompoundTag tag) {
+        ribbonList = new ArrayList<>();
 
-        badgeList.add(Badges.getFromTag(tag.getCompound("poke0badges")));
-        badgeList.add(Badges.getFromTag(tag.getCompound("poke1badges")));
-        badgeList.add(Badges.getFromTag(tag.getCompound("poke2badges")));
-        badgeList.add(Badges.getFromTag(tag.getCompound("poke3badges")));
-        badgeList.add(Badges.getFromTag(tag.getCompound("poke4badges")));
-        badgeList.add(Badges.getFromTag(tag.getCompound("poke5badges")));
+        ribbonList.add(Ribbons.getFromTag(tag.getCompound("poke0ribbons")));
+        ribbonList.add(Ribbons.getFromTag(tag.getCompound("poke1ribbons")));
+        ribbonList.add(Ribbons.getFromTag(tag.getCompound("poke2ribbons")));
+        ribbonList.add(Ribbons.getFromTag(tag.getCompound("poke3ribbons")));
+        ribbonList.add(Ribbons.getFromTag(tag.getCompound("poke4ribbons")));
+        ribbonList.add(Ribbons.getFromTag(tag.getCompound("poke5ribbons")));
     }
 }

@@ -6,15 +6,13 @@ import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.forge.cobble_contests.menus.ContestMenu;
-import com.raspix.forge.cobble_contests.pokemon.Badges;
+import com.raspix.forge.cobble_contests.pokemon.Ribbons;
 import com.raspix.forge.cobble_contests.pokemon.CVs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.OutgoingChatMessage;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -155,9 +153,9 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
         Component componentOutput;
         try {
             Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(id).get(pokeIdx);
-            CompoundTag badgeTag = poke.getPersistentData().getCompound("Badges");
+            CompoundTag ribbonTag = poke.getPersistentData().getCompound("Ribbons");
             String pokeName = poke.getDisplayName().getString();
-            int contestLevel = getNextContestLevel(badgeTag, contestType);
+            int contestLevel = getNextContestLevel(ribbonTag, contestType);
             if(contestLevel < 5) {
                 boolean result = runContest(poke, contestType, contestLevel);
                 if (result) {
@@ -218,43 +216,43 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
         };
     }
 
-    private int getNextContestLevel(CompoundTag badgeTag, int contestType) {
-        Badges badges = Badges.getFromTag(badgeTag);
-        return badges.getNextContestLevel(contestType);
+    private int getNextContestLevel(CompoundTag ribbonTag, int contestType) {
+        Ribbons ribbons = Ribbons.getFromTag(ribbonTag);
+        return ribbons.getNextContestLevel(contestType);
     }
 
     private boolean runContest(Pokemon poke, int contestType, int contestLevel) {
         boolean result = false;
         CVs cvs = CVs.getFromTag(poke.getPersistentData().getCompound("CVs"));
-        Badges badges = Badges.getFromTag(poke.getPersistentData().getCompound("Badges"));
+        Ribbons ribbons = Ribbons.getFromTag(poke.getPersistentData().getCompound("Ribbons"));
         switch (contestType) {
             case 0:
                 if(runAppContest(poke, contestLevel, cvs.getCool())) {
-                    badges.setRankedCool(contestLevel, true);
+                    ribbons.setRankedCool(contestLevel, true);
                     result = true;
                 }
                 break;
             case 1:
                 if(runAppContest(poke, contestLevel, cvs.getBeauty())) {
-                    badges.setRankedBeauty(contestLevel, true);
+                    ribbons.setRankedBeauty(contestLevel, true);
                     result = true;
                 }
                 break;
             case 2:
                 if(runAppContest(poke, contestLevel, cvs.getCute())) {
-                    badges.setRankedCute(contestLevel, true);
+                    ribbons.setRankedCute(contestLevel, true);
                     result = true;
                 }
                 break;
             case 3:
                 if(runAppContest(poke, contestLevel, cvs.getSmart())) {
-                    badges.setRankedSmart(contestLevel, true);
+                    ribbons.setRankedSmart(contestLevel, true);
                     result = true;
                 }
                 break;
             case 4:
                 if(runAppContest(poke, contestLevel, cvs.getTough())) {
-                    badges.setRankedTough(contestLevel, true);
+                    ribbons.setRankedTough(contestLevel, true);
                     result = true;
                 }
                 break;
@@ -262,12 +260,12 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
                 break;
         }
         Map<String, CompoundTag> myData = new HashMap<String, CompoundTag>() {};
-        myData.put("Badges", badges.saveToNBT());
-        saveBadges(poke, myData);
+        myData.put("Ribbons", ribbons.saveToNBT());
+        saveRibbons(poke, myData);
         return result;
     }
 
-    private void saveBadges(final Pokemon pokemon, final Map<String, CompoundTag> myData) {
+    private void saveRibbons(final Pokemon pokemon, final Map<String, CompoundTag> myData) {
         final CompoundTag tag = pokemon.getPersistentData();
         myData.forEach((key, value) -> {
             tag.put(key, value);
@@ -296,12 +294,12 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
         CVs cvs = CVs.getFromTag(poke.getPersistentData().getCompound("CVs"));
         if (cvs.getBeauty() >= thresholds[level]){
             result = true;
-            Badges badges = Badges.getFromTag(poke.getPersistentData().getCompound("Badges"));
-            badges.setRankedBeauty(level, true);
+            Ribbons ribbons = Ribbons.getFromTag(poke.getPersistentData().getCompound("Ribbons"));
+            ribbons.setRankedBeauty(level, true);
             Map<String, CompoundTag> myData = new HashMap<String, CompoundTag>() {};
             //CompoundTag dat = cvs.saveToNBT();
-            myData.put("Badges", badges.saveToNBT());
-            saveBadges(poke, myData);
+            myData.put("Ribbons", ribbons.saveToNBT());
+            saveRibbons(poke, myData);
 
         }
         return result;

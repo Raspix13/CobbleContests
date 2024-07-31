@@ -135,9 +135,14 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
             float valMultiplier = 1.0f;
             if(this.mainFlavor == liked && mainFlavor >= 0 && mainFlavor != secFlavor){
                 valMultiplier = 1.1f;
-            }
-            if(this.mainFlavor == disliked && mainFlavor >= 0 && mainFlavor != secFlavor){
+                pokemon.incrementFriendship(5, true);
+            }else if(this.mainFlavor == disliked && mainFlavor >= 0 && mainFlavor != secFlavor){
                 valMultiplier = 0.9f;
+                pokemon.decrementFriendship(1, true);
+            }else if(this.mainFlavor == -1 && this.secFlavor == -1){
+                pokemon.decrementFriendship(20, true);
+            }else {
+                pokemon.incrementFriendship(1, true);
             }
 
             // need to change this so that all get buff if the primary flavor of the poffin is fav/hated
@@ -158,7 +163,6 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
             //CompoundTag dat = cvs.saveToNBT();
             myData.put(cvsKey, cvs.saveToNBT());
             saveCVs(pokemon, myData);
-            pokemon.incrementFriendship(1, true);
 
             if (!serverPlayer.isCreative()) {
                 itemStack.shrink(1);

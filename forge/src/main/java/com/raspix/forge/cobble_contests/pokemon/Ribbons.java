@@ -3,7 +3,7 @@ package com.raspix.forge.cobble_contests.pokemon;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 
-public class Badges {
+public class Ribbons {
 
     private boolean[] rankedCool;
     private boolean[] rankedBeauty;
@@ -11,7 +11,7 @@ public class Badges {
     private boolean[] rankedSmart;
     private boolean[] rankedTough;
 
-    public Badges(){
+    public Ribbons(){
         rankedCool = new boolean[5];
         rankedBeauty = new boolean[5];
         rankedCute = new boolean[5];
@@ -31,16 +31,16 @@ public class Badges {
 
 
 
-    public static Badges getFromTag(CompoundTag tag){
-        Badges badges = new Badges();
+    public static Ribbons getFromTag(CompoundTag tag){
+        Ribbons ribbons = new Ribbons();
         if (tag != null){
-            badges.setRankedCool(tag.getCompound("cool"));
-            badges.setRankedBeauty(tag.getCompound("beauty"));
-            badges.setRankedCute(tag.getCompound("cute"));
-            badges.setRankedSmart(tag.getCompound("smart"));
-            badges.setRankedTough(tag.getCompound("tough"));
+            ribbons.setRankedCool(tag.getCompound("cool"));
+            ribbons.setRankedBeauty(tag.getCompound("beauty"));
+            ribbons.setRankedCute(tag.getCompound("cute"));
+            ribbons.setRankedSmart(tag.getCompound("smart"));
+            ribbons.setRankedTough(tag.getCompound("tough"));
         }
-        return badges;
+        return ribbons;
     }
 
 

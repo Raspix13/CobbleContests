@@ -41,7 +41,7 @@ public class CBInfoScreenParty {
             ctx.enqueueWork(() -> {
                 if(Minecraft.getInstance().screen instanceof PlayerContestInfoScreen screen){
                     screen.setCVs(packet.tag);
-                    screen.setBadges(packet.tag);
+                    screen.setRibbons(packet.tag);
                 }
             });
             ctx.setPacketHandled(true);

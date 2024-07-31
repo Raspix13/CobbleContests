@@ -6,9 +6,9 @@ license = "MIT"
 modId = "cobble_contests"
 version = "1.0.0"
 displayName = "Cobble Contests"
-description = '''
+authors="Raspix"
+description='''A side mod for cobblemon that tries to add contests from the main games'''
 
-'''
 
 [[dependencies.cobble_contests]]
 modId = "minecraft"

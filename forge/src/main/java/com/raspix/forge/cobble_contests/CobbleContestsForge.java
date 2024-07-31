@@ -38,7 +38,6 @@ import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 
 /**TODO future:
  * -texture booth
- * -finish booth gui
  * -clean up all print statements
  * -make sure contest results are fully translatable
  *
@@ -52,6 +51,7 @@ import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
  *  -make sure poffins dissapear on use in survival
  *  -get tooltips to show up on poffinpot
  *  -fix up poffins with unclear colors
+ *  -finish booth gui
  *
  *
  */

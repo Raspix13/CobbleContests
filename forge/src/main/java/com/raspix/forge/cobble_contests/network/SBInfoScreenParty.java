@@ -4,17 +4,14 @@ import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
 import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
 import com.cobblemon.mod.common.pokemon.Pokemon;
-import com.raspix.forge.cobble_contests.menus.screens.PlayerContestInfoScreen;
-import com.raspix.forge.cobble_contests.pokemon.Badges;
+import com.raspix.forge.cobble_contests.pokemon.Ribbons;
 import com.raspix.forge.cobble_contests.pokemon.CVs;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -54,10 +51,10 @@ public class SBInfoScreenParty {
                         if(poke.size() > i && poke.get(i) != null){
                             CompoundTag pers = poke.get(i).getPersistentData();
                             tag.put("poke" +i, pers.getCompound("CVs"));
-                            tag.put("poke" +i + "badges", pers.getCompound("Badges"));
+                            tag.put("poke" +i + "ribbons", pers.getCompound("Ribbons"));
                         }else{
                             tag.put("poke" +i, new CVs().saveToNBT());
-                            tag.put("poke" +i + "badges", new Badges().saveToNBT());
+                            tag.put("poke" +i + "ribbons", new Ribbons().saveToNBT());
                         }
 
                     }
