@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 public class CobbleContests {
 
     public static final String MOD_ID = "cobble_contests";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
 
     public static void init() {

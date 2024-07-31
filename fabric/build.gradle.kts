@@ -1,6 +1,7 @@
 plugins {
     id("dev.architectury.loom")
     id("architectury-plugin")
+    id ("maven-publish")
 }
 
 architectury {
@@ -17,6 +18,10 @@ loom {
     }
 }
 
+fabricApi {
+
+}
+
 dependencies {
     minecraft("net.minecraft:minecraft:1.20.1")
     mappings(loom.officialMojangMappings())
@@ -31,7 +36,9 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+
 }
+
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()

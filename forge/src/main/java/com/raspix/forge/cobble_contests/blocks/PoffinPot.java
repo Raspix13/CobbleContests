@@ -120,4 +120,17 @@ public class PoffinPot extends BaseEntityBlock {
         return pLevel.isClientSide ? null : createTickerHelper(pServerType, pClientType, PoffinPotBlockEntity::serverTick);
     }
 
+
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+        if (!pState.is(pNewState.getBlock())) {
+            BlockEntity blockentity = pLevel.getBlockEntity(pPos);
+            if (blockentity instanceof Container) {
+                Containers.dropContents(pLevel, pPos, (Container)blockentity);
+                pLevel.updateNeighbourForOutputSignal(pPos, this);
+            }
+
+            super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
+        }
+    }
+
 }

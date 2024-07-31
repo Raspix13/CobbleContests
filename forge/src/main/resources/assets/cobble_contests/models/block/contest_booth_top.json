@@ -4,6 +4,7 @@
     "0": "cobble_contests:block/contest_booth",
     "particle": "cobble_contests:block/contest_booth"
   },
+  "render_type": "cutout",
   "elements": [
     {
       "name": "top",

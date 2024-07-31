@@ -139,21 +139,23 @@ public class ContestBlock extends Block implements EntityBlock {
 
     @Override
     public @NotNull VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        VoxelShape shape = Block.box(0, 0, 0, 0, 0, 0);
-        shape = Shapes.join(shape, SHAPE_AABB, BooleanOp.OR);
+        //VoxelShape shape = Block.box(0, 0, 0, 0, 0, 0);
+        //shape = Shapes.join(shape, SHAPE_AABB, BooleanOp.OR);
+        VoxelShape shape = SHAPE_AABB;
 
         return shape;
     }
 
     public VoxelShape getShape(BlockState state, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        VoxelShape shape = Block.box(0, 0, 0, 0, 0, 0);
+        VoxelShape shape = SHAPE_AABB;//Block.box(0, 0, 0, 0, 0, 0);
         return getCollisionShape(state, pLevel, pPos, pContext);
     }
 
     @Override
     public boolean isCollisionShapeFullBlock(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
-        return false;
+        return true;
     }
+
 
     @Override
     public @NotNull RenderShape getRenderShape(BlockState pState) {
