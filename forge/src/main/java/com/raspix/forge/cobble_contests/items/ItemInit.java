@@ -54,7 +54,7 @@ public class ItemInit {
 
     //public static final RegistryObject<Item> POFFIN_CASE = ITEMS.register("poffin_case", () -> new PoffinItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> CONTEST_CARD = ITEMS.register("contest_card", () -> new ContestWallet(new Item.Properties().stacksTo(1)));
-
+    public static final RegistryObject<Item> BALL_SWAPPER = ITEMS.register("ball_swapper", () -> new BallSwapper(new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CobbleContestsForge.CREATIVE_MODE_TABS.register("cobble_contests_tab", () -> CreativeModeTab.builder()
             .withTabsBefore(CreativeModeTabs.COMBAT)
@@ -63,6 +63,7 @@ public class ItemInit {
             .displayItems((parameters, output) -> {
                 output.accept(CONTEST_BOOTH.get());
                 output.accept(CONTEST_CARD.get());
+                output.accept(BALL_SWAPPER.get());
                 output.accept(POFFIN_POT.get());
                 //output.accept(POFFIN_CASE.get());
                 output.accept(POFFIN_DOUGH_BASE.get());

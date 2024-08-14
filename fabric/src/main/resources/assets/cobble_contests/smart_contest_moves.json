@@ -1,0 +1,8 @@
+{
+  "moves": [
+    {"name": "absorb", "contestStat": "Cool", "appeal": 4},
+    {"name": "acid", "contestStat": "Cool", "appeal": 3},
+    {"name": "allyswitch", "contestStat": "Cool", "appeal": 3},
+    {"name": "aromatherapy", "contestStat": "Cool", "appeal": 1}
+  ]
+}
