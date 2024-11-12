@@ -22,6 +22,7 @@ public class ItemInit {
     public static final Item CONTEST_BOOTH = registerItemBlock("contest_booth", BlockInit.CONTEST_BOOTH);
     public static final Item POFFIN_POT = registerItemBlock("poffin_pot", BlockInit.POFFIN_POT);
 
+
     public static final Item POFFIN_DOUGH_BASE = registerItem("poffin_dough_base");
     public static final Item FOUL_POFFIN = registerPoffinItem("foul_poffin", -1, -1);
 

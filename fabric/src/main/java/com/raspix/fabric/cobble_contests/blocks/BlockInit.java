@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public class BlockInit {
 
     public static final Block CONTEST_BOOTH = registerBlock("contest_booth", new ContestBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
-    public static final Block POFFIN_POT = registerBlock("poffin_pot");
+    public static final Block POFFIN_POT = registerBlock("poffin_pot", new PoffinPot(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
 
 
     private static Block registerBlock(@Nullable String type) {
@@ -24,7 +24,7 @@ public class BlockInit {
 
 
     private static Block registerBlock(String name, Block block) {
-        return Registry.register(BuiltInRegistries.BLOCK, name, block);
+        return Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(CobbleContestsFabric.MOD_ID, name), block);
     }
 
 }
