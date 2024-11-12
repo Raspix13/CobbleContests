@@ -1,6 +1,7 @@
 package com.raspix.fabric.cobble_contests.items;
 
 import com.raspix.fabric.cobble_contests.CobbleContestsFabric;
+import com.raspix.fabric.cobble_contests.blocks.BlockInit;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -9,15 +10,17 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.world.item.Items.registerItem;
 
 public class ItemInit {
 
-    public static final Item CONTEST_BOOTH = registerItem("contest_booth");
-    public static final Item POFFIN_POT = registerItem("poffin_pot");
+    public static final Item CONTEST_BOOTH = registerItemBlock("contest_booth", BlockInit.CONTEST_BOOTH);
+    public static final Item POFFIN_POT = registerItemBlock("poffin_pot", BlockInit.POFFIN_POT);
 
     public static final Item POFFIN_DOUGH_BASE = registerItem("poffin_dough_base");
     public static final Item FOUL_POFFIN = registerPoffinItem("foul_poffin", -1, -1);
@@ -49,6 +52,7 @@ public class ItemInit {
     public static final Item SOUR_BITTER_POFFIN = registerPoffinItem("sour_bitter_poffin", 4, 3);
 
     public static final Item CONTEST_CARD = Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(CobbleContestsFabric.MOD_ID, "contest_card"), new Item(new Item.Properties().stacksTo(1)));
+    public static final Item BALL_SWAPPER = Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(CobbleContestsFabric.MOD_ID,"ball_swapper"), new BallSwapper(new Item.Properties().stacksTo(1)));
 
     @SuppressWarnings(value = "unused")
     public static final CreativeModeTab POKENAV_GROUP = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(CobbleContestsFabric.MOD_ID, "cobble_contests_tab"),
@@ -58,6 +62,7 @@ public class ItemInit {
                     .displayItems(((displayContext, entries) -> {
                         entries.accept(CONTEST_BOOTH);
                         entries.accept(CONTEST_CARD);
+                        entries.accept(BALL_SWAPPER);
                         entries.accept(POFFIN_POT);
                         entries.accept(POFFIN_DOUGH_BASE);
                         entries.accept(FOUL_POFFIN);
@@ -92,6 +97,11 @@ public class ItemInit {
     private static Item registerItem(@Nullable String type) {
         return registerItem(type,
                 new Item(new Item.Properties().stacksTo(1)));
+    }
+
+    private static Item registerItemBlock(@Nullable String type, Block block) {
+        return registerItem(type,
+                new ItemNameBlockItem(block, new Item.Properties()));
     }
 
     private static Item registerItem(String name, Item item) {

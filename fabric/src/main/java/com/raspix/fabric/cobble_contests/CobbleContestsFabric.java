@@ -26,6 +26,7 @@ public class CobbleContestsFabric implements ModInitializer {
         //CobbleContests.init();
         CommandRegistrationCallback.EVENT.register(ExampleCommandRegistry::registerCommands);
         ItemInit.registerItems();
+
     }
 
     public void registerItems() {

@@ -27,7 +27,8 @@ dependencies {
     mappings(loom.officialMojangMappings())
     modImplementation("net.fabricmc:fabric-loader:0.15.10")
 
-    modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:0.89.3+1.20.1")
+    modRuntimeOnly("net.fabricmc.fabric-api:fabr" +
+            "ic-api:0.89.3+1.20.1")
     modImplementation(fabricApi.module("fabric-command-api-v2", "0.89.3+1.20.1"))
     implementation(project(":common", configuration = "namedElements"))
     "developmentFabric"(project(":common", configuration = "namedElements"))
