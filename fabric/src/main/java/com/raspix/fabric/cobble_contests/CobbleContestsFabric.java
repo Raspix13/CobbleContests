@@ -1,7 +1,10 @@
 package com.raspix.fabric.cobble_contests;
 
 import com.raspix.common.cobble_contests.ExampleCommandRegistry;
+import com.raspix.fabric.cobble_contests.blocks.BlockInit;
+import com.raspix.fabric.cobble_contests.blocks.entity.BlockEntityInit;
 import com.raspix.fabric.cobble_contests.items.ItemInit;
+import com.raspix.fabric.cobble_contests.menus.MenuInit;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import org.slf4j.Logger;
@@ -25,9 +28,14 @@ public class CobbleContestsFabric implements ModInitializer {
     public void onInitialize() {
         //CobbleContests.init();
         CommandRegistrationCallback.EVENT.register(ExampleCommandRegistry::registerCommands);
+        BlockEntityInit.registerBlockEntities();
         ItemInit.registerItems();
+        BlockInit.registerBlocks();
+        MenuInit.registerMenus();
 
     }
+
+
 
     public void registerItems() {
         //CobblemonItems.INSTANCE.register( (identifier, item) -> Registry.register(CobblemonItems.INSTANCE.getRegistry(), identifier, item) );

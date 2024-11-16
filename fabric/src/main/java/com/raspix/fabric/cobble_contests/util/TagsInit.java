@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.Block;
 public class TagsInit {
 
     public static class Blocks{
-        //public static final TagKey<Item> COBBLEMON_BERRIES = tag("cobblemon_berries");
+        //public static final TagKey<Block> COBBLEMON_BERRIES = tag("cobblemon_berries");
 
 
         private static TagKey<Block> tag(String name){

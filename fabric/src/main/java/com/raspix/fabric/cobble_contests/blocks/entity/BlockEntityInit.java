@@ -28,12 +28,16 @@ public class BlockEntityInit {
                     .build(null));*/
 
 
-    public static final BlockEntityType CONTEST_BLOCK_ENTITY = registerBlockEntity("contest_block", BlockEntityType.Builder.of(ContestBlockEntity::new, BlockInit.CONTEST_BOOTH).build(null));
+    //public static final BlockEntityType CONTEST_BLOCK_ENTITY = registerBlockEntity("contest_block", BlockEntityType.Builder.of(ContestBlockEntity::new, BlockInit.CONTEST_BOOTH).build(null));
     public static final BlockEntityType POFFIN_POT_BLOCK_ENTITY = registerBlockEntity("poffin_pot", BlockEntityType.Builder.of(PoffinPotBlockEntity::new, BlockInit.POFFIN_POT).build(null));
 
 
     private static BlockEntityType registerBlockEntity(String name, BlockEntityType blockEntityType) {
         return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, new ResourceLocation(CobbleContestsFabric.MOD_ID, name), blockEntityType);
+    }
+
+    public static void registerBlockEntities() {
+        CobbleContestsFabric.LOGGER.info("Registering Block Entities for " + CobbleContestsFabric.MOD_ID);
     }
 
 }

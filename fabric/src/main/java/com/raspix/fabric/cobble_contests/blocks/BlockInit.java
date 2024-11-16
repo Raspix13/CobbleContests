@@ -27,4 +27,8 @@ public class BlockInit {
         return Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(CobbleContestsFabric.MOD_ID, name), block);
     }
 
+    public static void registerBlocks() {
+        CobbleContestsFabric.LOGGER.info("Registering Blocks for " + CobbleContestsFabric.MOD_ID);
+    }
+
 }

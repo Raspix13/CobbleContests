@@ -43,7 +43,7 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     public ContestBlockEntity(BlockPos pPos, BlockState pBlockState) {
-        super(BlockEntityInit.CONTEST_BLOCK_ENTITY, pPos, pBlockState);
+        super(null, pPos, pBlockState);//BlockEntityInit.CONTEST_BLOCK_ENTITY
     }
 
     @Override

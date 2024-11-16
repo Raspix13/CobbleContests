@@ -50,7 +50,7 @@ public class PoffinPot extends BaseEntityBlock {
     @org.jetbrains.annotations.Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
-        return null;//BlockEntityInit.POFFIN_POT_BLOCK_ENTITY.get().create(pos, state);
+        return BlockEntityInit.POFFIN_POT_BLOCK_ENTITY.create(pos, state);
     }
 
 
@@ -60,11 +60,13 @@ public class PoffinPot extends BaseEntityBlock {
         } else {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if(!(blockEntity instanceof PoffinPotBlockEntity)){
+                System.out.println("Wrong entity type");
                 return InteractionResult.PASS;
             }
             if (player instanceof ServerPlayer sPlayer) {
                 //NetworkHooks.openScreen((ServerPlayer)player, (PoffinPotBlockEntity)blockEntity, pos);
-                //sPlayer.openMenu((PoffinPotBlockEntity)blockEntity);
+                System.out.println("Setting to open");
+                sPlayer.openMenu((PoffinPotBlockEntity)blockEntity);
             }
             return InteractionResult.CONSUME;
         }

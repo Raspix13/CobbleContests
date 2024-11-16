@@ -6,9 +6,11 @@
 
   "block.cobble_contests.contest_booth": "Contest Booth",
   "block.cobble_contests.poffin_pot": "Poffin Pot",
+  "item.cobble_contests.contest_booth": "Contest Booth",
+  "item.cobble_contests.poffin_pot": "Poffin Pot",
 
   "item.cobble_contests.contest_card": "Contest Card",
-
+  "item.cobble_contests.ball_swapper": "Ball Replacer",
 
   "item.cobble_contests.poffin_dough_base": "Poffin Dough",
   "item.cobble_contests.foul_poffin": "Foul Poffin",
@@ -43,6 +45,9 @@
   "item.cobble_contests.sour_dry_poffin": "Sour Dry Poffin",
   "item.cobble_contests.sour_sweet_poffin": "Sour Sweet Poffin",
   "item.cobble_contests.sour_bitter_poffin": "Sour Bitter Poffin",
+
+  "tooltip.cobble_contests.ball_swapper.tooltip.ball_type": "Currently swapping to %1$s. To change ball, use with new ball in offhand. Use again to change the ball of a pokemon",
+  "tooltip.cobble_contests.ball_swapper.tooltip.empty": "empty",
 
   "tooltip.cobble_contests.poffin_item.tooltip.poffin_stats": "Spicy: %1$s Dry: %2$s Sweet: %3$s Bitter: %4$s Sour: %5$s Smoothness: %6$s",
 

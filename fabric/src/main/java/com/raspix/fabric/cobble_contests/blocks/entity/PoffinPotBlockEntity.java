@@ -7,6 +7,7 @@ import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.blocks.PoffinPot;
 import com.raspix.fabric.cobble_contests.items.ItemInit;
+import com.raspix.fabric.cobble_contests.menus.PoffinPotMenu;
 import com.raspix.fabric.cobble_contests.util.TagsInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -83,7 +84,7 @@ public class PoffinPotBlockEntity extends BaseContainerBlockEntity implements Wo
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, @NotNull Inventory inv, Player player) {
-        return null;//new PoffinPotMenu(id, inv, this, this, this.dataAccess);
+        return new PoffinPotMenu(id, inv, this, this, this.dataAccess);
     }
 
     @Override
@@ -94,7 +95,7 @@ public class PoffinPotBlockEntity extends BaseContainerBlockEntity implements Wo
             System.out.println("oopsie");
             throw new RuntimeException(e);
         }
-        return null;//new PoffinPotMenu(i, arg, this, this, this.dataAccess);
+        return new PoffinPotMenu(i, arg, this, this, this.dataAccess);
     }
 
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, PoffinPotBlockEntity pBlockEntity) {

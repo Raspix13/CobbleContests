@@ -52,7 +52,7 @@ public class ItemInit {
     public static final Item SOUR_SWEET_POFFIN = registerPoffinItem("sour_sweet_poffin", 4, 2);
     public static final Item SOUR_BITTER_POFFIN = registerPoffinItem("sour_bitter_poffin", 4, 3);
 
-    public static final Item CONTEST_CARD = Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(CobbleContestsFabric.MOD_ID, "contest_card"), new Item(new Item.Properties().stacksTo(1)));
+    public static final Item CONTEST_CARD = Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(CobbleContestsFabric.MOD_ID, "contest_card"), new ContestWallet(new Item.Properties().stacksTo(1)));
     public static final Item BALL_SWAPPER = Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(CobbleContestsFabric.MOD_ID,"ball_swapper"), new BallSwapper(new Item.Properties().stacksTo(1)));
 
     @SuppressWarnings(value = "unused")
@@ -97,7 +97,7 @@ public class ItemInit {
 
     private static Item registerItem(@Nullable String type) {
         return registerItem(type,
-                new Item(new Item.Properties().stacksTo(1)));
+                new Item(new Item.Properties()));
     }
 
     private static Item registerItemBlock(@Nullable String type, Block block) {
