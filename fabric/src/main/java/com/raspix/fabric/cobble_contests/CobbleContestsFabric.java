@@ -5,8 +5,11 @@ import com.raspix.fabric.cobble_contests.blocks.BlockInit;
 import com.raspix.fabric.cobble_contests.blocks.entity.BlockEntityInit;
 import com.raspix.fabric.cobble_contests.items.ItemInit;
 import com.raspix.fabric.cobble_contests.menus.MenuInit;
+import com.raspix.fabric.cobble_contests.menus.screens.PoffinPotScreen;
+import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.client.gui.screens.MenuScreens;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,11 +30,14 @@ public class CobbleContestsFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         //CobbleContests.init();
-        CommandRegistrationCallback.EVENT.register(ExampleCommandRegistry::registerCommands);
+        //CommandRegistrationCallback.EVENT.register(ExampleCommandRegistry::registerCommands);
         BlockEntityInit.registerBlockEntities();
         ItemInit.registerItems();
         BlockInit.registerBlocks();
         MenuInit.registerMenus();
+
+        MessagesInit.registerC2SPackets();
+        //MessagesInit.registerS2CPackets();
 
     }
 

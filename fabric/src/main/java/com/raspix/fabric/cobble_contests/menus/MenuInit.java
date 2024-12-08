@@ -3,6 +3,8 @@ package com.raspix.fabric.cobble_contests.menus;
 import com.raspix.fabric.cobble_contests.CobbleContestsFabric;
 import com.raspix.fabric.cobble_contests.menus.screens.PlayerContestInfoScreen;
 import com.raspix.fabric.cobble_contests.menus.screens.PoffinPotScreen;
+import com.raspix.fabric.cobble_contests.menus.screens.SecondTestScreen;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -11,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.awt.*;
@@ -20,7 +23,7 @@ public class MenuInit {
     //public static final MenuType POFFIN_POT_MENU = registerMenu("poffin_pot_menu", new MenuType<>(() -> PoffinPotMenu::new));
 
 
-    //public static final MenuType<ContestMenu> CONTEST_MENU = Registry.register(BuiltInRegistries.MENU, new ResourceLocation(CobbleContestsFabric.MOD_ID, "contest_menu"), new MenuType(ContestMenu::new, FeatureFlags.DEFAULT_FLAGS));
+    public static final MenuType<ContestMenu> CONTEST_MENU = Registry.register(BuiltInRegistries.MENU, new ResourceLocation(CobbleContestsFabric.MOD_ID, "contest_menu"), new ExtendedScreenHandlerType<>(ContestMenu::new));
     public static final MenuType<PoffinPotMenu> POFFIN_POT_MENU = Registry.register(BuiltInRegistries.MENU, new ResourceLocation(CobbleContestsFabric.MOD_ID, "poffin_pot_menu"), new MenuType(PoffinPotMenu::new, FeatureFlags.DEFAULT_FLAGS));
     public static final MenuType<PlayerContestInfoMenu> PLAYER_CONTEST_INFO_MENU = Registry.register(BuiltInRegistries.MENU, new ResourceLocation(CobbleContestsFabric.MOD_ID, "player_contest_info_menu"), new MenuType(PlayerContestInfoMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
@@ -45,6 +48,7 @@ public class MenuInit {
     public static void registerScreens(){
         MenuScreens.register(MenuInit.POFFIN_POT_MENU, PoffinPotScreen::new);
         MenuScreens.register(MenuInit.PLAYER_CONTEST_INFO_MENU, PlayerContestInfoScreen::new);
+        MenuScreens.register(MenuInit.CONTEST_MENU, SecondTestScreen::new);
     }
 
 }

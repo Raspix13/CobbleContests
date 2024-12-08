@@ -2,6 +2,7 @@ package com.raspix.fabric.cobble_contests.blocks;
 
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.blocks.entity.BlockEntityInit;
+import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -9,17 +10,14 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.ConduitBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -45,13 +43,13 @@ public class ContestBlock extends Block implements EntityBlock {
 
     public ContestBlock(Properties arg) {
         super(arg);
+        this.registerDefaultState(this.stateDefinition.any().setValue(PART, true));
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
-        this.registerDefaultState(this.stateDefinition.any().setValue(PART, true));
-        return null;//BlockEntityInit.CONTEST_BLOCK_ENTITY.create(pos, state);
+        return BlockEntityInit.CONTEST_BLOCK_ENTITY.create(pos, state);
     }
 
 
@@ -67,7 +65,8 @@ public class ContestBlock extends Block implements EntityBlock {
 
 
             BlockEntity blockEntity = level.getBlockEntity(pos);
-            if(!(blockEntity instanceof ConduitBlockEntity)){
+            if(!(blockEntity instanceof ContestBlockEntity)){
+                System.out.println("Wrong entity type");
                 return InteractionResult.PASS;
             }
             if (player instanceof ServerPlayer) {
@@ -96,6 +95,8 @@ public class ContestBlock extends Block implements EntityBlock {
                 if(menuP == null){
                     System.out.println("null provider");
                 }
+                System.out.println("Setting to open");
+                player.openMenu((ContestBlockEntity)blockEntity);
                 //NetworkHooks.openScreen((ServerPlayer)player, (MenuProvider) blockEntity, pos);
                 //PacketHandler.sendToServer(new SSendPartyPacket(player.getUUID()));
                 //System.out.println("hi1");
@@ -112,13 +113,13 @@ public class ContestBlock extends Block implements EntityBlock {
         }
     }
 
-    @Nullable
+    /**@Nullable
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         return new SimpleMenuProvider((id, playerInv, arg4) -> {
-            return null;//new ContestMenu(id, playerInv, level.getBlockEntity(pos));
+            return new ContestMenu(id, playerInv, level.getBlockEntity(pos));
         }, TITLE);
-    }
+    }*/
 
     @Override
     public @NotNull VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {

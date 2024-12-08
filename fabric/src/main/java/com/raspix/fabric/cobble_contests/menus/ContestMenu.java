@@ -1,16 +1,16 @@
-package com.raspix.forge.cobble_contests.menus;
+package com.raspix.fabric.cobble_contests.menus;
 
-import com.cobblemon.mod.common.Cobblemon;
-import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
 import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
 import com.cobblemon.mod.common.client.CobblemonClient;
 import com.cobblemon.mod.common.client.storage.ClientParty;
-import com.raspix.forge.cobble_contests.blocks.BlockInit;
-import com.raspix.forge.cobble_contests.blocks.entity.ContestBlockEntity;
-import com.raspix.forge.cobble_contests.network.CBERunContest;
-import com.raspix.forge.cobble_contests.network.PacketHandler;
-import com.raspix.forge.cobble_contests.network.SBInfoScreenParty;
+import com.raspix.fabric.cobble_contests.blocks.BlockInit;
+import com.raspix.fabric.cobble_contests.blocks.entity.BlockEntityInit;
+import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
+import com.raspix.fabric.cobble_contests.network.MessagesInit;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -22,41 +22,42 @@ import java.util.UUID;
 
 public class ContestMenu extends AbstractContainerMenu {
 
-    private final ContestBlockEntity blockEntity;
-    private final ContainerLevelAccess levelAccess;
+    private ContestBlockEntity blockEntity;
+    private ContainerLevelAccess levelAccess;
     private PlayerPartyStore playerPartyStore;
     private ClientParty playerPartyClient;
 
     //server constructor
     public ContestMenu(int containerID, Inventory playerInv, BlockEntity blockEntity){
-        super(MenuInit.CONTEST_MENU.get(), containerID);
+        super(MenuInit.CONTEST_MENU, containerID);
         if(blockEntity instanceof ContestBlockEntity be){
-            System.out.println("HEWWL");
             this.blockEntity = be;
         }else {
             throw new IllegalStateException("Incorrect block entity class (%s) passed into ContestMenu"
                     .formatted(blockEntity.getClass().getCanonicalName()));
         }
         this.levelAccess = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
-
-        //try {
-            UUID id = playerInv.player.getUUID();
-            //playerPartyStore = Cobblemon.INSTANCE.getStorage().getParty(id);
-            playerPartyClient = CobblemonClient.INSTANCE.getStorage().getMyParty();
-        /**}catch (NoPokemonStoreException e){
-            System.out.println("you failed");
-        }*/
-
-
-        //System.out.println("hewwo");
-        createTestMenu();
+        UUID id = playerInv.player.getUUID();
+        playerPartyClient = CobblemonClient.INSTANCE.getStorage().getMyParty();
 
     }
 
-    private void createTestMenu() {
-
-
+    public void SetBlockEntity(ContestBlockEntity be){
+        System.out.println("Setting block entity");
+        blockEntity = be;
+        levelAccess = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
+        playerPartyClient = CobblemonClient.INSTANCE.getStorage().getMyParty();
     }
+
+    public ContestMenu(int containerID, Inventory playerInv, PacketByteBufs bytes) {
+        this(containerID, playerInv, (BlockEntity) null);
+    }
+
+
+    public static ContestMenu MenuFromBlockEntity(int containerID, Inventory playerInv, BlockEntity blockEntity){
+        return new ContestMenu(containerID, playerInv, blockEntity);
+    }
+
 
     //client constructor
     protected ContestMenu(int containerID, Inventory playerInv, FriendlyByteBuf additionalData) {
@@ -70,12 +71,8 @@ public class ContestMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return stillValid(this.levelAccess, player, BlockInit.CONTEST_BOOTH.get());
+        return stillValid(this.levelAccess, player, BlockInit.CONTEST_BOOTH);
     }
-
-    /**public ContestBlockEntity getBlockEntity() {
-        return blockEntity;
-    }*/
 
     public boolean playerStartHosting(UUID id){
         return this.blockEntity.tryHosting(id);
@@ -106,6 +103,7 @@ public class ContestMenu extends AbstractContainerMenu {
     }
 
     public void startStatAssesment(UUID player, int pokemonIdx, int contestType){
-        PacketHandler.sendToServer(new CBERunContest(player, pokemonIdx, blockEntity.getBlockPos(), contestType, 0));
+        //PacketHandler.sendToServer(new CBERunContest(player, pokemonIdx, blockEntity.getBlockPos(), contestType, 0));
     }
+
 }

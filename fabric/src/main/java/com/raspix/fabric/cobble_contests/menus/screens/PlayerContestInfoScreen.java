@@ -18,18 +18,22 @@ import com.raspix.fabric.cobble_contests.CobbleContestsMoves;
 import com.raspix.fabric.cobble_contests.events.ContestMoves;
 import com.raspix.fabric.cobble_contests.menus.PlayerContestInfoMenu;
 import com.raspix.fabric.cobble_contests.menus.widgets.PokemonInfoSlotButton;
+import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import io.netty.buffer.Unpooled;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +90,7 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         this.imageHeight = 194;
         this.playerInv = playerInv;
         this.contestInfoMenu = containerID;
-        //PacketHandler.sendToServer(new SBInfoScreenParty(playerInv.player.getUUID()));
+        ClientPlayNetworking.send(MessagesInit.WALLET_ID_1, new FriendlyByteBuf(Unpooled.buffer()).writeUUID(playerInv.player.getUUID()));//PacketHandler.sendToServer(new SBInfoScreenParty(playerInv.player.getUUID()));
     }
 
     @Override
@@ -176,12 +180,17 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
 
         if(pageIndex == 0){ //stat page
             if(clientParty != null && clientParty.getSlots().size() > 0 && clientParty.get(pokemonIndex) != null && cvList != null){
+                System.out.println("Should render for index " + pokemonIndex);
                 Pokemon poke = clientParty.get(pokemonIndex);
                 assert poke != null;
 
                 drawStatHexagon(new Vector3f(45f/255f, 237f/255f, 96f/255f), cvList.get(pokemonIndex), guiGraphics);
                 writeFlavors(guiGraphics, poke);
                 drawFriendshipHeart(guiGraphics, poke);
+            }else{
+                //System.out.println("is not null?" + (clientParty != null));
+                //System.out.println("is size?" + (clientParty.getSlots().size()));
+                //System.out.println("is poke?" + (clientParty.get(pokemonIndex) != null));
             }
         }else if (pageIndex == 1){// moves page
             if(clientParty != null && clientParty.getSlots().size() > 0 && clientParty.get(pokemonIndex) != null){

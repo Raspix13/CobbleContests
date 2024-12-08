@@ -5,12 +5,18 @@ import com.cobblemon.mod.common.api.reactive.SimpleObservable;
 import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.common.cobble_contests.CobbleContests;
+import com.raspix.fabric.cobble_contests.menus.ContestMenu;
+import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -27,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class ContestBlockEntity extends BlockEntity implements MenuProvider {
+public class ContestBlockEntity extends BlockEntity implements MenuProvider, ExtendedScreenHandlerFactory {
 
     private static final Component TITLE = Component.translatable("container." + CobbleContests.MOD_ID + ".contest_block");
 
@@ -43,7 +49,7 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     public ContestBlockEntity(BlockPos pPos, BlockState pBlockState) {
-        super(null, pPos, pBlockState);//BlockEntityInit.CONTEST_BLOCK_ENTITY
+        super(BlockEntityInit.CONTEST_BLOCK_ENTITY, pPos, pBlockState);//BlockEntityInit.CONTEST_BLOCK_ENTITY
     }
 
     @Override
@@ -64,7 +70,10 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerID, @NotNull Inventory playerInv, Player player) {
-        return null;//new ContestMenu(containerID, playerInv, this);
+        ContestMenu menu = new ContestMenu(containerID, playerInv, this);
+        ServerPlayNetworking.send((ServerPlayer) player, MessagesInit.BOOTH_ID_1, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(this.getBlockPos()));
+        return menu;
+        //return ContestMenu.MenuFromBlockEntity(containerID, playerInv, this);
     }
 
     public boolean tryHosting(UUID id){
@@ -118,6 +127,11 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
         if(participants.containsKey(id)){
             participants.remove(id);
         }
+    }
+
+    @Override
+    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
+        buf.writeBlockPos(this.getBlockPos());
     }
 
 

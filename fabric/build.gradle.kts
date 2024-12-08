@@ -25,10 +25,13 @@ fabricApi {
 dependencies {
     minecraft("net.minecraft:minecraft:1.20.1")
     mappings(loom.officialMojangMappings())
+    //mappings("net.fabricmc:yarn:1.20.1+build.8:v2")
     modImplementation("net.fabricmc:fabric-loader:0.15.10")
+    //modImplementation("net.fabricmc:fabric-loader:0.15.11")
 
-    modRuntimeOnly("net.fabricmc.fabric-api:fabr" +
-            "ic-api:0.89.3+1.20.1")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.89.3+1.20.1")
+    //modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:0.92.2+1.20.1")
+    //modImplementation(fabricApi.module("fabric-command-api-v2", "0.89.3+1.20.1"))
     modImplementation(fabricApi.module("fabric-command-api-v2", "0.89.3+1.20.1"))
     implementation(project(":common", configuration = "namedElements"))
     "developmentFabric"(project(":common", configuration = "namedElements"))
