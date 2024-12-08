@@ -1,0 +1,36 @@
+Planning and Ideas:
+
+
+Additions:
+-Items given when winning a ranked contest for the first time (per pokemon?)
+-Contest minigames
+    -What from official pokemon games work well in cobblemon
+        -dress up/pictures is fun but may be hard to code in with my knowledge
+    -Any new mechanic ideas?
+    -Spectator mode
+    -held scarves should affect stats
+    -maybe add pokeball seals and capsuls? should they give effects? https://bulbapedia.bulbagarden.net/wiki/Sticker
+    -Rounds:
+        -1st: Pokemon Introduction: Includes friendship, seals, and capsules, and maybe some player choice thing. Instead of dress up (which I probably cant code) maybe have seals and capsules instead
+        -2nd: Condition Evaluation: Purely stat based (1*contestStatType+E(0.5*otherStatTypes)+(0.5*sheen) for number of hearts based on chart https://bulbapedia.bulbagarden.net/wiki/Pok%C3%A9mon_Contest
+        -3nd: Skill Contest: Move contest or optional Something directly against other pokemon?
+-player hosted contests with prizes
+-Maybe add pokeblocks from later contest games?
+-Public contest rankings? Some way to display them?
+-different booth skins/judges
+
+
+QOL:
+-should be able to see learnable moves with contest stats from the card, if not also change learned and also see normal move effects
+-Figure out how to use config files and set them up, also figure out what people would want to configure
+-Format poffin flavor text better to match colors
+-Save number of wins per contest type and level on the player
+-Results of contest on the booth screen as well
+
+Bugs & Issues:
+-Does the contest booth have different entities for the top and bottom?
+-Can multiple contests be run at the same time (Different booths)?
+-Does trading keep ribbons and stats?
+
+Things I Need to Work on Before Releasing Newest Version:
+-

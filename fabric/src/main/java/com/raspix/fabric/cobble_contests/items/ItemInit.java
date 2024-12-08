@@ -110,7 +110,7 @@ public class ItemInit {
     }
 
     private static Item registerPoffinItem(String name, int mainF, int secF) {
-        return Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(CobbleContestsFabric.MOD_ID, name), new PoffinItem(new Item.Properties()));
+        return Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(CobbleContestsFabric.MOD_ID, name), new PoffinItem(new Item.Properties(), mainF, secF));
     }
 
     public static void registerItems() {

@@ -98,7 +98,6 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
         CompoundTag tag = pokemon.getPersistentData();
         if(tag.getCompound(cvsKey) == null){
             cvs = CVs.createNewCVs();
-            //System.out.println("missing CVs, generated");
         }else {
             cvs = CVs.getFromTag(tag.getCompound(cvsKey));
             System.out.println(cvs.getAsString());
@@ -132,16 +131,18 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
             int disliked = getIndexFromFlavor(nature.getDislikedFlavor());
             int liked = getIndexFromFlavor(nature.getFavoriteFlavor());
             float valMultiplier = 1.0f;
-            if(this.mainFlavor == liked && mainFlavor >= 0 && mainFlavor != secFlavor){
+            if(this.mainFlavor == liked && mainFlavor >= 0 && mainFlavor != secFlavor){ //liked and has 2 flavors
+                System.out.println("liked flavor");
                 valMultiplier = 1.1f;
                 pokemon.incrementFriendship(5, true);
-            }else if(this.mainFlavor == disliked && mainFlavor >= 0 && mainFlavor != secFlavor){
+            }else if(this.mainFlavor == disliked && mainFlavor >= 0 && mainFlavor != secFlavor){ //disliked and has 2 flavors
+                System.out.println("disliked flavor");
                 valMultiplier = 0.9f;
                 pokemon.decrementFriendship(1, true);
-            }else if(this.mainFlavor == -1 && this.secFlavor == -1){
+            }else if(this.mainFlavor == -1 && this.secFlavor == -1){ //no flavor so foul
                 pokemon.decrementFriendship(20, true);
             }else {
-                pokemon.incrementFriendship(1, true);
+                pokemon.incrementFriendship(1, true); //no opinion on flavor
             }
 
             // need to change this so that all get buff if the primary flavor of the poffin is fav/hated

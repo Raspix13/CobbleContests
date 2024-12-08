@@ -3,6 +3,7 @@ package com.raspix.fabric.cobble_contests.blocks;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.blocks.entity.BlockEntityInit;
 import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
+import com.raspix.fabric.cobble_contests.menus.ContestMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -10,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -54,43 +56,19 @@ public class ContestBlock extends Block implements EntityBlock {
 
 
     public InteractionResult use(BlockState arg, Level level, BlockPos pos, Player player, InteractionHand arg5, BlockHitResult arg6) {
+        System.out.println("Clicking contest booth");
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
 
-            /**if (player.isInBattle()) {
-                player.sendMessage(lang("pc.inbattle").red());
-                return ActionResult.SUCCESS;
-            }*/
-
-
             BlockEntity blockEntity = level.getBlockEntity(pos);
+            System.out.println("Block entity clicked: " + blockEntity + ", At: " + pos);
             if(!(blockEntity instanceof ContestBlockEntity)){
                 System.out.println("Wrong entity type");
                 return InteractionResult.PASS;
             }
             if (player instanceof ServerPlayer) {
 
-
-
-                /**try {
-                    UUID playerID = player.getUUID();
-                    PlayerPartyStore partyStore = Cobblemon.INSTANCE.getStorage().getParty(player.getUUID());
-                    PCStore pcStore = Cobblemon.INSTANCE.getStorage().getPC(player.getUUID());
-                } catch (NoPokemonStoreException e) {
-                    throw new RuntimeException(e);
-                }*/
-
-                /**try {
-                    PCStore pc = Cobblemon.INSTANCE.getStorage().getPC(((ServerPlayer) player).getUUID());
-                    //System.out.println("tried finding pc");
-                } catch (NoPokemonStoreException e) {
-                    //System.out.println("error finding pc");
-                    throw new RuntimeException(e);
-                }*/
-
-                //PacketHandler.INSTANCE.sendToServer(new SSendPartyPacket(player.getUUID(), pos));
-                //OpenPCPacket(pc.uuid).sendToPlayer(player);
                 MenuProvider menuP = blockEntity.getBlockState().getMenuProvider(level, pos);
                 if(menuP == null){
                     System.out.println("null provider");
@@ -99,27 +77,18 @@ public class ContestBlock extends Block implements EntityBlock {
                 player.openMenu((ContestBlockEntity)blockEntity);
                 //NetworkHooks.openScreen((ServerPlayer)player, (MenuProvider) blockEntity, pos);
                 //PacketHandler.sendToServer(new SSendPartyPacket(player.getUUID()));
-                //System.out.println("hi1");
-
-                /**ClientPC pc = CobblemonClient.storage.pcStores[packet.storeID];
-                if(pc == null){
-                    return InteractionResult.SUCCESS;
-                }
-                MinecraftClient.getInstance().setScreen(PCGUI(pc, CobblemonClient.storage.myParty, new PCGUIConfiguration()));*/
-
-                //PCGUIConfiguration()
             }
             return InteractionResult.CONSUME;
         }
     }
 
-    /**@Nullable
+    @Nullable
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         return new SimpleMenuProvider((id, playerInv, arg4) -> {
             return new ContestMenu(id, playerInv, level.getBlockEntity(pos));
         }, TITLE);
-    }*/
+    }
 
     @Override
     public @NotNull VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {

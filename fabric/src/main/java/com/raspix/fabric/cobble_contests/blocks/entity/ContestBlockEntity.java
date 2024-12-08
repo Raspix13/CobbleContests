@@ -42,6 +42,8 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider, Ext
     private int contestType;
     private Map<UUID, ContestParticipation> participants;
 
+    private int[] thresholds = {5, 40, 100, 175, 245};
+
 
 
     public ContestBlockEntity(BlockEntityType<?> arg, BlockPos arg2, BlockState arg3) {
@@ -75,6 +77,12 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider, Ext
         return menu;
         //return ContestMenu.MenuFromBlockEntity(containerID, playerInv, this);
     }
+
+    @Override
+    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
+        buf.writeBlockPos(this.getBlockPos());
+    }
+
 
     public boolean tryHosting(UUID id){
         if(!isHost){
@@ -128,12 +136,6 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider, Ext
             participants.remove(id);
         }
     }
-
-    @Override
-    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-        buf.writeBlockPos(this.getBlockPos());
-    }
-
 
     public class ContestParticipation{
         private UUID id;
@@ -293,8 +295,6 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider, Ext
         }
     }
 
-
-    private int[] thresholds = {5, 40, 100, 175, 245};
     private boolean runAppContest(Pokemon poke, int level, int typeVal){
         boolean result = false;
         if (level < 5 &&
