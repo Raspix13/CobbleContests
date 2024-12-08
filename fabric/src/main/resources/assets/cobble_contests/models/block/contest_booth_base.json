@@ -1,5 +1,6 @@
 {
   "parent": "block/block",
+  "render_type": "cutout",
   "textures": {
     "0": "cobble_contests:block/contest_booth",
     "particle": "cobble_contests:block/contest_booth"

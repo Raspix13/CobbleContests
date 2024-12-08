@@ -12,6 +12,9 @@
   "entrypoints": {
     "main": [
       "com.raspix.fabric.cobble_contests.CobbleContestsFabric"
+    ],
+    "client": [
+      "com.raspix.fabric.cobble_contests.CobbleContestsFabricClient"
     ]
   },
   "depends": {

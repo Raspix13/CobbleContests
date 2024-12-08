@@ -14,20 +14,21 @@ public class MessagesInit {
     public static final ResourceLocation CHANNEL_ID = new ResourceLocation(CobbleContestsFabric.MOD_ID, "example");
     public static final ResourceLocation WALLET_ID_1 = new ResourceLocation(CobbleContestsFabric.MOD_ID, "wallet_1");
     public static final ResourceLocation WALLET_ID_2 = new ResourceLocation(CobbleContestsFabric.MOD_ID, "wallet_2");
-    public static final ResourceLocation BOOTH_ID_1 = new ResourceLocation(CobbleContestsFabric.MOD_ID, "booth_1");
+    public static final ResourceLocation RUN_CONTEST_ID = new ResourceLocation(CobbleContestsFabric.MOD_ID, "run_contest");
     public static final ResourceLocation BOOTH_ID_2 = new ResourceLocation(CobbleContestsFabric.MOD_ID, "booth_2");
 
 
 
     public static void registerC2SPackets(){ // client to server
         ServerPlayNetworking.registerGlobalReceiver(WALLET_ID_1, SBWalletScreenParty::recieve);
-        ClientPlayNetworking.registerGlobalReceiver(WALLET_ID_2, CBWalletScreenParty::recieve);
-        ClientPlayNetworking.registerGlobalReceiver(BOOTH_ID_1, CBBoothScreen::recieve);
-        ServerPlayNetworking.registerGlobalReceiver(BOOTH_ID_2, SBBoothScreen::recieve);
+        //ClientPlayNetworking.registerGlobalReceiver(WALLET_ID_2, CBWalletScreenParty::recieve);
+        //ClientPlayNetworking.registerGlobalReceiver(RUN_CONTEST_ID, CBERunContest::recieve);
+        ServerPlayNetworking.registerGlobalReceiver(RUN_CONTEST_ID, CBERunContest::recieve);
+        //ServerPlayNetworking.registerGlobalReceiver(BOOTH_ID_2, SBBoothScreen::recieve);
     }
 
     public static void registerS2CPackets(){ //server to client
-        //ClientPlayNetworking.registerGlobalReceiver(WALLET_ID_2, CBWalletScreenParty::recieve);
+        ClientPlayNetworking.registerGlobalReceiver(WALLET_ID_2, CBWalletScreenParty::recieve);
     }
 
     /**public void onInitialize() {

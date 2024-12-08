@@ -43,12 +43,12 @@ public class ContestBlock extends Block implements EntityBlock {
 
     public ContestBlock(Properties arg) {
         super(arg);
-        this.registerDefaultState(this.stateDefinition.any().setValue(PART, true));
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+        this.registerDefaultState(this.stateDefinition.any().setValue(PART, true));
         return BlockEntityInit.CONTEST_BLOCK_ENTITY.create(pos, state);
     }
 

@@ -180,7 +180,7 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
 
         if(pageIndex == 0){ //stat page
             if(clientParty != null && clientParty.getSlots().size() > 0 && clientParty.get(pokemonIndex) != null && cvList != null){
-                System.out.println("Should render for index " + pokemonIndex);
+                //System.out.println("Should render for index " + pokemonIndex);
                 Pokemon poke = clientParty.get(pokemonIndex);
                 assert poke != null;
 

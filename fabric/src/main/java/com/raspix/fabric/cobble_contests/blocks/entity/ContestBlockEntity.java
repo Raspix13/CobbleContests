@@ -71,7 +71,7 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider, Ext
     @Override
     public AbstractContainerMenu createMenu(int containerID, @NotNull Inventory playerInv, Player player) {
         ContestMenu menu = new ContestMenu(containerID, playerInv, this);
-        ServerPlayNetworking.send((ServerPlayer) player, MessagesInit.BOOTH_ID_1, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(this.getBlockPos()));
+        //ServerPlayNetworking.send((ServerPlayer) player, MessagesInit.BOOTH_ID_1, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(this.getBlockPos()));
         return menu;
         //return ContestMenu.MenuFromBlockEntity(containerID, playerInv, this);
     }

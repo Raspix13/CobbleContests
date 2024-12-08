@@ -31,7 +31,6 @@ public class ContestMenu extends AbstractContainerMenu {
     public ContestMenu(int containerID, Inventory playerInv, BlockEntity blockEntity){
         super(MenuInit.CONTEST_MENU.get(), containerID);
         if(blockEntity instanceof ContestBlockEntity be){
-            System.out.println("HEWWL");
             this.blockEntity = be;
         }else {
             throw new IllegalStateException("Incorrect block entity class (%s) passed into ContestMenu"

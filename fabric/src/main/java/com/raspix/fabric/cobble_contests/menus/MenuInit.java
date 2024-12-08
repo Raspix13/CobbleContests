@@ -42,7 +42,7 @@ public class MenuInit {
 
     public static void registerMenus() {
         CobbleContestsFabric.LOGGER.info("Registering Menus for " + CobbleContestsFabric.MOD_ID);
-        registerScreens();
+        //registerScreens();
     }
 
     public static void registerScreens(){
