@@ -34,5 +34,7 @@ Bugs & Issues:
 -Does trading keep ribbons and stats?
 
 Things I Need to Work on Before Releasing Newest Version:
--does ball replacer drop ball when switching
 
+
+For future reference:
+-forge mod info is set in mods.toml in resources->META-INF & fabric is fabric.mod.json in resources

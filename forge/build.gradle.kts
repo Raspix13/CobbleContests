@@ -8,6 +8,10 @@ architectury {
     forge()
 }
 
+base {
+    archivesName = "cobble_contests"
+}
+
 loom {
     enableTransitiveAccessWideners.set(true)
     silentMojangMappingsLicense()

@@ -2,7 +2,8 @@ Cobble Contests 1.0.1 (Java + Fabric)
 -Added Fabric version
 -Added Ball Replacer which lets you change the ball your pokemon is stored in
 -Fixed card display for toughness ribbons to no longer be based on smarts
--Poffin Por should no longer give the local brewery achievement
+-Poffin Pot should no longer give the local brewery achievement
+-Fixed other small bugs
 
 
 Cobble Contests 1.0.0 (Java only)

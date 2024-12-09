@@ -8,7 +8,11 @@ plugins {
 }
 
 group = "com.raspix.cobble_contests"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.1-SNAPSHOT"
+
+base {
+    archivesName = "cobble_contests"
+}
 
 allprojects {
     apply(plugin = "java")

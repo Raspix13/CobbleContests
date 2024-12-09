@@ -12,6 +12,10 @@ architectury {
     platformSetupLoomIde()
 }
 
+base {
+    archivesName = "cobble_contests"
+}
+
 dependencies {
 
     minecraft("com.mojang:minecraft:1.20.1")
