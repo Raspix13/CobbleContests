@@ -179,7 +179,7 @@ public class PoffinPotMenu extends AbstractContainerMenu {
             Potion potion = PotionUtils.getPotion(arg2);
             if (arg instanceof ServerPlayer) {
                 ForgeEventFactory.onPlayerBrewedPotion(arg, arg2);
-                CriteriaTriggers.BREWED_POTION.trigger((ServerPlayer)arg, potion);
+                //CriteriaTriggers.BREWED_POTION.trigger((ServerPlayer)arg, potion);
             }
 
             super.onTake(arg, arg2);

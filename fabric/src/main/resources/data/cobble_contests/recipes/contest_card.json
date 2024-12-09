@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "cobble_contests:poffin_dough_base"
+    }
+  ],
+  "result": {
+    "item": "cobble_contests:contest_card",
+    "count": 1
+  }
+}
+
+
+

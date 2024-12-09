@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 public class CobbleContestsFabric implements ModInitializer {
     public static final String MOD_ID = "cobble_contests";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    //public static final CobbleContestsDataProvider dataProvider = new CobbleContestsDataProvider();
 
     /**public static IConfig CONFIG;
     public static AbstractNetworkHandler NETWORK;
@@ -31,12 +32,17 @@ public class CobbleContestsFabric implements ModInitializer {
     public void onInitialize() {
         //CobbleContests.init();
         //CommandRegistrationCallback.EVENT.register(ExampleCommandRegistry::registerCommands);
+
         BlockEntityInit.registerBlockEntities();
         ItemInit.registerItems();
         BlockInit.registerBlocks();
         MenuInit.registerMenus();
 
         MessagesInit.registerC2SPackets();
+
+        //dataProvider.registerDefaults();
+
+
         //MessagesInit.registerS2CPackets();
 
     }

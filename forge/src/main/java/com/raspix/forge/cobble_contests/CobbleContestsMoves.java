@@ -173,7 +173,7 @@ public class CobbleContestsMoves implements JsonDataRegistry<ContestMoves.MoveDa
                 CobbleContestsForge.LOGGER.error("Error loading the {} move", identifier, e);
             }
         }
-        CobbleContestsForge.LOGGER.info("MEOW RIGHT HERE or something");
+        //CobbleContestsForge.LOGGER.info("MEOW RIGHT HERE or something");
         CobbleContestsForge.LOGGER.info("Loaded {} contest moves", this.allMoves.size());
         this.getObservable().emit();
     }

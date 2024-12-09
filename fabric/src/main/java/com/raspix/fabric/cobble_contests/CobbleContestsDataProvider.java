@@ -3,18 +3,23 @@ package com.raspix.fabric.cobble_contests;
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.data.DataProvider;
 import com.cobblemon.mod.common.api.data.DataRegistry;
-import com.raspix.fabric.cobble_contests.CobbleContestsMoves;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.util.perf.Profiler;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 import static com.cobblemon.mod.common.util.DistributionUtilsKt.server;
 import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
@@ -34,12 +39,16 @@ public class CobbleContestsDataProvider implements DataProvider {
         CobbleContestsFabric.LOGGER.info("Registering Defaults");
         this.register(CobbleContestsMoves.INSTANCE);
 
-
-
         //Cobblemon.implementation.registerResourceReloader(cobblemonResource("client_resources"), new SimpleResourceReloader(PackType.CLIENT_RESOURCES), PackType.CLIENT_RESOURCES, emptyList());
 
+        //Cobblemon.implementation.registerResourceReloader(cobblemonResource("data_resources"), new SimpleResourceReloader(PackType.SERVER_DATA), PackType.SERVER_DATA, emptyList());
+
         Cobblemon.implementation.registerResourceReloader(cobblemonResource("data_resources"), new SimpleResourceReloader(PackType.SERVER_DATA), PackType.SERVER_DATA, emptyList());
+        //IdentifiableResourceReloadListener
+        //ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new CobblemonReloadListener(cobblemonResource("data_resources"), new SimpleResourceReloader(PackType.SERVER_DATA), emptyList()));
+
     }
+
 
     @Override
     public void doAfterSync(@NotNull ServerPlayer serverPlayer, @NotNull Function0<Unit> function0) {
@@ -99,4 +108,39 @@ public class CobbleContestsDataProvider implements DataProvider {
             }
         }
     }
+
+
+
+// Taken from cobblemon code because I do not understand it
+    /**private class CobblemonReloadListener implements IdentifiableResourceReloadListener {
+     private final ResourceLocation identifier;
+     private final SimpleResourceReloader reloader;
+     private final Collection<ResourceLocation> dependencies;
+
+     public CobblemonReloadListener(ResourceLocation identifier, SimpleResourceReloader reloader, Collection<ResourceLocation> dependencies) {
+     this.identifier = identifier;
+     this.reloader = reloader;
+     this.dependencies = dependencies;
+     }
+
+     @Override
+     public ResourceLocation getFabricId() {
+     return this.identifier;
+     }
+
+     @Override
+     public CompletableFuture<Void> reload(PreparationBarrier synchronizer, ResourceManager manager, ProfilerFiller prepareProfiler, ProfilerFiller applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
+     return this.reloader.reload(synchronizer, manager, prepareProfiler, applyProfiler, prepareExecutor, applyExecutor);
+     }
+
+     @Override
+     public String getName() {
+     return this.reloader.getName();
+     }
+
+     @Override
+     public Collection<ResourceLocation> getFabricDependencies() {
+     return new ArrayList<>(this.dependencies);
+     }
+     */
 }

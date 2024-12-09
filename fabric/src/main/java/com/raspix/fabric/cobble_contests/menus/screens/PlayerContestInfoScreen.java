@@ -317,19 +317,19 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         int yPos = this.topPos + 97 + 72;
         int xPos = this.leftPos + 19;
         if(this.ribbonList != null && this.ribbonList.size() == 6){
-            if(this.ribbonList.get(pokemonIndex).getSmartRanked(0)){
+            if(this.ribbonList.get(pokemonIndex).getToughRanked(0)){
                 guiGraphics.blit(RANK_RIBBONS, xPos, yPos, 0, 64, 16, 16, 80, 80);
             }
-            if(this.ribbonList.get(pokemonIndex).getSmartRanked(1)){
+            if(this.ribbonList.get(pokemonIndex).getToughRanked(1)){
                 guiGraphics.blit(RANK_RIBBONS, xPos +11, yPos, 16, 64, 16, 16, 80, 80);
             }
-            if(this.ribbonList.get(pokemonIndex).getSmartRanked(2)){
+            if(this.ribbonList.get(pokemonIndex).getToughRanked(2)){
                 guiGraphics.blit(RANK_RIBBONS, xPos +27, yPos, 32, 64, 16, 16, 80, 80);
             }
-            if(this.ribbonList.get(pokemonIndex).getSmartRanked(3)){
+            if(this.ribbonList.get(pokemonIndex).getToughRanked(3)){
                 guiGraphics.blit(RANK_RIBBONS, xPos +45, yPos, 48, 64, 16, 16, 80, 80);
             }
-            if(this.ribbonList.get(pokemonIndex).getSmartRanked(4)){
+            if(this.ribbonList.get(pokemonIndex).getToughRanked(4)){
                 guiGraphics.blit(RANK_RIBBONS, xPos +63, yPos, 64, 64, 16, 16, 80, 80);
             }
 
