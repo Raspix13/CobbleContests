@@ -2,8 +2,8 @@ package com.raspix.fabric.cobble_contests.items;
 
 import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
 //import com.raspix.fabric.cobble_contests.menus.PlayerContestInfoMenu;
-import com.raspix.fabric.cobble_contests.blocks.entity.PoffinPotBlockEntity;
-import com.raspix.fabric.cobble_contests.menus.PlayerContestInfoMenu;
+//import com.raspix.fabric.cobble_contests.blocks.entity.PoffinPotBlockEntity;
+//import com.raspix.fabric.cobble_contests.menus.PlayerContestInfoMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -35,7 +35,7 @@ public class ContestWallet extends Item {
 
     public MenuProvider getMenuProvider(Player player1) {
         PlayerPartyStore playerPartyStore = null;
-        return  new SimpleMenuProvider((containerId, playerInventory, player) -> new PlayerContestInfoMenu(containerId, playerInventory), this.getDisplayName()); //
+        return null;//new SimpleMenuProvider((containerId, playerInventory, player) -> new PlayerContestInfoMenu(containerId, playerInventory), this.getDisplayName()); //
     }
 
     public Component getDisplayName() {

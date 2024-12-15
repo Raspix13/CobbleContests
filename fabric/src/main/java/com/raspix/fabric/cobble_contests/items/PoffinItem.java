@@ -22,10 +22,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
@@ -62,6 +64,11 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
     @Override
     public BagItem getBagItem() {
         return new BagItem() {
+            @Override
+            public @NotNull Item getReturnItem() {
+                return ItemInit.DRY_POFFIN;
+            }
+
             @NotNull
             @Override
             public String getItemName() {
@@ -106,8 +113,10 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
         if(cvs.getSheen() < 255 || itemStack.getItem() == ItemInit.FOUL_POFFIN) {
             // spicy, dry, sweet, bitter, sour, sheen
             int[] flavors = {0, 0, 0, 0, 0, 0};
-            if (itemStack.getTag() != null) {
-                for (String tagInfo : itemStack.getTag().getAllKeys()) {
+            //String uwu = itemStack.getTags().toList();
+            //TODO
+            /**if (itemStack.getTags() != null) {
+                for (String tagInfo : itemStack.getTags().getAllKeys()) {
                     if (tagInfo.contains("Flavors")) {
                         CompoundTag poffinTag = itemStack.getTag().getCompound(tagInfo);
                         try {
@@ -124,6 +133,10 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
                 }
             }else {
                 flavors = getBaseFlavors();
+            }*/
+            System.out.println(itemStack.getTags().toList().size());
+            for(TagKey key : itemStack.getTags().toList()){
+                System.out.println(key);
             }
             System.out.println("Applying: " + Arrays.toString(flavors));
 
@@ -288,39 +301,60 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
     @NotNull
     @Override
     public InteractionResultHolder<ItemStack> interactGeneral(@NotNull ServerPlayer serverPlayer, @NotNull ItemStack itemStack) {
-        try {
-            List<Pokemon> pokeList1 = Cobblemon.INSTANCE.getStorage().getParty(serverPlayer.getUUID()).toGappyList();
-            if(pokeList1.isEmpty()){
-                return InteractionResultHolder.fail(itemStack);
-            }
-            List<Pokemon> pokeList = new ArrayList<Pokemon>();
-            for (Pokemon poke: pokeList1) {
-                if (poke != null){
-                    pokeList.add(poke);
-                }
-            }
-            PartySelectCallbacks.INSTANCE.createFromPokemon(
-                    serverPlayer,
-                    pokeList,
-                    this::canUseOnPokemon,
-                    pk -> {
-                        if (true) {
-                            applyToPokemon(serverPlayer, itemStack, pk);
-                            CobblemonCriteria.INSTANCE.getPOKEMON_INTERACT().trigger(serverPlayer,
-                                    new PokemonInteractContext(
-                                            pk.getSpecies().resourceIdentifier, Registries.ITEM.registry()));// Registries.ITEM.getId(itemStack.getItem())  itemStack.getItem().
-                        }
-                        return null;
-                    }
-            );
-        } catch (NoPokemonStoreException e) {
-            throw new RuntimeException(e);
+        List<Pokemon> pokeList1 = Cobblemon.INSTANCE.getStorage().getParty(serverPlayer).toGappyList();
+        if(pokeList1.isEmpty()){
+            return InteractionResultHolder.fail(itemStack);
         }
+        List<Pokemon> pokeList = new ArrayList<Pokemon>();
+        for (Pokemon poke: pokeList1) {
+            if (poke != null){
+                pokeList.add(poke);
+            }
+        }
+        PartySelectCallbacks.INSTANCE.createFromPokemon(
+                serverPlayer,
+                pokeList,
+                this::canUseOnPokemon,
+                pk -> {
+                    if (true) {
+                        applyToPokemon(serverPlayer, itemStack, pk);
+                        CobblemonCriteria.INSTANCE.getPOKEMON_INTERACT().trigger(serverPlayer,
+                                new PokemonInteractContext(
+                                        pk.getSpecies().resourceIdentifier, Registries.ITEM.registry()));// Registries.ITEM.getId(itemStack.getItem())  itemStack.getItem().
+                    }
+                    return null;
+                }
+        );
         return InteractionResultHolder.success(itemStack);
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
+        super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
+        //if(itemStack.getTags() != null) {
+            /**for (TagKey tagInfo : itemStack.getTags().toList()) {
+                if (tagInfo.toString().contains("Flavors")) {
+                    CompoundTag poffinTag = itemStack.getTags().getCompound(tagInfo);
+                    try {
+                        int spicy = poffinTag.getInt("spicy");
+                        int dry = poffinTag.getInt("dry");
+                        int sweet = poffinTag.getInt("sweet");
+                        int bitter = poffinTag.getInt("bitter");
+                        int sour = poffinTag.getInt("sour");
+                        int smoothness = poffinTag.getInt("sheen");
+                        list.add(Component.translatable("tooltip.cobble_contests.poffin_item.tooltip.poffin_stats", spicy, dry, sweet, bitter, sour, smoothness).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.LIGHT_PURPLE));
+                    } catch (ClassCastException e) {
+                    }
+                }
+            }*/
+        //}else {
+            int[] baseFlavors = getBaseFlavors();
+            list.add(Component.translatable("tooltip.cobble_contests.poffin_item.tooltip.poffin_stats", baseFlavors[0], baseFlavors[1], baseFlavors[2], baseFlavors[3], baseFlavors[4], baseFlavors[5]).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.LIGHT_PURPLE));
+        //}
+    }
+
+
+    /**public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
         if(pStack.getTag() != null) {
             for (String tagInfo : pStack.getTag().getAllKeys()) {
@@ -343,7 +377,7 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
             pTooltipComponents.add(Component.translatable("tooltip.cobble_contests.poffin_item.tooltip.poffin_stats", baseFlavors[0], baseFlavors[1], baseFlavors[2], baseFlavors[3], baseFlavors[4], baseFlavors[5]).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.LIGHT_PURPLE));
         }
 
-    }
+    }*/
 
     /**
      * For poffins that were not assigned data, like those in creative

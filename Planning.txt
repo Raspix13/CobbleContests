@@ -34,6 +34,8 @@ Bugs & Issues:
 -Does trading keep ribbons and stats?
 
 Things I Need to Work on Before Releasing Newest Version:
+-Fabric:
+    -Ballswapper tooltip cuts off screen
 
 
 For future reference:

@@ -15,7 +15,7 @@ public class TagsInit {
 
 
         private static TagKey<Block> tag(String name){
-            return TagKey.create(Registries.BLOCK, new ResourceLocation(CobbleContests.MOD_ID, name));
+            return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, name));
             //return BlockTags.create(new ResourceLocation(CobbleContests.MOD_ID, name));
         }
     }
@@ -27,7 +27,7 @@ public class TagsInit {
         private static TagKey<Item> tag(String name){
             //return ItemTags.create(new ResourceLocation(CobbleContests.MOD_ID, name));
 
-            return TagKey.create(Registries.ITEM, new ResourceLocation(CobbleContests.MOD_ID, name));
+            return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, name));
         }
         //TagKey[minecraft:item / cobble_contests:cobblemon_berries]
     }

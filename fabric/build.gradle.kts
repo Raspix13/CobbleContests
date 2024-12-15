@@ -1,7 +1,8 @@
 plugins {
     id("dev.architectury.loom")
     id("architectury-plugin")
-    id ("maven-publish")
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+
 }
 
 architectury {
@@ -18,28 +19,32 @@ loom {
     }
 }
 
+val shadowCommon = configurations.create("shadowCommon")
+
 fabricApi {
 
 }
 
 dependencies {
-    minecraft("net.minecraft:minecraft:1.20.1")
+    minecraft("com.mojang:minecraft:${property("minecraft_version")}")
     mappings(loom.officialMojangMappings())
-    //mappings("net.fabricmc:yarn:1.20.1+build.8:v2")
-    modImplementation("net.fabricmc:fabric-loader:0.15.10")
-    //modImplementation("net.fabricmc:fabric-loader:0.15.11")
+    modImplementation("net.fabricmc:fabric-loader:${property("fabric_loader_version")}")
 
-    modImplementation("net.fabricmc.fabric-api:fabric-api:0.89.3+1.20.1")
-    //modRuntimeOnly("net.fabricmc.fabric-api:fabric-api:0.92.2+1.20.1")
-    //modImplementation(fabricApi.module("fabric-command-api-v2", "0.89.3+1.20.1"))
-    modImplementation(fabricApi.module("fabric-command-api-v2", "0.89.3+1.20.1"))
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_api_version")}")
+    modImplementation(fabricApi.module("fabric-command-api-v2", property("fabric_api_version").toString()))
+
+    modImplementation("net.fabricmc:fabric-language-kotlin:${property("fabric_kotlin")}")
+    modImplementation("com.cobblemon:fabric:${property("cobblemon_version")}") { isTransitive = false }
+
+
     implementation(project(":common", configuration = "namedElements"))
     "developmentFabric"(project(":common", configuration = "namedElements"))
+    shadowCommon(project(":common", configuration = "transformProductionFabric"))
 
-    modImplementation("com.cobblemon:fabric:1.5.2+1.20.1")
+    modImplementation("com.cobblemon:fabric:1.6.0+1.21-SNAPSHOT")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${property("junit_version")}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("junit_version")}")
 
 }
 

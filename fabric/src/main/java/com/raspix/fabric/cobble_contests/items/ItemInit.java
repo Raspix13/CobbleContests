@@ -1,7 +1,7 @@
 package com.raspix.fabric.cobble_contests.items;
 
 import com.raspix.fabric.cobble_contests.CobbleContestsFabric;
-import com.raspix.fabric.cobble_contests.blocks.BlockInit;
+//import com.raspix.fabric.cobble_contests.blocks.BlockInit;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -19,8 +19,8 @@ import static net.minecraft.world.item.Items.registerItem;
 
 public class ItemInit {
 
-    public static final Item CONTEST_BOOTH = registerItemBlock("contest_booth", BlockInit.CONTEST_BOOTH);
-    public static final Item POFFIN_POT = registerItemBlock("poffin_pot", BlockInit.POFFIN_POT);
+    //public static final Item CONTEST_BOOTH = registerItemBlock("contest_booth", BlockInit.CONTEST_BOOTH);
+    //public static final Item POFFIN_POT = registerItemBlock("poffin_pot", BlockInit.POFFIN_POT);
 
 
     public static final Item POFFIN_DOUGH_BASE = registerItem("poffin_dough_base");
@@ -52,19 +52,19 @@ public class ItemInit {
     public static final Item SOUR_SWEET_POFFIN = registerPoffinItem("sour_sweet_poffin", 4, 2);
     public static final Item SOUR_BITTER_POFFIN = registerPoffinItem("sour_bitter_poffin", 4, 3);
 
-    public static final Item CONTEST_CARD = Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(CobbleContestsFabric.MOD_ID, "contest_card"), new ContestWallet(new Item.Properties().stacksTo(1)));
-    public static final Item BALL_SWAPPER = Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(CobbleContestsFabric.MOD_ID,"ball_swapper"), new BallSwapper(new Item.Properties().stacksTo(1)));
+    public static final Item CONTEST_CARD = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_card"), new ContestWallet(new Item.Properties().stacksTo(1)));
+    public static final Item BALL_SWAPPER = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID,"ball_swapper"), new BallSwapper(new Item.Properties().stacksTo(1)));
 
     @SuppressWarnings(value = "unused")
-    public static final CreativeModeTab POKENAV_GROUP = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(CobbleContestsFabric.MOD_ID, "cobble_contests_tab"),
+    public static final CreativeModeTab POKENAV_GROUP = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "cobble_contests_tab"),
             CreativeModeTab.builder(CreativeModeTab.Row.TOP, 1)
                     .icon(() -> new ItemStack(CONTEST_CARD))
                     .title(Component.translatable("creativetab.cobble_contests"))
                     .displayItems(((displayContext, entries) -> {
-                        entries.accept(CONTEST_BOOTH);
+                        //entries.accept(CONTEST_BOOTH);
                         entries.accept(CONTEST_CARD);
                         entries.accept(BALL_SWAPPER);
-                        entries.accept(POFFIN_POT);
+                        //entries.accept(POFFIN_POT);
                         entries.accept(POFFIN_DOUGH_BASE);
                         entries.accept(FOUL_POFFIN);
                         entries.accept(SPICY_POFFIN);
@@ -106,11 +106,11 @@ public class ItemInit {
     }
 
     private static Item registerItem(String name, Item item) {
-        return Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(CobbleContestsFabric.MOD_ID, name), item);
+        return Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, name), item);
     }
 
     private static Item registerPoffinItem(String name, int mainF, int secF) {
-        return Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(CobbleContestsFabric.MOD_ID, name), new PoffinItem(new Item.Properties(), mainF, secF));
+        return Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, name), new PoffinItem(new Item.Properties(), mainF, secF));
     }
 
     public static void registerItems() {

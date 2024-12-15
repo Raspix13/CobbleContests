@@ -25,7 +25,7 @@ public class CobbleContestsMoves implements JsonDataRegistry<ContestMoves.MoveDa
     @NotNull
     @Override
     public ResourceLocation getId() {
-        return new ResourceLocation(CobbleContestsFabric.MOD_ID, "contest_moves");
+        return ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_moves");
     }
 
     @NotNull
@@ -80,7 +80,7 @@ public class CobbleContestsMoves implements JsonDataRegistry<ContestMoves.MoveDa
     }
 
     private <T> T loadMechanic(ResourceManager manager, String name, Class<T> clazz) {
-        try (var inputStream = manager.getResourceOrThrow(new ResourceLocation(CobbleContestsFabric.MOD_ID, "moves/" + name + ".json")).open()) {
+        try (var inputStream = manager.getResourceOrThrow(ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "moves/" + name + ".json")).open()) {
             return getGson().fromJson(new InputStreamReader(inputStream), clazz);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -101,7 +101,7 @@ public class CobbleContestsMoves implements JsonDataRegistry<ContestMoves.MoveDa
         resourceManager.listResourceStacks("moves", (path) -> path.getPath().endsWith(".json")).forEach((identifier, resource) -> {
                     try (InputStream stream = resource.get(0).open()) {
                         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-                        ResourceLocation resolvedIdentifier = new ResourceLocation(identifier.getNamespace(), new File(identifier.getPath()).getName());
+                        ResourceLocation resolvedIdentifier = ResourceLocation.fromNamespaceAndPath(identifier.getNamespace(), new File(identifier.getPath()).getName());
                         List<String> lines = reader.lines().toList();
                         for(int i = 1; i < lines.size()-2; i++){
                             if(!lines.get(i).equals("")) {

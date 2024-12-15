@@ -8,7 +8,7 @@ plugins {
 }
 
 architectury {
-    common("fabric", "forge")
+    common("fabric", "neoforge")
     platformSetupLoomIde()
 }
 
@@ -18,14 +18,14 @@ base {
 
 dependencies {
 
-    minecraft("com.mojang:minecraft:1.20.1")
+    minecraft("com.mojang:minecraft:${property("minecraft_version")}")
     mappings(loom.officialMojangMappings())
-    modCompileOnly("com.cobblemon:mod:1.5.2+1.20.1") {
+    modImplementation("com.cobblemon:mod:${property("cobblemon_version")}") {
         isTransitive = false
     }
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${property("junit_version")}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("junit_version")}")
 }
 
 tasks.getByName<Test>("test") {
