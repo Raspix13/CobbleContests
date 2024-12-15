@@ -2,6 +2,7 @@ package com.raspix.fabric.cobble_contests.items;
 
 import com.raspix.fabric.cobble_contests.CobbleContestsFabric;
 //import com.raspix.fabric.cobble_contests.blocks.BlockInit;
+import com.raspix.fabric.cobble_contests.blocks.BlockInit;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -19,8 +20,8 @@ import static net.minecraft.world.item.Items.registerItem;
 
 public class ItemInit {
 
-    //public static final Item CONTEST_BOOTH = registerItemBlock("contest_booth", BlockInit.CONTEST_BOOTH);
-    //public static final Item POFFIN_POT = registerItemBlock("poffin_pot", BlockInit.POFFIN_POT);
+    public static final Item CONTEST_BOOTH = registerItemBlock("contest_booth", BlockInit.CONTEST_BOOTH);
+    public static final Item POFFIN_POT = registerItemBlock("poffin_pot", BlockInit.POFFIN_POT);
 
 
     public static final Item POFFIN_DOUGH_BASE = registerItem("poffin_dough_base");
@@ -61,10 +62,10 @@ public class ItemInit {
                     .icon(() -> new ItemStack(CONTEST_CARD))
                     .title(Component.translatable("creativetab.cobble_contests"))
                     .displayItems(((displayContext, entries) -> {
-                        //entries.accept(CONTEST_BOOTH);
+                        entries.accept(CONTEST_BOOTH);
                         entries.accept(CONTEST_CARD);
                         entries.accept(BALL_SWAPPER);
-                        //entries.accept(POFFIN_POT);
+                        entries.accept(POFFIN_POT);
                         entries.accept(POFFIN_DOUGH_BASE);
                         entries.accept(FOUL_POFFIN);
                         entries.accept(SPICY_POFFIN);

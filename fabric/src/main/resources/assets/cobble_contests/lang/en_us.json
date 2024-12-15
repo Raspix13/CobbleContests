@@ -48,6 +48,7 @@
 
   "tooltip.cobble_contests.ball_swapper.tooltip.ball_type": "Currently swapping to %1$s. To change ball, use with new ball in offhand. Use again to change the ball of a pokemon",
   "tooltip.cobble_contests.ball_swapper.tooltip.empty": "empty",
+  "cobble_contests.ball_swapper.same_ball": "This is the same as the current ball",
 
   "tooltip.cobble_contests.poffin_item.tooltip.poffin_stats": "Spicy: %1$s Dry: %2$s Sweet: %3$s Bitter: %4$s Sour: %5$s Smoothness: %6$s",
 

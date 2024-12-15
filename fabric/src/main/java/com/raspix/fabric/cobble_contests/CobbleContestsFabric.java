@@ -3,6 +3,8 @@ package com.raspix.fabric.cobble_contests;
 import com.raspix.common.cobble_contests.ExampleCommandRegistry;
 //import com.raspix.fabric.cobble_contests.blocks.BlockInit;
 //import com.raspix.fabric.cobble_contests.blocks.entity.BlockEntityInit;
+import com.raspix.fabric.cobble_contests.blocks.BlockInit;
+import com.raspix.fabric.cobble_contests.blocks.entity.BlockEntityInit;
 import com.raspix.fabric.cobble_contests.items.ItemInit;
 //import com.raspix.fabric.cobble_contests.menus.MenuInit;
 //import com.raspix.fabric.cobble_contests.menus.screens.PoffinPotScreen;
@@ -33,9 +35,9 @@ public class CobbleContestsFabric implements ModInitializer {
         //CobbleContests.init();
         //CommandRegistrationCallback.EVENT.register(ExampleCommandRegistry::registerCommands);
 
-        //BlockEntityInit.registerBlockEntities();
+        BlockEntityInit.registerBlockEntities();
         ItemInit.registerItems();
-        //BlockInit.registerBlocks();
+        BlockInit.registerBlocks();
         //MenuInit.registerMenus();
 
         //MessagesInit.registerC2SPackets();
