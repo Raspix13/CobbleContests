@@ -114,27 +114,21 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
         if(cvs.getSheen() < 255 || itemStack.getItem() == ItemInit.FOUL_POFFIN) {
             // spicy, dry, sweet, bitter, sour, sheen
             int[] flavors = {0, 0, 0, 0, 0, 0};
-            //String uwu = itemStack.getTags().toList();
-            //TODO
-            /**if (itemStack.getTags() != null) {
-                for (String tagInfo : itemStack.getTags().getAllKeys()) {
-                    if (tagInfo.contains("Flavors")) {
-                        CompoundTag poffinTag = itemStack.getTag().getCompound(tagInfo);
-                        try {
-                            flavors[0] = poffinTag.getInt("spicy");
-                            flavors[1] = poffinTag.getInt("dry");
-                            flavors[2] = poffinTag.getInt("sweet");
-                            flavors[3] = poffinTag.getInt("bitter");
-                            flavors[4] = poffinTag.getInt("sour");
-                            flavors[5] = poffinTag.getInt("sheen");
-                        } catch (ClassCastException e) {
+            if(itemStack.has(DataComponents.CUSTOM_DATA) && itemStack.get(DataComponents.CUSTOM_DATA).contains("Flavors")) {
+                CompoundTag poffinTag = itemStack.get(DataComponents.CUSTOM_DATA).copyTag().getCompound("Flavors");
+                try {
+                    flavors[0] = poffinTag.getInt("spicy");
+                    flavors[1] = poffinTag.getInt("dry");
+                    flavors[2] = poffinTag.getInt("sweet");
+                    flavors[3] = poffinTag.getInt("bitter");
+                    flavors[4] = poffinTag.getInt("sour");
+                    flavors[5] = poffinTag.getInt("sheen");
+                } catch (ClassCastException e) {
 
-                        }
-                    }
                 }
             }else {
                 flavors = getBaseFlavors();
-            }*/
+            }
             System.out.println(itemStack.getTags().toList().size());
             for(TagKey key : itemStack.getTags().toList()){
                 System.out.println(key);
@@ -162,26 +156,17 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
             // need to change this so that all get buff if the primary flavor of the poffin is fav/hated
             for (int i = 0; i < 5; i++) {
                 int valBonus = (int) ((float)flavors[i] * valMultiplier);
-                /**int valBonus = flavors[i];
-                if (i == liked) {
-                    valBonus = (int) ((float) valBonus * 1.1f);
-                } else if (i == disliked) {
-                    valBonus = (int) ((float) valBonus * 0.9f);
-                }*/
-
                 cvs.increaseCVFromFlavorIndex(i, valBonus);
             }
             cvs.increaseSheen(flavors[5]);
 
             Map<String, CompoundTag> myData = new HashMap<String, CompoundTag>() {};
-            //CompoundTag dat = cvs.saveToNBT();
             myData.put(cvsKey, cvs.saveToNBT());
             saveCVs(pokemon, myData);
 
             if (!serverPlayer.isCreative()) {
                 itemStack.shrink(1);
             }
-            //CVs testCVs = CVs.getFromTag(dat);
             return InteractionResultHolder.success(itemStack);
         }else {
             serverPlayer.displayClientMessage(Component.literal(pokemon.getDisplayName().getString() + " already has max sheen and can not eat any more").withStyle(ChatFormatting.LIGHT_PURPLE), false);
@@ -344,43 +329,12 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
                 list.add(Component.translatable("tooltip.cobble_contests.poffin_item.tooltip.poffin_stats", spicy, dry, sweet, bitter, sour, smoothness).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.LIGHT_PURPLE));
             } catch (ClassCastException e) {
             }
-            /**for (TagKey tagInfo : itemStack.getTags().toList()) {
-                if (tagInfo.toString().contains("Flavors")) {
-                    CompoundTag poffinTag = itemStack.get(DataComponents.CUSTOM_DATA).copyTag();
-
-                }
-            }*/
         }else {
             int[] baseFlavors = getBaseFlavors();
             list.add(Component.translatable("tooltip.cobble_contests.poffin_item.tooltip.poffin_stats", baseFlavors[0], baseFlavors[1], baseFlavors[2], baseFlavors[3], baseFlavors[4], baseFlavors[5]).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.LIGHT_PURPLE));
         }
     }
 
-
-    /**public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        if(pStack.getTag() != null) {
-            for (String tagInfo : pStack.getTag().getAllKeys()) {
-                if (tagInfo.contains("Flavors")) {
-                    CompoundTag poffinTag = pStack.getTag().getCompound(tagInfo);
-                    try {
-                        int spicy = poffinTag.getInt("spicy");
-                        int dry = poffinTag.getInt("dry");
-                        int sweet = poffinTag.getInt("sweet");
-                        int bitter = poffinTag.getInt("bitter");
-                        int sour = poffinTag.getInt("sour");
-                        int smoothness = poffinTag.getInt("sheen");
-                        pTooltipComponents.add(Component.translatable("tooltip.cobble_contests.poffin_item.tooltip.poffin_stats", spicy, dry, sweet, bitter, sour, smoothness).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.LIGHT_PURPLE));
-                    } catch (ClassCastException e) {
-                    }
-                }
-            }
-        }else {
-            int[] baseFlavors = getBaseFlavors();
-            pTooltipComponents.add(Component.translatable("tooltip.cobble_contests.poffin_item.tooltip.poffin_stats", baseFlavors[0], baseFlavors[1], baseFlavors[2], baseFlavors[3], baseFlavors[4], baseFlavors[5]).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.LIGHT_PURPLE));
-        }
-
-    }*/
 
     /**
      * For poffins that were not assigned data, like those in creative

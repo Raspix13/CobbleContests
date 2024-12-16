@@ -175,14 +175,7 @@ public class PoffinPotBlockEntity extends BaseContainerBlockEntity implements Wo
         //TODO: if any berries are the same, return randomized foul poffin
         if(isDuplicateBerry(berries1, berries2, berries3, berries4)){
             ItemStack resultPoffin = new ItemStack(ItemInit.FOUL_POFFIN);
-            CompoundTag tag = resultPoffin.get(DataComponents.CUSTOM_DATA).copyTag();
-            //three random values with value of 2
-            //set values
-            if (tag == null) {
-                tag = new CompoundTag();
-                //resultPoffin.setTag(tag);
-                CustomData.set(DataComponents.CUSTOM_DATA, resultPoffin, tag);
-            }
+            CompoundTag tag = resultPoffin.has(DataComponents.CUSTOM_DATA)? resultPoffin.get(DataComponents.CUSTOM_DATA).copyTag(): new CompoundTag();
 
             CompoundTag poffinTag = new CompoundTag();
             poffinTag.putInt("spicy", -10);
@@ -193,6 +186,7 @@ public class PoffinPotBlockEntity extends BaseContainerBlockEntity implements Wo
             poffinTag.putInt("sheen", -30);
 
             tag.put("Flavors", poffinTag);
+            CustomData.set(DataComponents.CUSTOM_DATA, resultPoffin, tag);
             return resultPoffin;
         }
         //boolean isBerryDupe = false;
@@ -216,7 +210,6 @@ public class PoffinPotBlockEntity extends BaseContainerBlockEntity implements Wo
         }
 
         int[] berryCalc = berryTotal.clone();
-        System.out.println("clone: " + Arrays.toString(berryCalc));
         int negs = 0; //how many values are negative
         for (int i = 0; i < 5; i++){ //does not include sheen
             int value = berryTotal[i] - berryTotal[(i+1 > 4? 0: i+1)];
@@ -225,12 +218,10 @@ public class PoffinPotBlockEntity extends BaseContainerBlockEntity implements Wo
             }
             berryCalc[i] = value;
         }
-        System.out.println("clone2: " + Arrays.toString(berryCalc));
         for(int i = 0; i < 5; i++){ //setting bounds & negs
             berryCalc[i] = Math.min(Math.max(0, berryCalc[i]- negs) , 99);
         }
         berryCalc[5] = (berryCalc[5]/numBerries) - numBerries; //calculate smoothness
-        System.out.println("clone3: " + Arrays.toString(berryCalc));
         int mainFlavor = 0;
         int secondaryFlavor = -1;
 

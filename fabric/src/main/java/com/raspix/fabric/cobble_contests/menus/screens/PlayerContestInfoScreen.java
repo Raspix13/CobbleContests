@@ -100,15 +100,22 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         buttons = new ArrayList<>();
         /**this.buttons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 12, this.topPos - 13, 17, 14, 292, 0, 16, TEXTURE, 1000, 750, btn -> {
             setPageIndex(0);
-        })));*/
-        this.buttons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 12, this.topPos - 13, 17, 14, new WidgetSprites(TEXTURE, TEXTURE), btn -> {
-            setPageIndex(0);
-        /**})));
+        })));
         this.buttons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 30, this.topPos - 13, 17, 14, 309, 0, 16, TEXTURE, 1000, 750, btn -> {
             setPageIndex(1);
         })));
         this.buttons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 48, this.topPos -13, 17, 14, 326, 0, 16, TEXTURE, 1000, 750, btn -> {
-            setPageIndex(2);*/
+            setPageIndex(2);
+        })));*/
+
+        this.buttons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 12, this.topPos - 13, 17, 14, new WidgetSprites(TEXTURE, TEXTURE), btn -> {
+            setPageIndex(0);
+        })));
+        this.buttons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 30, this.topPos - 13, 17, 14, new WidgetSprites(TEXTURE, TEXTURE), btn -> {
+            setPageIndex(1);
+        })));
+        this.buttons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 48, this.topPos -13, 17, 14, new WidgetSprites(TEXTURE, TEXTURE), btn -> {
+            setPageIndex(2);
         })));
         pokemonIndex = 0;
         pageIndex = 0;
@@ -454,21 +461,22 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
     }
 
     private void drawTriangle(Vector3f colour, Vector2f v1, Vector2f v2, Vector2f v3) {
-        /**RenderSystem.setShaderTexture(0, CobblemonResources.INSTANCE.getWHITE());
+        RenderSystem.setShaderTexture(0, CobblemonResources.INSTANCE.getWHITE());
         RenderSystem.setShaderColor(colour.x, colour.y, colour.z, 0.6F);
         RenderSystem.enableBlend();
 
         Tesselator tessellator = Tesselator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuilder();
+        BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION);//getBuilder();
 
-        bufferBuilder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION);
-        bufferBuilder.vertex(v1.x, v1.y, 10.0D).endVertex();//.color(0x2d, 0xed, 0x60, 0x99)
-        bufferBuilder.vertex(v2.x, v2.y, 10.0D).endVertex();
-        bufferBuilder.vertex(v3.x, v3.y, 10.0D).endVertex();
+        //bufferBuilder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION);
+        bufferBuilder.addVertex(v1.x, v1.y, 10.0F);//.color(0x2d, 0xed, 0x60, 0x99)
+        bufferBuilder.addVertex(v2.x, v2.y, 10.0F);
+        bufferBuilder.addVertex(v3.x, v3.y, 10.0F);
 
-        bufferBuilder.nextElement();
-        tessellator.end();
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);*/
+        //bufferBuilder.nextElement();
+        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
+        //tessellator.end();
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
     }
 
     private void writeFlavors(GuiGraphics guiGraphics, Pokemon pokemon){
