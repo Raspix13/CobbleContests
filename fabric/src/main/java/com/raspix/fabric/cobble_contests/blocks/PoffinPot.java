@@ -60,7 +60,8 @@ public class PoffinPot extends BaseEntityBlock {
     }
 
 
-    public InteractionResult use(BlockState arg, Level level, BlockPos pos, Player player, InteractionHand arg5, BlockHitResult arg6) {
+    @Override
+    public InteractionResult useWithoutItem(BlockState arg, Level level, BlockPos pos, Player player, BlockHitResult arg6) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {

@@ -8,11 +8,13 @@ import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.blocks.PoffinPot;
 import com.raspix.fabric.cobble_contests.items.ItemInit;
 //import com.raspix.fabric.cobble_contests.menus.PoffinPotMenu;
+import com.raspix.fabric.cobble_contests.menus.PoffinPotMenu;
 import com.raspix.fabric.cobble_contests.util.TagsInit;
 import net.minecraft.core.*;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
@@ -91,20 +93,15 @@ public class PoffinPotBlockEntity extends BaseContainerBlockEntity implements Wo
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, @NotNull Inventory inv, Player player) {
-        //return new PoffinPotMenu(id, inv, this, this, this.dataAccess);
-        return null;
+        return new PoffinPotMenu(id, inv, this, this, this.dataAccess);
+        //return null;
     }
 
     @Override
     protected AbstractContainerMenu createMenu(int i, Inventory arg) {
-        /**try {
-            PlayerPartyStore playerPartyStore = Cobblemon.INSTANCE.getStorage().getParty(arg.player.getUUID());
-        } catch (NoPokemonStoreException e) {
-            System.out.println("oopsie");
-            throw new RuntimeException(e);
-        }
-        return new PoffinPotMenu(i, arg, this, this, this.dataAccess);*/
-        return null;
+        PlayerPartyStore playerPartyStore = Cobblemon.INSTANCE.getStorage().getParty((ServerPlayer) arg.player);
+        return new PoffinPotMenu(i, arg, this, this, this.dataAccess);
+        //return null;
     }
 
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, PoffinPotBlockEntity pBlockEntity) {
