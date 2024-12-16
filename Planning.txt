@@ -36,6 +36,7 @@ Bugs & Issues:
 Things I Need to Work on Before Releasing Newest Version:
 -Fabric:
     -Ballswapper tooltip cuts off screen
+    -fix poffin not being foul when result of berries is 0 (leppa + chesto)
 
 
 For future reference:

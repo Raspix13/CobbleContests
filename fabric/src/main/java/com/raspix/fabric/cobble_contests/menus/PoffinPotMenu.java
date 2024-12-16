@@ -196,13 +196,6 @@ public class PoffinPotMenu extends AbstractContainerMenu {
         }
 
         public boolean mayPlace(ItemStack arg) {
-            /**Object[] tags = arg.getTags().toArray();
-            for (Object key: tags){
-                System.out.println(key);
-            }*/
-            System.out.println("mayplace1");
-            System.out.println(arg.is(TagsInit.Items.COBBLEMON_BERRIES));
-            System.out.println(arg.is(CobblemonItemTags.BERRIES));
             return arg.is(TagsInit.Items.COBBLEMON_BERRIES);
         }
 
@@ -211,16 +204,7 @@ public class PoffinPotMenu extends AbstractContainerMenu {
         }
 
         public static boolean mayPlaceItem(ItemStack arg) {
-            /**Object[] tags = arg.getTags().toArray();
-             for (Object key: tags){
-             System.out.println(key);
-             }*/
-            System.out.println(TagsInit.Items.COBBLEMON_BERRIES);
-            System.out.println(CobblemonItemTags.BERRIES);
-            System.out.println("mayplaceItem1");
-            System.out.println(arg.is(TagsInit.Items.COBBLEMON_BERRIES));
-            System.out.println(arg.is(CobblemonItemTags.BERRIES));
-            return arg.is(CobblemonItemTags.BERRIES);
+            return arg.is(TagsInit.Items.COBBLEMON_BERRIES);
         }
     }
 

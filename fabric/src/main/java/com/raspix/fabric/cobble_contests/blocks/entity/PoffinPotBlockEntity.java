@@ -175,7 +175,7 @@ public class PoffinPotBlockEntity extends BaseContainerBlockEntity implements Wo
         //TODO: if any berries are the same, return randomized foul poffin
         if(isDuplicateBerry(berries1, berries2, berries3, berries4)){
             ItemStack resultPoffin = new ItemStack(ItemInit.FOUL_POFFIN);
-            CompoundTag tag = resultPoffin.get(DataComponents.CUSTOM_DATA).getUnsafe();
+            CompoundTag tag = resultPoffin.get(DataComponents.CUSTOM_DATA).copyTag();
             //three random values with value of 2
             //set values
             if (tag == null) {
@@ -195,7 +195,7 @@ public class PoffinPotBlockEntity extends BaseContainerBlockEntity implements Wo
             tag.put("Flavors", poffinTag);
             return resultPoffin;
         }
-        boolean isBerryDupe = false;
+        //boolean isBerryDupe = false;
         int[] berryTotal = new int[]{0, 0, 0, 0, 0, 0};
         int numBerries = 0;
         if(!berries1.isEmpty()){
@@ -216,6 +216,7 @@ public class PoffinPotBlockEntity extends BaseContainerBlockEntity implements Wo
         }
 
         int[] berryCalc = berryTotal.clone();
+        System.out.println("clone: " + Arrays.toString(berryCalc));
         int negs = 0; //how many values are negative
         for (int i = 0; i < 5; i++){ //does not include sheen
             int value = berryTotal[i] - berryTotal[(i+1 > 4? 0: i+1)];
@@ -224,12 +225,12 @@ public class PoffinPotBlockEntity extends BaseContainerBlockEntity implements Wo
             }
             berryCalc[i] = value;
         }
-
+        System.out.println("clone2: " + Arrays.toString(berryCalc));
         for(int i = 0; i < 5; i++){ //setting bounds & negs
             berryCalc[i] = Math.min(Math.max(0, berryCalc[i]- negs) , 99);
         }
         berryCalc[5] = (berryCalc[5]/numBerries) - numBerries; //calculate smoothness
-
+        System.out.println("clone3: " + Arrays.toString(berryCalc));
         int mainFlavor = 0;
         int secondaryFlavor = -1;
 
@@ -246,11 +247,13 @@ public class PoffinPotBlockEntity extends BaseContainerBlockEntity implements Wo
         }
 
         ItemStack poffin = getPoffinType(mainFlavor, secondaryFlavor);
-        CompoundTag compound = poffin.get(DataComponents.CUSTOM_DATA).getUnsafe();
-        if (compound == null) {
+        CompoundTag compound;
+        if (!poffin.has(DataComponents.CUSTOM_DATA)) {
             compound = new CompoundTag();
-            CustomData.set(DataComponents.CUSTOM_DATA, poffin, compound);
+
             //poffin.setTag(compound);
+        }else{
+            compound = poffin.get(DataComponents.CUSTOM_DATA).copyTag();
         }
         CompoundTag poffinTag = new CompoundTag();
         poffinTag.putInt("spicy", berryCalc[0]);
@@ -261,6 +264,7 @@ public class PoffinPotBlockEntity extends BaseContainerBlockEntity implements Wo
         poffinTag.putInt("sheen", berryCalc[5]);
 
         compound.put("Flavors", poffinTag);
+        CustomData.set(DataComponents.CUSTOM_DATA, poffin, compound);
 
         //assign nbt data
         return poffin;
