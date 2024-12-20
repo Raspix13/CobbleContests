@@ -19,6 +19,8 @@ import com.raspix.fabric.cobble_contests.events.ContestMoves;
 import com.raspix.fabric.cobble_contests.menus.PlayerContestInfoMenu;
 import com.raspix.fabric.cobble_contests.menus.widgets.PokemonInfoSlotButton;
 //import com.raspix.fabric.cobble_contests.network.MessagesInit;
+import com.raspix.fabric.cobble_contests.network.MessagesInit;
+import com.raspix.fabric.cobble_contests.network.SBWalletScreenParty;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -91,7 +93,7 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         this.imageHeight = 194;
         this.playerInv = playerInv;
         this.contestInfoMenu = containerID;
-        //ClientPlayNetworking.send(MessagesInit.WALLET_ID_1, new FriendlyByteBuf(Unpooled.buffer()).writeUUID(playerInv.player.getUUID()));//PacketHandler.sendToServer(new SBInfoScreenParty(playerInv.player.getUUID()));
+        ClientPlayNetworking.send(new SBWalletScreenParty(playerInv.player.getUUID()));//(MessagesInit.WALLET_ID_1, new FriendlyByteBuf(Unpooled.buffer()).writeUUID(playerInv.player.getUUID()));//PacketHandler.sendToServer(new SBInfoScreenParty(playerInv.player.getUUID()));
     }
 
     @Override

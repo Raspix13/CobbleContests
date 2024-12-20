@@ -7,6 +7,7 @@ package com.raspix.fabric.cobble_contests;
 //import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import com.raspix.fabric.cobble_contests.blocks.BlockInit;
 import com.raspix.fabric.cobble_contests.menus.MenuInit;
+import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -23,7 +24,7 @@ public class CobbleContestsFabricClient implements ClientModInitializer {
     public void onInitializeClient() {
         MenuInit.registerScreens();
 
-        //MessagesInit.registerS2CPackets();
+        MessagesInit.registerS2CPackets();
 
         BlockRenderLayerMap.INSTANCE.putBlock(BlockInit.CONTEST_BOOTH, RenderType.cutout());
     }

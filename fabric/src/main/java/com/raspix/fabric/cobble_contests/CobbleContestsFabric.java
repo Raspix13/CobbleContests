@@ -10,8 +10,11 @@ import com.raspix.fabric.cobble_contests.items.ItemInit;
 //import com.raspix.fabric.cobble_contests.menus.screens.PoffinPotScreen;
 //import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import com.raspix.fabric.cobble_contests.menus.MenuInit;
+import com.raspix.fabric.cobble_contests.network.MessagesInit;
+import com.raspix.fabric.cobble_contests.network.SBWalletScreenParty;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +44,10 @@ public class CobbleContestsFabric implements ModInitializer {
         BlockInit.registerBlocks();
         MenuInit.registerMenus();
 
-        //MessagesInit.registerC2SPackets();
+        //PayloadTypeRegistry.playC2S().register(SBWalletScreenParty.PACKET_ID, SBWalletScreenParty.PACKET_CODEC);
+        //PayloadTypeRegistry.playS2C().register(SBWalletScreenParty.PACKET_ID, SBWalletScreenParty.PACKET_CODEC);
+
+        MessagesInit.registerC2SPackets();
 
         //dataProvider.registerDefaults();
 
