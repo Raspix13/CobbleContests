@@ -19,6 +19,7 @@ public class MessagesInit {
     public static final ResourceLocation CHANNEL_ID = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "example");
     public static final ResourceLocation WALLET_ID_1 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "wallet_conditions");
     public static final ResourceLocation WALLET_ID_2 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "wallet_conditions2");
+    public static final ResourceLocation CONTEST_BOOTH = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_booth");
     public static final ResourceLocation RUN_CONTEST_ID = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "run_contest");
     public static final ResourceLocation BOOTH_ID_2 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "booth_2");
 
@@ -46,8 +47,8 @@ public class MessagesInit {
     public static void registerS2CPackets(){ //server to client
         //ClientPlayNetworking.registerGlobalReceiver(WALLET_ID_2, CBWalletScreenParty::recieve);
         ClientPlayNetworking.registerGlobalReceiver(CBWalletScreenParty.PACKET_ID, (payload, context) -> {
-                    System.out.println("UM: " + context.getClass());
-                    System.out.println("UM2: " + payload.getClass());
+                    //System.out.println("UM: " + context.getClass());
+                    //System.out.println("UM2: " + payload.getClass());
                     payload.recieve(context.client());
                     //var world = context.player().getServerWorld();
         });

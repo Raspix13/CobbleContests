@@ -7,6 +7,7 @@ import com.raspix.fabric.cobble_contests.blocks.BlockInit;
 import com.raspix.fabric.cobble_contests.blocks.entity.BlockEntityInit;
 import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
 //import com.raspix.fabric.cobble_contests.network.MessagesInit;
+import com.raspix.fabric.cobble_contests.network.BlockPosPayload;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -32,7 +33,7 @@ public class ContestMenu extends AbstractContainerMenu {
 
     //server constructor
     public ContestMenu(int containerID, Inventory playerInv, BlockEntity blockEntity){
-        super(null, containerID); //MenuInit.CONTEST_MENU
+        super(MenuInit.CONTEST_MENU, containerID); //MenuInit.CONTEST_MENU
         if(blockEntity instanceof ContestBlockEntity be){
             this.blockEntity = be;
         }else {
@@ -40,6 +41,26 @@ public class ContestMenu extends AbstractContainerMenu {
                     .formatted(blockEntity.getClass().getCanonicalName()));
         }
         this.levelAccess = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
+        UUID id = playerInv.player.getUUID();
+        playerPartyClient = CobblemonClient.INSTANCE.getStorage().getMyParty();
+
+    }
+
+    public ContestMenu(int containerID, Inventory playerInv, BlockPosPayload payload) {
+        this(containerID, playerInv, (ContestBlockEntity) playerInv.player.level().getBlockEntity(payload.pos()));
+        /**super(MenuInit.CONTEST_MENU, containerID); //MenuInit.CONTEST_MENU
+        UUID id = playerInv.player.getUUID();
+        playerPartyClient = CobblemonClient.INSTANCE.getStorage().getMyParty();
+        if(o == null){
+            System.out.println("o in ContestMenu is null");
+        }else{
+            System.out.println("o in ContestMenu is not null");
+            System.out.println(o);
+        }*/
+    }
+
+    public ContestMenu(int containerID, Inventory playerInv) {
+        super(MenuInit.CONTEST_MENU, containerID); //MenuInit.CONTEST_MENU
         UUID id = playerInv.player.getUUID();
         playerPartyClient = CobblemonClient.INSTANCE.getStorage().getMyParty();
 

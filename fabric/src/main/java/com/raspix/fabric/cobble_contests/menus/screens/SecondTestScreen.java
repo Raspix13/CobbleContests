@@ -9,6 +9,7 @@ import com.raspix.fabric.cobble_contests.menus.widgets.PokemonContestSlotButton;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -74,19 +75,20 @@ public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
         createWaitingButtons();
         createTypeButtons();
         createPartyButtons();
-        /**this.confirmationButton = this.addRenderableWidget(new ImageButton(this.leftPos + 80, this.topPos + 40, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+        this.confirmationButton = this.addRenderableWidget(new ImageButton(this.leftPos + 80, this.topPos + 40, 64, 18, new WidgetSprites(TEXTURE, TEXTURE), btn -> {
             setContestLevel();
-        }));*/
+        }));
 
         setPageIndex(0);
     }
 
     private void createHomeButtons(){
         homeButtons = new ArrayList<>();
-        /**this.homeButtons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 110, this.topPos + 40, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+        this.homeButtons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 110, this.topPos + 40, 64, 18, new WidgetSprites(TEXTURE, TEXTURE), btn -> {
             this.contestRunningType = 0;
             setPageIndex(CONTEST_TYPE_SELECTION);
-        })));*/
+        })));
+
     }
 
     private void createWaitingButtons(){

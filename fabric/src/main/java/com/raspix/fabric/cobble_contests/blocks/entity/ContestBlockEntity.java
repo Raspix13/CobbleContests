@@ -1,22 +1,18 @@
 package com.raspix.fabric.cobble_contests.blocks.entity;
 
-import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.reactive.SimpleObservable;
-import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.common.cobble_contests.CobbleContests;
 //import com.raspix.fabric.cobble_contests.menus.ContestMenu;
 //import com.raspix.fabric.cobble_contests.network.MessagesInit;
+import com.raspix.fabric.cobble_contests.menus.ContestMenu;
+import com.raspix.fabric.cobble_contests.network.BlockPosPayload;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
-import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -33,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class ContestBlockEntity extends BlockEntity implements MenuProvider, ExtendedScreenHandlerFactory {
+public class ContestBlockEntity extends BlockEntity implements MenuProvider, ExtendedScreenHandlerFactory<BlockPosPayload> {
 
     private static final Component TITLE = Component.translatable("container." + CobbleContests.MOD_ID + ".contest_block");
 
@@ -72,9 +68,9 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider, Ext
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerID, @NotNull Inventory playerInv, Player player) {
-        //ContestMenu menu = new ContestMenu(containerID, playerInv, this);
-        //return menu;
-        return null;
+        ContestMenu menu = new ContestMenu(containerID, playerInv, this);
+        return menu;
+        //return null;
     }
 
     /**@Override
@@ -137,8 +133,8 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider, Ext
     }
 
     @Override
-    public Object getScreenOpeningData(ServerPlayer player) {
-        return null;
+    public BlockPosPayload getScreenOpeningData(ServerPlayer player) {
+        return new BlockPosPayload(this.worldPosition);
     }
 
     public class ContestParticipation{
@@ -323,6 +319,8 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider, Ext
         }
         return result;
     }
+
+
 
 
 

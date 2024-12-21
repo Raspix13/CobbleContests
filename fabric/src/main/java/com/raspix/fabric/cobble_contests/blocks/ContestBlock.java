@@ -4,6 +4,7 @@ import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.blocks.entity.BlockEntityInit;
 import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
 //import com.raspix.fabric.cobble_contests.menus.ContestMenu;
+import com.raspix.fabric.cobble_contests.menus.ContestMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -55,7 +56,7 @@ public class ContestBlock extends Block implements EntityBlock {
     }
 
 
-    public InteractionResult use(BlockState arg, Level level, BlockPos pos, Player player, InteractionHand arg5, BlockHitResult arg6) {
+    public InteractionResult useWithoutItem(BlockState arg, Level level, BlockPos pos, Player player, BlockHitResult arg6) {
         System.out.println("Clicking contest booth");
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
@@ -85,10 +86,10 @@ public class ContestBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
-        /**return new SimpleMenuProvider((id, playerInv, arg4) -> {
+        return new SimpleMenuProvider((id, playerInv, arg4) -> {
             return new ContestMenu(id, playerInv, level.getBlockEntity(pos));
-        }, TITLE);*/
-        return null;
+        }, TITLE);
+        //return null;
     }
 
     @Override
