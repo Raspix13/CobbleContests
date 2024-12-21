@@ -17,6 +17,7 @@ import com.raspix.fabric.cobble_contests.menus.PlayerContestInfoMenu;
 import com.raspix.fabric.cobble_contests.CobbleContestsMoves;
 import com.raspix.fabric.cobble_contests.events.ContestMoves;
 import com.raspix.fabric.cobble_contests.menus.PlayerContestInfoMenu;
+import com.raspix.fabric.cobble_contests.menus.widgets.FixedImageButton;
 import com.raspix.fabric.cobble_contests.menus.widgets.PokemonInfoSlotButton;
 //import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import com.raspix.fabric.cobble_contests.network.MessagesInit;
@@ -100,23 +101,13 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
     protected void init() {
         super.init();
         buttons = new ArrayList<>();
-        /**this.buttons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 12, this.topPos - 13, 17, 14, 292, 0, 16, TEXTURE, 1000, 750, btn -> {
+        this.buttons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 12, this.topPos - 13, 17, 14, 292, 0, 16, TEXTURE, 1000, 750, btn -> {
             setPageIndex(0);
         })));
-        this.buttons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 30, this.topPos - 13, 17, 14, 309, 0, 16, TEXTURE, 1000, 750, btn -> {
+        this.buttons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 30, this.topPos - 13, 17, 14, 309, 0, 16, TEXTURE, 1000, 750, btn -> {
             setPageIndex(1);
         })));
-        this.buttons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 48, this.topPos -13, 17, 14, 326, 0, 16, TEXTURE, 1000, 750, btn -> {
-            setPageIndex(2);
-        })));*/
-
-        this.buttons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 12, this.topPos - 13, 17, 14, new WidgetSprites(TEXTURE, TEXTURE), btn -> {
-            setPageIndex(0);
-        })));
-        this.buttons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 30, this.topPos - 13, 17, 14, new WidgetSprites(TEXTURE, TEXTURE), btn -> {
-            setPageIndex(1);
-        })));
-        this.buttons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 48, this.topPos -13, 17, 14, new WidgetSprites(TEXTURE, TEXTURE), btn -> {
+        this.buttons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 48, this.topPos -13, 17, 14, 326, 0, 16, TEXTURE, 1000, 750, btn -> {
             setPageIndex(2);
         })));
         pokemonIndex = 0;

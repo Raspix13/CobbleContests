@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 
 //https://fabricmc.net/2024/04/19/1205.html#:%7E:text=is%20already%20broken
 //https://wiki.fabricmc.net/tutorial:networking#networking_in_1205
+//
 
 public class MessagesInit {
     public static final ResourceLocation CHANNEL_ID = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "example");

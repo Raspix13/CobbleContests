@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.client.storage.ClientParty;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
 import com.raspix.fabric.cobble_contests.menus.ContestMenu;
+import com.raspix.fabric.cobble_contests.menus.widgets.FixedImageButton;
 import com.raspix.fabric.cobble_contests.menus.widgets.PokemonContestSlotButton;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -75,7 +76,7 @@ public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
         createWaitingButtons();
         createTypeButtons();
         createPartyButtons();
-        this.confirmationButton = this.addRenderableWidget(new ImageButton(this.leftPos + 80, this.topPos + 40, 64, 18, new WidgetSprites(TEXTURE, TEXTURE), btn -> {
+        this.confirmationButton = this.addRenderableWidget(new FixedImageButton(this.leftPos + 80, this.topPos + 40, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
             setContestLevel();
         }));
 
@@ -84,7 +85,7 @@ public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
 
     private void createHomeButtons(){
         homeButtons = new ArrayList<>();
-        this.homeButtons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 110, this.topPos + 40, 64, 18, new WidgetSprites(TEXTURE, TEXTURE), btn -> {
+        this.homeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 110, this.topPos + 40, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
             this.contestRunningType = 0;
             setPageIndex(CONTEST_TYPE_SELECTION);
         })));
@@ -93,30 +94,30 @@ public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
 
     private void createWaitingButtons(){
         waitButtons = new ArrayList<>();
-        /*this.waitButtons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 110, this.topPos + 140, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+        this.waitButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 110, this.topPos + 140, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
             startContest();
             //start contest
             //setPageIndex(CONTEST_TYPE_SELECTION);
-        })));*/
+        })));
     }
 
     private void createTypeButtons(){
         typeButtons = new ArrayList<>();
-        /**this.typeButtons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 134, this.topPos + 49, 20, 20, 288, 0, 21, TEXTURE, 1000, 750, btn -> {
+        this.typeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 134, this.topPos + 49, 20, 20, 288, 0, 21, TEXTURE, 1000, 750, btn -> {
             setContestType(0);
         })));
-        this.typeButtons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 210, this.topPos + 78, 20, 20, 308, 0, 21, TEXTURE, 1000, 750, btn -> {
+        this.typeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 210, this.topPos + 78, 20, 20, 308, 0, 21, TEXTURE, 1000, 750, btn -> {
             setContestType(1);
         })));
-        this.typeButtons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 173, this.topPos + 155, 20, 20, 328, 0, 21, TEXTURE, 1000, 750, btn -> {
+        this.typeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 173, this.topPos + 155, 20, 20, 328, 0, 21, TEXTURE, 1000, 750, btn -> {
             setContestType(2);
         })));
-        this.typeButtons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 95, this.topPos + 155, 20, 20, 348, 0, 21, TEXTURE, 1000, 750, btn -> {
+        this.typeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 95, this.topPos + 155, 20, 20, 348, 0, 21, TEXTURE, 1000, 750, btn -> {
             setContestType(3);
         })));
-        this.typeButtons.add(this.addRenderableWidget(new ImageButton(this.leftPos + 58, this.topPos + 78, 20, 20, 368, 0, 21, TEXTURE, 1000, 750, btn -> {
+        this.typeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 58, this.topPos + 78, 20, 20, 368, 0, 21, TEXTURE, 1000, 750, btn -> {
             setContestType(4);
-        })));*/
+        })));
     }
 
     private void createPartyButtons(){

@@ -2,6 +2,9 @@ package com.raspix.fabric.cobble_contests.menus.widgets;
 
 import com.cobblemon.mod.common.client.CobblemonResources;
 //import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonFloatingState;
+import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState;
+import com.cobblemon.mod.common.client.render.models.blockbench.PosableState;
+import com.cobblemon.mod.common.entity.PoseType;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.pokemon.status.PersistentStatusContainer;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -21,7 +24,7 @@ import static com.cobblemon.mod.common.client.render.RenderHelperKt.*;
 import static com.cobblemon.mod.common.util.LocalizationUtilsKt.lang;
 import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 
-public class PokemonInfoSlotButton extends ImageButton {
+public class PokemonInfoSlotButton extends FixedImageButton {
 
     private final int WIDTH = 46;
     private final int HEIGHT = 27;
@@ -49,13 +52,13 @@ public class PokemonInfoSlotButton extends ImageButton {
 
     public PokemonInfoSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, int p, int q, OnPress arg2, Component arg3, Pokemon pokemon) {
         //super(i, j, k, l, m, n, o, arg, p, q, arg2, arg3);
-        super(i, j, k, l, new WidgetSprites(arg, arg), arg2, arg3);
+        super(i, j, k, l, m, n, o, arg, p, q, arg2, arg3);
         this.pokemon = pokemon;
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mX, int mY, float f) {
-        super.renderWidget(guiGraphics, mX, mY, f);
+    public void renderWidget(GuiGraphics guiGraphics, int mX, int mY, float partials) {
+        super.renderWidget(guiGraphics, mX, mY, partials);
         if (pokemon != null) {
             float halfScale = 0.5f;
             PoseStack poses = guiGraphics.pose();
@@ -68,7 +71,18 @@ public class PokemonInfoSlotButton extends ImageButton {
              poses.pushPose();
              /**drawProfilePokemon(pokemon.getSpecies().getResourceIdentifier(), pokemon.getAspects(),
              poses, new Quaternionf().rotationXYZ((float) Math.toRadians(13f), (float) Math.toRadians(35f), 0F),
-             new PokemonFloatingState(), 2.42f, 12f);*/
+             null, 2.42f, 12f);*/
+
+            drawProfilePokemon(
+                    pokemon.getSpecies().getResourceIdentifier(),
+                    poses,
+                    new Quaternionf().rotationXYZ((float) Math.toRadians(13f), (float) Math.toRadians(35f), 0F),
+                    PoseType.PROFILE,
+                    new FloatingState(),
+                    partials,
+                    12f,
+                    true, false, 1f, 1f, 1f, 1f
+            );
 
              poses.popPose();
              poses.translate(-(this.getX() + (PORTRAIT_DIAMETER / 2.0)), -(this.getY()-10 + 6), 0f);
@@ -84,14 +98,14 @@ public class PokemonInfoSlotButton extends ImageButton {
              true,
              true, null, null
              );
-            /**ResourceLocation stateIcon = pokemon.getState().getIcon(pokemon);
+            ResourceLocation stateIcon = pokemon.getState().getIcon(pokemon);
             if (stateIcon != null) {
                 blitk(
                         poses, stateIcon, (Number)((getX() + 24.5) / halfScale), (Number)((getY() + 3) / halfScale),
                         (Number)17, (Number)24, (Number)0, (Number)0, (Number) width, (Number) height, (Number)0,
                         (Number)1f, (Number)1, (Number)1, (Number)1, true, halfScale
                 );
-            }*/
+            }
 
             ResourceLocation ballIcon = cobblemonResource("textures/gui/ball/" + pokemon.getCaughtBall().getName().getPath() + ".png");
             int ballHeight = 22;
@@ -103,7 +117,7 @@ public class PokemonInfoSlotButton extends ImageButton {
 
 
             PersistentStatusContainer status = pokemon.getStatus();
-            /**if (!pokemon.isFainted() && status != null) {
+            if (!pokemon.isFainted() && status != null) {
                 String statusName = status.getStatus().getShowdownName();
                 blitk(
                         poses, cobblemonResource("textures/gui/party/status_$statusName.png"),
@@ -111,7 +125,7 @@ public class PokemonInfoSlotButton extends ImageButton {
                         4,(Number)0, (Number)0, (Number) width, (Number) height, (Number)0,
                         (Number)1f, (Number)1, (Number)1, (Number)1, true, 1f
                 );
-            }*/
+            }
 
             float hpRatio = pokemon.getCurrentHealth() / (float)pokemon.getHp();
             int barWidthMax = 37;
