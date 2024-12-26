@@ -1,4 +1,8 @@
-Cobble Contests 1.0.1 (Java + Fabric)
+Cobble Contests 1.0.2 (Fabric)
+Updated for Cobblemon 1.6
+-Fixed some bugs with contest card and contest booth that caused crashing on single and multiplayer
+
+Cobble Contests 1.0.1 (Forge + Fabric)
 -Added Fabric version
 -Added Ball Replacer which lets you change the ball your pokemon is stored in
 -Fixed card display for toughness ribbons to no longer be based on smarts
@@ -6,6 +10,6 @@ Cobble Contests 1.0.1 (Java + Fabric)
 -Fixed other small bugs
 
 
-Cobble Contests 1.0.0 (Java only)
+Cobble Contests 1.0.0 (Forge only)
 -Adds poffins, the poffin pot, contest card, and contest booth
 -For Cobblemon V1.5.2

@@ -41,7 +41,7 @@ dependencies {
     "developmentFabric"(project(":common", configuration = "namedElements"))
     shadowCommon(project(":common", configuration = "transformProductionFabric"))
 
-    modImplementation("com.cobblemon:fabric:1.6.0+1.21-SNAPSHOT")
+    //modImplementation("com.cobblemon:fabric:1.6.0+1.21")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${property("junit_version")}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("junit_version")}")

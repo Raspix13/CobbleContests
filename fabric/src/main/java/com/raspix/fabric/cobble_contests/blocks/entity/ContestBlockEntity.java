@@ -1,6 +1,8 @@
 package com.raspix.fabric.cobble_contests.blocks.entity;
 
+import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.reactive.SimpleObservable;
+import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.common.cobble_contests.CobbleContests;
 //import com.raspix.fabric.cobble_contests.menus.ContestMenu;
@@ -10,6 +12,7 @@ import com.raspix.fabric.cobble_contests.network.BlockPosPayload;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -165,37 +168,35 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider, Ext
         }
     }
 
-    public void runStatAssesment(UUID id, int pokeIdx, int contestType, int contestLevel1){
+    public void runStatAssesment(UUID id, int pokeIdx, int contestType, int contestLevel1, ServerPlayer player){
         //String contestOutput = "";
-        /**Component componentOutput;
-        try {
-            Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(id).get(pokeIdx);
-            CompoundTag ribbonTag = poke.getPersistentData().getCompound("Ribbons");
-            String pokeName = poke.getDisplayName().getString();
-            int contestLevel = getNextContestLevel(ribbonTag, contestType);
-            if(contestLevel < 5) {
-                boolean result = runContest(poke, contestType, contestLevel);
-                if (result) {
-                    componentOutput = Component.translatable("cobble_contests.contest_result.won_ranked", pokeName, getContestLevelString(contestLevel), getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
-                    //contestOutput = pokeName + " Won the " + getContestLevelString(contestLevel) + " " + getContestTypeString(contestType) + " Contest";
-                } else {
-                    componentOutput = Component.translatable("cobble_contests.contest_result.lost_ranked", pokeName, getContestLevelString(contestLevel), getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
-                    //contestOutput = pokeName + " Lost the " + getContestLevelString(contestLevel) + " " + getContestTypeString(contestType) + " Contest";
-                }
-            }else{
-                componentOutput = Component.translatable("cobble_contests.contest_result.maxed_ranked", pokeName, getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
-                //contestOutput = pokeName + " has already beaten all " + getContestTypeString(contestType) + " Contests";
+        Component componentOutput;
+        //Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(id).get(pokeIdx);
+        Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(player).get(pokeIdx);
+        CompoundTag ribbonTag = poke.getPersistentData().getCompound("Ribbons");
+        String pokeName = poke.getDisplayName().getString();
+        int contestLevel = getNextContestLevel(ribbonTag, contestType);
+        if(contestLevel < 5) {
+            boolean result = runContest(poke, contestType, contestLevel);
+            if (result) {
+                componentOutput = Component.translatable("cobble_contests.contest_result.won_ranked", pokeName, getContestLevelString(contestLevel), getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
+                //contestOutput = pokeName + " Won the " + getContestLevelString(contestLevel) + " " + getContestTypeString(contestType) + " Contest";
+            } else {
+                componentOutput = Component.translatable("cobble_contests.contest_result.lost_ranked", pokeName, getContestLevelString(contestLevel), getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
+                //contestOutput = pokeName + " Lost the " + getContestLevelString(contestLevel) + " " + getContestTypeString(contestType) + " Contest";
             }
-            ServerPlayer sPlayer = poke.getOwnerPlayer();
-            if (!sPlayer.level().isClientSide()) {
-                sPlayer.displayClientMessage(componentOutput, false);
-                //sPlayer.displayClientMessage(Component.literal(contestOutput).withStyle(ChatFormatting.LIGHT_PURPLE), false);
-            }
+        }else{
+            componentOutput = Component.translatable("cobble_contests.contest_result.maxed_ranked", pokeName, getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
+            //contestOutput = pokeName + " has already beaten all " + getContestTypeString(contestType) + " Contests";
+        }
+        ServerPlayer sPlayer = poke.getOwnerPlayer();
+        if (!sPlayer.level().isClientSide()) {
+            sPlayer.displayClientMessage(componentOutput, false);
+            //sPlayer.displayClientMessage(Component.literal(contestOutput).withStyle(ChatFormatting.LIGHT_PURPLE), false);
+        }
 
 
-            //Objects.requireNonNull().sendSystemMessage(Component.literal(contestOutput));
-        }catch (NoPokemonStoreException e){
-        }*/
+        //Objects.requireNonNull().sendSystemMessage(Component.literal(contestOutput));
 
 
     }

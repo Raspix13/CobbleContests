@@ -16,28 +16,22 @@ import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.menus.PlayerContestInfoMenu;
 import com.raspix.fabric.cobble_contests.CobbleContestsMoves;
 import com.raspix.fabric.cobble_contests.events.ContestMoves;
-import com.raspix.fabric.cobble_contests.menus.PlayerContestInfoMenu;
 import com.raspix.fabric.cobble_contests.menus.widgets.FixedImageButton;
 import com.raspix.fabric.cobble_contests.menus.widgets.PokemonInfoSlotButton;
 //import com.raspix.fabric.cobble_contests.network.MessagesInit;
-import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import com.raspix.fabric.cobble_contests.network.SBWalletScreenParty;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import io.netty.buffer.Unpooled;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +41,7 @@ import static com.cobblemon.mod.common.client.render.RenderHelperKt.drawScaledTe
 import static com.cobblemon.mod.common.util.LocalizationUtilsKt.lang;
 import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 
-public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerContestInfoMenu> {
+public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerContestInfoMenu> {
 
     private static final int BASE_WIDTH = 349;
     private static final int BASE_HEIGHT = 205;
@@ -86,7 +80,7 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
     private PlayerContestInfoMenu contestInfoMenu;
 
 
-    public PlayerContestInfoScreen(PlayerContestInfoMenu containerID, Inventory playerInv, Component title) {
+    public PlayerConditionCardScreen(PlayerContestInfoMenu containerID, Inventory playerInv, Component title) {
         super(containerID, playerInv, title);
         this.leftPos = 0;
         this.topPos = 0;
@@ -404,9 +398,9 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         ).renderLeftAligned(
                 guiGraphics,
                 (xPos + 80) / 0.5f,
-                (yPos + 3) / 0.5f,
-                5.5 / 0.5f,
-                1,
+                (yPos + 4) / 0.5f,
+                0,
+                11,
                 ColourLibrary.WHITE,
                 1f,
                 true

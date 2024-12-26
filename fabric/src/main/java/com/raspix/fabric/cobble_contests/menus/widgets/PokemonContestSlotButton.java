@@ -63,9 +63,11 @@ public class PokemonContestSlotButton extends FixedImageButton {
 
             ResourceLocation stateIcon = pokemon.getState().getIcon(pokemon);
             if (stateIcon != null) {
+                int textWidth = 24;
+                int textHeight = 17;
                 blitk(
                         poses, stateIcon, (Number)((getX() + 24.5) / halfScale), (Number)((getY() + 3) / halfScale),
-                        (Number)17, (Number)24, (Number)0, (Number)0, (Number) width, (Number) height, (Number)0,
+                        (Number)17, (Number)24, (Number)0, (Number)0, (Number) textWidth, (Number) textHeight, (Number)0,
                         (Number)1f, (Number)1, (Number)1, (Number)1, true, halfScale
                 );
             }
@@ -82,10 +84,14 @@ public class PokemonContestSlotButton extends FixedImageButton {
             PersistentStatusContainer status = pokemon.getStatus();
             if (!pokemon.isFainted() && status != null) {
                 String statusName = status.getStatus().getShowdownName();
+                String statusRL = "textures/gui/party/status_" + statusName + ".png";
+                int textWidth = 4;
+                int textHeight = 14;
+                //System.out.println("CSB: " + statusRL);
                 blitk(
-                        poses, cobblemonResource("textures/gui/party/status_$statusName.png"),
+                        poses, cobblemonResource(statusRL),
                         getX() + 42, getY() + 5, 14,
-                        4,(Number)0, (Number)0, (Number) width, (Number) height, (Number)0,
+                        4,(Number)0, (Number)0, (Number) textWidth, (Number) textHeight, (Number)0,
                         (Number)1f, (Number)1, (Number)1, (Number)1, true, 1f
                 );
             }

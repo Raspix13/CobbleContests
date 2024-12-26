@@ -29,11 +29,11 @@ public class PoffinPotScreen extends AbstractContainerScreen<PoffinPotMenu> {
         this.topPos = (this.height - this.imageHeight) / 2;
 
         buttons = new ArrayList<>();
-        /**this.buttons.add(this.addRenderableWidget(new ExtendedButton(this.leftPos + 5, this.topPos + 5, 12, 12, Component.literal("i"), (arg) -> {
-            toggleInstructions(arg);
+        this.buttons.add(this.addRenderableWidget(Button.builder( Component.literal("i"), (arg) -> {
+            toggleInstructions(buttons.get(0));
             //this.leftPos = updateScreenPosition(this.width, this.imageWidth);
             //arg.setPosition(this.leftPos + 20, this.height / 2 - 49);
-        })));*/
+        }).bounds(this.leftPos + 5, this.topPos + 5, 12, 12).build()));
     }
 
     public int updateScreenPosition(int j, int k) {
@@ -111,9 +111,9 @@ public class PoffinPotScreen extends AbstractContainerScreen<PoffinPotMenu> {
             ).renderLeftAligned(
                     guiGraphics,
                     (this.leftPos + 4) / 0.5f,
-                    (this.topPos + 41) / 0.5f,
-                    5.5 / 0.5f,
-                    1,
+                    (this.topPos + 42) / 0.5f,
+                    0,
+                    11,
                     ColourLibrary.WHITE,
                     1f,
                     true

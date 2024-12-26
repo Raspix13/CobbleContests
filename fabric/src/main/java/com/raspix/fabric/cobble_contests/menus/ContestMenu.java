@@ -8,6 +8,8 @@ import com.raspix.fabric.cobble_contests.blocks.entity.BlockEntityInit;
 import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
 //import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import com.raspix.fabric.cobble_contests.network.BlockPosPayload;
+import com.raspix.fabric.cobble_contests.network.MessagesInit;
+import com.raspix.fabric.cobble_contests.network.SBRunContest;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -42,7 +44,10 @@ public class ContestMenu extends AbstractContainerMenu {
         }
         this.levelAccess = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
         UUID id = playerInv.player.getUUID();
-        playerPartyClient = CobblemonClient.INSTANCE.getStorage().getMyParty();
+        if(playerInv.player.level().isClientSide()){
+            playerPartyClient = CobblemonClient.INSTANCE.getStorage().getMyParty();
+        }
+
 
     }
 
@@ -134,7 +139,7 @@ public class ContestMenu extends AbstractContainerMenu {
         buf.writeBlockPos(blockEntity.getBlockPos());
         buf.writeInt(contestType);
         buf.writeInt(0);
-        //ClientPlayNetworking.send(MessagesInit.RUN_CONTEST_ID, buf);
+        ClientPlayNetworking.send(new SBRunContest(buf));
     }
 
 }

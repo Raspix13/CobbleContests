@@ -9,7 +9,7 @@
     }
   ],
   "result": {
-    "item": "cobble_contests:contest_card",
+    "id": "cobble_contests:contest_card",
     "count": 1
   }
 }

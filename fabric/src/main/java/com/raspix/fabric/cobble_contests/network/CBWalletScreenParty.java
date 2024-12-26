@@ -1,20 +1,14 @@
 package com.raspix.fabric.cobble_contests.network;
 
-import com.raspix.fabric.cobble_contests.menus.screens.PlayerContestInfoScreen;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import com.raspix.fabric.cobble_contests.menus.screens.PlayerConditionCardScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 public class CBWalletScreenParty implements CustomPacketPayload {
 
@@ -46,7 +40,7 @@ public class CBWalletScreenParty implements CustomPacketPayload {
 
     public void recieve(Minecraft minecraft){
         System.out.println("Recieving CBWallet");
-        if(Minecraft.getInstance().screen instanceof PlayerContestInfoScreen screen){
+        if(Minecraft.getInstance().screen instanceof PlayerConditionCardScreen screen){
             //CompoundTag tag = buf.readNbt();
             screen.setCVs(this.tag);
             screen.setRibbons(this.tag);

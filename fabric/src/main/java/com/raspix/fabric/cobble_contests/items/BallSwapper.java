@@ -67,7 +67,7 @@ public class BallSwapper extends Item implements PokemonSelectingItem {
     public InteractionResultHolder<ItemStack> applyToPokemon(@NotNull ServerPlayer serverPlayer, @NotNull ItemStack itemStack, @NotNull Pokemon pokemon) {
         PokeBall newBall;
         CustomData dat = itemStack.get(DataComponents.CUSTOM_DATA);
-        if(!dat.contains(ballCode)){
+        if(dat == null || !dat.contains(ballCode)){
             newBall = CobblemonItems.POKE_BALL.getPokeBall();
             //System.out.println("missing CVs, generated");
         }else {
@@ -236,6 +236,8 @@ public class BallSwapper extends Item implements PokemonSelectingItem {
         }else {
             list.add(Component.translatable("tooltip.cobble_contests.ball_swapper.tooltip.ball_type", Component.translatable("tooltip.cobble_contests.ball_swapper.tooltip.empty").withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY)); //Component.translatable("tooltip.cobble_contests.ball_swapper.tooltip.empty").getString()
         }
+        list.add(Component.translatable("tooltip.cobble_contests.ball_swapper.tooltip.instructions1").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+        list.add(Component.translatable("tooltip.cobble_contests.ball_swapper.tooltip.instructions2").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
 
     }
 }

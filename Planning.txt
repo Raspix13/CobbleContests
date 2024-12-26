@@ -34,11 +34,26 @@ Bugs & Issues:
 -Does trading keep ribbons and stats?
 
 Things I Need to Work on Before Releasing Newest Version:
+-Each Time Checklist:
+    - Do recipes work?
+    - Do blocks drop?
+    - Does card work?
+        - with fainted, full party, empty party, status effects, out of ball or shouldered?
+    - Does ball swapper work?
+        -Drop held ball when changed?
+        -Display usage message when same ball or no ball
+    - Do things all work on servers and single player?
+    - Does poffin pot cook?
+        - Do ingeidients only go in their spots?
+        - Does the info button work?
 -Fabric:
-    -Ballswapper tooltip cuts off screen
-    -fix poffin not being foul when result of berries is 0 (leppa + chesto)
-    -make sure poffins have eat effect
+    *-Ballswapper tooltip cuts off screen
+    *-make sure things save
 
+Next Update Plan Reminders:
+- make contest screen tell current level of contest for pokemon
+- fix poffin not being foul when result of berries is 0 (leppa + chesto)
 
 For future reference:
 -forge mod info is set in mods.toml in resources->META-INF & fabric is fabric.mod.json in resources
+
