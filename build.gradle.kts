@@ -7,9 +7,6 @@ plugins {
     id("architectury-plugin") version("3.4-SNAPSHOT") apply false
 }
 
-group = "com.raspix.cobble_contests"
-version = "1.0.1-SNAPSHOT"
-
 base {
     archivesName = "cobble_contests"
 }
@@ -17,6 +14,9 @@ base {
 allprojects {
     apply(plugin = "java")
     apply(plugin = "org.jetbrains.kotlin.jvm")
+
+    group = "com.raspix.cobble_contests"
+    version = "1.0.1-SNAPSHOT"
 
     repositories {
         mavenCentral()

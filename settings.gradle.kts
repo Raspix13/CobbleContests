@@ -1,4 +1,4 @@
-rootProject.name = "Multi-Platform"
+rootProject.name = "CobbleContests"
 
 pluginManagement {
     repositories {
@@ -12,6 +12,6 @@ pluginManagement {
 
 listOf(
     "common",
-//    "neoforge",
+    "neoforge",
     "fabric"
 ).forEach { include(it)}

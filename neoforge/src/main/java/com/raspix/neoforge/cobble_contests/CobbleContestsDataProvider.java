@@ -1,10 +1,8 @@
-package com.raspix.forge.cobble_contests;
+package com.raspix.neoforge.cobble_contests;
 
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.data.DataProvider;
 import com.cobblemon.mod.common.api.data.DataRegistry;
-import com.raspix.forge.cobble_contests.CobbleContestsForge;
-import com.raspix.forge.cobble_contests.CobbleContestsMoves;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import net.minecraft.resources.ResourceLocation;
@@ -34,7 +32,7 @@ public class CobbleContestsDataProvider implements DataProvider {
 
     public void registerDefaults(){
         CobbleContestsForge.LOGGER.info("Registering Defaults");
-        this.register(CobbleContestsMoves.INSTANCE);
+        //this.register(CobbleContestsMoves.INSTANCE);
 
 
 

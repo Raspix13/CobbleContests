@@ -1,17 +1,8 @@
-package com.raspix.forge.cobble_contests;
+package com.raspix.neoforge.cobble_contests;
 
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies;
 import com.cobblemon.mod.common.pokemon.Species;
 import com.mojang.logging.LogUtils;
-
-import com.raspix.forge.cobble_contests.blocks.BlockInit;
-import com.raspix.forge.cobble_contests.blocks.entity.BlockEntityInit;
-import com.raspix.forge.cobble_contests.items.ItemInit;
-import com.raspix.forge.cobble_contests.menus.MenuInit;
-import com.raspix.forge.cobble_contests.menus.screens.PlayerContestInfoScreen;
-import com.raspix.forge.cobble_contests.menus.screens.PoffinPotScreen;
-import com.raspix.forge.cobble_contests.menus.screens.SecondTestScreen;
-import com.raspix.forge.cobble_contests.network.PacketHandler;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -36,7 +27,6 @@ import net.minecraft.world.item.CreativeModeTab;
 //import org.slf4j.Logger;
 //import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 
-import com.cobblemon.common.example.ExampleCommandRegistry;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -85,7 +75,7 @@ public class CobbleContestsForge {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MOD_ID);
 
     //public static ContestMoves contestMoves;
-    public static final CobbleContestsDataProvider dataProvider = new CobbleContestsDataProvider();
+    //public static final CobbleContestsDataProvider dataProvider = new CobbleContestsDataProvider();
 
 
 
@@ -96,15 +86,19 @@ public class CobbleContestsForge {
 
         //IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        NeoForge.EVENT_BUS.register(this);
+
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::initialize);
 
-        BlockInit.BLOCKS.register(modEventBus);
-        ItemInit.ITEMS.register(modEventBus);
+
+
+        //BlockInit.BLOCKS.register(modEventBus);
+        //ItemInit.ITEMS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
-        BlockEntityInit.BLOCK_ENTITIES.register(modEventBus);
-        MenuInit.MENU_TYPES.register(modEventBus);
+        //BlockEntityInit.BLOCK_ENTITIES.register(modEventBus);
+        //MenuInit.MENU_TYPES.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::addCreative);
         //ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -118,13 +112,18 @@ public class CobbleContestsForge {
 
     }
 
+    @SubscribeEvent
+    public void onCommandRegistration(RegisterCommandsEvent event) {
+        //ExampleCommandRegistry.registerCommands(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
+    }
+
     /**@SubscribeEvent
     public void onCommandRegistration(RegisterCommandsEvent event) {
         ExampleCommandRegistry.registerCommands(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
     }*/
 
     public void initialize(FMLCommonSetupEvent event){
-        dataProvider.registerDefaults();
+        //dataProvider.registerDefaults();
     }
 
     /**@EventBusSubscriber(bus = EventBusSubscriber.Bus.NEOFORGE)
@@ -167,9 +166,9 @@ public class CobbleContestsForge {
         @SubscribeEvent
         public static void clientSetUp(FMLClientSetupEvent event){
             event.enqueueWork(()-> {
-                MenuScreens.register(MenuInit.CONTEST_MENU.get(), SecondTestScreen::new);
-                MenuScreens.register(MenuInit.PLAYER_CONTEST_INFO_MENU.get(), PlayerContestInfoScreen::new);
-                MenuScreens.register(MenuInit.POFFIN_POT_MENU.get(), PoffinPotScreen::new);
+                //MenuScreens.register(MenuInit.CONTEST_MENU.get(), SecondTestScreen::new);
+                //MenuScreens.register(MenuInit.PLAYER_CONTEST_INFO_MENU.get(), PlayerContestInfoScreen::new);
+                //MenuScreens.register(MenuInit.POFFIN_POT_MENU.get(), PoffinPotScreen::new);
 
             });
 
@@ -191,7 +190,7 @@ public class CobbleContestsForge {
         @SubscribeEvent
         public static void commonSetup(FMLCommonSetupEvent event){
             event.enqueueWork(() -> {
-                PacketHandler.register();
+                //PacketHandler.register();
             });
 
         }

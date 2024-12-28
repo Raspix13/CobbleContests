@@ -1,4 +1,4 @@
-package com.raspix.forge.cobble_contests;
+package com.raspix.neoforge.cobble_contests;
 
 import com.raspix.common.cobble_contests.CobbleContests;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 // An example config class. This is not required, but it's a good idea to have one to keep your config organized.
 // Demonstrates how to use Forge's config APIs
-@EventBusSubscriber(modid = CobbleContestsForge.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+//@EventBusSubscriber(modid = CobbleContestsForge.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class Config
 {
     /**private static final NeoForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
