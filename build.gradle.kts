@@ -16,7 +16,7 @@ allprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
 
     group = "com.raspix.cobble_contests"
-    version = "1.0.1-SNAPSHOT"
+    version = "1.0.2"
 
     repositories {
         mavenCentral()

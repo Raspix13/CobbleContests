@@ -3,6 +3,9 @@ package com.raspix.neoforge.cobble_contests;
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies;
 import com.cobblemon.mod.common.pokemon.Species;
 import com.mojang.logging.LogUtils;
+import com.raspix.neoforge.cobble_contests.blocks.BlockInit;
+import com.raspix.neoforge.cobble_contests.blocks.entity.BlockEntityInit;
+import com.raspix.neoforge.cobble_contests.items.ItemInit;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -94,10 +97,10 @@ public class CobbleContestsForge {
 
 
 
-        //BlockInit.BLOCKS.register(modEventBus);
-        //ItemInit.ITEMS.register(modEventBus);
+        BlockInit.BLOCKS.register(modEventBus);
+        ItemInit.ITEMS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
-        //BlockEntityInit.BLOCK_ENTITIES.register(modEventBus);
+        BlockEntityInit.BLOCK_ENTITIES.register(modEventBus);
         //MenuInit.MENU_TYPES.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::addCreative);

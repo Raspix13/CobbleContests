@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "cobble_contests:block/test_block"
+    }
+  }
+}
