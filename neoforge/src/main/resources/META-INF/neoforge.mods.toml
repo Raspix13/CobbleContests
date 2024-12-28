@@ -1,14 +1,14 @@
-modLoader = "javafml"
-loaderVersion = "[1,)"
+modLoader = "kotlinforforge"
+loaderVersion = "[5.3,)"
 #issueTrackerURL = "A valid URL to your issue tracker where people can open bug tickets"
 license = "MIT License"
 
 [[mods]]
-modId = "cobble_contests"
+modId = "${mod_id}"
 version = "${version}"
-displayName = "Cobble Contests"
+displayName = "${mod_name}"
 authors="Raspix"
-description='''A side mod for cobblemon that tries to add contests from the main games'''
+description='''${mod_description}'''
 #logoFile = ""
 
 [[dependencies.cobble_contests]]

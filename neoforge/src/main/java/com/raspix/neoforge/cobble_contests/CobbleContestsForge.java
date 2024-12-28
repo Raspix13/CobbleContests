@@ -155,7 +155,7 @@ public class CobbleContestsForge {
     public class ClientEventBusSubscriber {
         @SubscribeEvent
         public static void clientSetup(FMLClientSetupEvent event) {
-            //ItemBlockRenderTypes.setRenderLayer((BlockInit.CONTEST_BOOTH.get()), RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer((BlockInit.CONTEST_BOOTH.get()), RenderType.translucent());
         }
     }
 
