@@ -10,6 +10,7 @@ import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.neoforge.cobble_contests.CobbleContestsForge;
 import com.raspix.neoforge.cobble_contests.blocks.PoffinPot;
 import com.raspix.neoforge.cobble_contests.items.ItemInit;
+import com.raspix.neoforge.cobble_contests.menus.PoffinPotMenu;
 import com.raspix.neoforge.cobble_contests.util.TagsInit;
 import net.minecraft.SharedConstants;
 import net.minecraft.Util;
@@ -107,13 +108,15 @@ public class PoffinPotBlockEntity extends BaseContainerBlockEntity implements Wo
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, @NotNull Inventory inv, Player player) {
-        return null;//new PoffinPotMenu(id, inv, this, this, this.dataAccess);
+        System.out.println("UNO");
+        return new PoffinPotMenu(id, inv, this, this, this.dataAccess);
     }
 
     @Override
     protected AbstractContainerMenu createMenu(int i, Inventory arg) {
+        System.out.println("DUOS");
         PlayerPartyStore playerPartyStore = Cobblemon.INSTANCE.getStorage().getParty((ServerPlayer) arg.player);
-        return null;//new PoffinPotMenu(i, arg, this, this, this.dataAccess);
+        return new PoffinPotMenu(i, arg, this, this, this.dataAccess);
     }
 
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, PoffinPotBlockEntity pBlockEntity) {

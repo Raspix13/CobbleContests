@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.neoforge.cobble_contests.CobbleContestsForge;
+import com.raspix.neoforge.cobble_contests.menus.ContestMenu;
 import com.raspix.neoforge.cobble_contests.pokemon.CVs;
 import com.raspix.neoforge.cobble_contests.pokemon.Ribbons;
 import net.minecraft.ChatFormatting;
@@ -63,7 +64,7 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerID, @NotNull Inventory playerInv, Player player) {
-        return null;//new ContestMenu(containerID, playerInv, this);
+        return new ContestMenu(containerID, playerInv, this);
     }
 
     public boolean tryHosting(UUID id){

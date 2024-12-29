@@ -8,6 +8,7 @@ import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.neoforge.cobble_contests.CobbleContestsForge;
 import com.raspix.neoforge.cobble_contests.blocks.entity.BlockEntityInit;
 import com.raspix.neoforge.cobble_contests.blocks.entity.ContestBlockEntity;
+import com.raspix.neoforge.cobble_contests.menus.ContestMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -64,7 +65,7 @@ public class ContestBlock extends Block implements EntityBlock {
     }
 
 
-    public InteractionResult use(BlockState arg, Level level, BlockPos pos, Player player, InteractionHand arg5, BlockHitResult arg6) {
+    public InteractionResult useWithoutItem(BlockState arg, Level level, BlockPos pos, Player player, BlockHitResult arg6) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
@@ -105,7 +106,7 @@ public class ContestBlock extends Block implements EntityBlock {
                 if(menuP == null){
                     System.out.println("null provider");
                 }
-                player.openMenu((ContestBlockEntity)blockEntity);
+                player.openMenu((ContestBlockEntity)blockEntity, pos);
                 //NetworkHooks.openScreen((ServerPlayer)player, (MenuProvider) blockEntity, pos);
                 //PacketHandler.sendToServer(new SSendPartyPacket(player.getUUID()));
                 //System.out.println("hi1");
@@ -126,7 +127,7 @@ public class ContestBlock extends Block implements EntityBlock {
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         return new SimpleMenuProvider((id, playerInv, arg4) -> {
-            return null;//new ContestMenu(id, playerInv, level.getBlockEntity(pos));
+            return new ContestMenu(id, playerInv, level.getBlockEntity(pos));
         }, TITLE);
     }
 

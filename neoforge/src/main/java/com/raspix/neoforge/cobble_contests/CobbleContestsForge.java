@@ -7,6 +7,10 @@ import com.raspix.neoforge.cobble_contests.blocks.BlockInit;
 import com.raspix.neoforge.cobble_contests.blocks.entity.BlockEntityInit;
 import com.raspix.neoforge.cobble_contests.events.JsonLoadMoves;
 import com.raspix.neoforge.cobble_contests.items.ItemInit;
+import com.raspix.neoforge.cobble_contests.menus.MenuInit;
+import com.raspix.neoforge.cobble_contests.menus.screens.PlayerContestInfoScreen;
+import com.raspix.neoforge.cobble_contests.menus.screens.PoffinPotScreen;
+import com.raspix.neoforge.cobble_contests.menus.screens.SecondTestScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -41,10 +45,12 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.slf4j.Logger;
 
@@ -87,9 +93,6 @@ public class CobbleContestsForge {
 
     public CobbleContestsForge(IEventBus modEventBus, ModContainer modContainer){
         //CobbleContests.init();
-        //MinecraftForge.EVENT_BUS.register(this);
-
-        //IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         NeoForge.EVENT_BUS.register(this);
 
@@ -104,9 +107,10 @@ public class CobbleContestsForge {
         ItemInit.ITEMS.register(modEventBus);
 
         BlockEntityInit.BLOCK_ENTITIES.register(modEventBus);
-        //MenuInit.MENU_TYPES.register(modEventBus);
+        MenuInit.MENU_TYPES.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::addCreative);
+        modEventBus.addListener(this::registerScreens);
         //ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
 
@@ -162,6 +166,13 @@ public class CobbleContestsForge {
         }
     }
 
+    // Event is listened to on the mod event bus
+    private void registerScreens(RegisterMenuScreensEvent event) {
+        event.register(MenuInit.CONTEST_MENU.get(), SecondTestScreen::new);
+        event.register(MenuInit.PLAYER_CONTEST_INFO_MENU.get(), PlayerContestInfoScreen::new);
+        event.register(MenuInit.POFFIN_POT_MENU.get(), PoffinPotScreen::new);
+    }
+
 
     @EventBusSubscriber(modid = MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents{
@@ -188,6 +199,7 @@ public class CobbleContestsForge {
 
     }
 
+
     private void addCreative(BuildCreativeModeTabContentsEvent event) {}
 
     @EventBusSubscriber(modid = MOD_ID, bus = EventBusSubscriber.Bus.MOD)
@@ -197,12 +209,19 @@ public class CobbleContestsForge {
         public static void commonSetup(FMLCommonSetupEvent event){
             event.enqueueWork(() -> {
                 //PacketHandler.register();
+
             });
 
         }
         @SubscribeEvent
         public void addJsonListeners(AddReloadListenerEvent event) {
             event.addListener(JsonLoadMoves.instance);
+        }
+
+        @SubscribeEvent
+        public static void registerPayloads(final RegisterPayloadHandlersEvent event) {
+            CobbleContestsForge.LOGGER.info("Registering Messages XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            System.out.println("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLllO");
         }
 
     }

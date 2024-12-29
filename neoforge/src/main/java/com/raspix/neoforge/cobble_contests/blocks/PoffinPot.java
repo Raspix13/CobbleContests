@@ -73,7 +73,7 @@ public class PoffinPot extends BaseEntityBlock {
             if (player instanceof ServerPlayer sPlayer) {
                 //NetworkHooks.openScreen((ServerPlayer)player, (PoffinPotBlockEntity)blockEntity, pos);
                 System.out.println("Setting to open");
-                sPlayer.openMenu((PoffinPotBlockEntity)blockEntity);
+                sPlayer.openMenu((PoffinPotBlockEntity)blockEntity, pos);
             }
             return InteractionResult.CONSUME;
         }

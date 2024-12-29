@@ -3,6 +3,7 @@ package com.raspix.neoforge.cobble_contests.network;
 import com.raspix.neoforge.cobble_contests.CobbleContestsForge;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -11,6 +12,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 //https://wiki.fabricmc.net/tutorial:networking#networking_in_1205
 //
 
+//@EventBusSubscriber(modid = CobbleContestsForge.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class MessagesInit {
     public static final ResourceLocation CHANNEL_ID = ResourceLocation.fromNamespaceAndPath(CobbleContestsForge.MOD_ID, "example");
     public static final ResourceLocation WALLET_ID_1 = ResourceLocation.fromNamespaceAndPath(CobbleContestsForge.MOD_ID, "wallet_conditions");
@@ -20,18 +22,19 @@ public class MessagesInit {
     //public static final ResourceLocation BOOTH_ID_2 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "booth_2");
 
 
-    @SubscribeEvent
+    //@SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
+        CobbleContestsForge.LOGGER.info("Registering Messages XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         // Sets the current network version
         final PayloadRegistrar registrar = event.registrar("1");
-        registrar.playToServer(
+        registrar.commonBidirectional(
                 SBWalletScreenParty.PACKET_ID, SBWalletScreenParty.PACKET_CODEC,
                 new DirectionalPayloadHandler<>(
                         SBWalletScreenParty::handleDataOnMain,
                         SBWalletScreenParty::handleDataOnMain
                 )
         );
-        registrar.playToServer(
+        registrar.commonBidirectional(
                 SBRunContest.PACKET_ID, SBRunContest.PACKET_CODEC,
                 new DirectionalPayloadHandler<>(
                         SBRunContest::handleDataOnMain,
@@ -39,7 +42,7 @@ public class MessagesInit {
                 )
         );
 
-        registrar.playToClient(
+        registrar.commonBidirectional(
                 CBWalletScreenParty.PACKET_ID, CBWalletScreenParty.PACKET_CODEC,
                 new DirectionalPayloadHandler<>(
                         CBWalletScreenParty::handleDataOnMain,

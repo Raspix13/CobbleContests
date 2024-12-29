@@ -67,7 +67,7 @@ public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
         this.playerInv = playerInv;
         this.contestInfoMenu = containerID;
         //PacketHandler.sendToServer(new SBInfoScreenParty(playerInv.player.getUUID()));
-        PacketDistributor.sendToServer(new SBWalletScreenParty(playerInv.player.getUUID()));
+        //PacketDistributor.sendToServer(new SBWalletScreenParty(playerInv.player.getUUID()));
     }
 
     @Override
