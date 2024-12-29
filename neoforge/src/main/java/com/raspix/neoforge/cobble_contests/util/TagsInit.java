@@ -1,6 +1,7 @@
 package com.raspix.neoforge.cobble_contests.util;
 
 import com.raspix.common.cobble_contests.CobbleContests;
+import com.raspix.neoforge.cobble_contests.CobbleContestsForge;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -16,7 +17,7 @@ public class TagsInit {
 
 
         private static TagKey<Block> tag(String name){
-            return BlockTags.create(ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, name));
+            return BlockTags.create(ResourceLocation.fromNamespaceAndPath(CobbleContestsForge.MOD_ID, name));
         }
     }
 
@@ -27,7 +28,7 @@ public class TagsInit {
         private static TagKey<Item> tag(String name){
             //return ItemTags.create(new ResourceLocation(CobbleContests.MOD_ID, name));
 
-            return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, name));
+            return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(CobbleContestsForge.MOD_ID, name));
         }
         //TagKey[minecraft:item / cobble_contests:cobblemon_berries]
     }

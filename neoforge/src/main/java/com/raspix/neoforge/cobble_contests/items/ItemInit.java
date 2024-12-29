@@ -7,10 +7,8 @@ import com.raspix.neoforge.cobble_contests.CobbleContestsForge;
 import com.raspix.neoforge.cobble_contests.blocks.BlockInit;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.Foods;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -23,10 +21,10 @@ import java.util.function.Supplier;
 public class ItemInit {
 
     private ItemInit(){}
-    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(CobbleContests.MOD_ID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(CobbleContestsForge.MOD_ID);
 
-    //public static final DeferredItem<BlockItem> CONTEST_BOOTH = ITEMS.register("contest_booth", () -> new BlockItem(BlockInit.CONTEST_BOOTH.get(), new Item.Properties()));
-    //public static final DeferredItem<BlockItem> POFFIN_POT = ITEMS.register("poffin_pot", () -> new BlockItem(BlockInit.POFFIN_POT.get(), new Item.Properties()));
+    public static final DeferredItem<BlockItem> CONTEST_BOOTH = ITEMS.register("contest_booth", () -> new BlockItem(BlockInit.CONTEST_BOOTH.get(), new Item.Properties()));
+    public static final DeferredItem<BlockItem> POFFIN_POT = ITEMS.register("poffin_pot", () -> new BlockItem(BlockInit.POFFIN_POT.get(), new Item.Properties()));
 
     public static final DeferredItem<Item> POFFIN_DOUGH_BASE = ITEMS.register("poffin_dough_base", () -> new Item(new Item.Properties()));
     public static final DeferredItem<Item> FOUL_POFFIN = ITEMS.register("foul_poffin", () -> new PoffinItem(new Item.Properties(), -1, -1)); //random
@@ -61,16 +59,16 @@ public class ItemInit {
     public static final DeferredItem<Item> CONTEST_CARD = ITEMS.register("contest_card", () -> new ContestWallet(new Item.Properties().stacksTo(1)));
     public static final DeferredItem<Item> BALL_SWAPPER = ITEMS.register("ball_swapper", () -> new BallSwapper(new Item.Properties().stacksTo(1)));
 
-    public static final Supplier<CreativeModeTab> EXAMPLE_TAB = CobbleContestsForge.CREATIVE_MODE_TABS.register("cobble_contests_tab", () -> CreativeModeTab.builder()
-            .withTabsBefore(CreativeModeTabs.COMBAT)
+    public static final Supplier<CreativeModeTab> CONTEST_TAB = CobbleContestsForge.CREATIVE_MODE_TABS.register("cobble_contests_tab", () -> CreativeModeTab.builder()
+            .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
             .title(Component.translatable("creativetab.cobble_contests"))
-            .icon(() -> CONTEST_CARD.get().getDefaultInstance())
+            .icon(() -> new ItemStack(CONTEST_CARD.get()))
             .displayItems((parameters, output) -> {
-                output.accept(BlockInit.CONTEST_BOOTH.get());
+                output.accept(CONTEST_BOOTH.get());
 
                 output.accept(CONTEST_CARD.get());
                 output.accept(BALL_SWAPPER.get());
-                output.accept(BlockInit.POFFIN_POT.get());
+                output.accept(POFFIN_POT.get());
                 //output.accept(POFFIN_CASE.get());
                 output.accept(POFFIN_DOUGH_BASE.get());
                 output.accept(FOUL_POFFIN.get());

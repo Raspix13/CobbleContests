@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.pokemon.Species;
 import com.mojang.logging.LogUtils;
 import com.raspix.neoforge.cobble_contests.blocks.BlockInit;
 import com.raspix.neoforge.cobble_contests.blocks.entity.BlockEntityInit;
+import com.raspix.neoforge.cobble_contests.events.JsonLoadMoves;
 import com.raspix.neoforge.cobble_contests.items.ItemInit;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -41,6 +42,7 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -78,7 +80,7 @@ public class CobbleContestsForge {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MOD_ID);
 
     //public static ContestMoves contestMoves;
-    //public static final CobbleContestsDataProvider dataProvider = new CobbleContestsDataProvider();
+    public static final CobbleContestsDataProvider dataProvider = new CobbleContestsDataProvider();
 
 
 
@@ -95,11 +97,12 @@ public class CobbleContestsForge {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::initialize);
 
+        CREATIVE_MODE_TABS.register(modEventBus);
 
 
         BlockInit.BLOCKS.register(modEventBus);
         ItemInit.ITEMS.register(modEventBus);
-        CREATIVE_MODE_TABS.register(modEventBus);
+
         BlockEntityInit.BLOCK_ENTITIES.register(modEventBus);
         //MenuInit.MENU_TYPES.register(modEventBus);
         NeoForge.EVENT_BUS.register(this);
@@ -126,7 +129,7 @@ public class CobbleContestsForge {
     }*/
 
     public void initialize(FMLCommonSetupEvent event){
-        //dataProvider.registerDefaults();
+        dataProvider.registerDefaults();
     }
 
     /**@EventBusSubscriber(bus = EventBusSubscriber.Bus.NEOFORGE)
@@ -197,10 +200,10 @@ public class CobbleContestsForge {
             });
 
         }
-        /**@SubscribeEvent
+        @SubscribeEvent
         public void addJsonListeners(AddReloadListenerEvent event) {
             event.addListener(JsonLoadMoves.instance);
-        }*/
+        }
 
     }
 

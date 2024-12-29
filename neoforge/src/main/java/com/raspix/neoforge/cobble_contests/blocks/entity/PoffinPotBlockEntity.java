@@ -7,6 +7,7 @@ import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
 import com.cobblemon.mod.common.item.CobblemonItem;
 import com.google.common.collect.Maps;
 import com.raspix.common.cobble_contests.CobbleContests;
+import com.raspix.neoforge.cobble_contests.CobbleContestsForge;
 import com.raspix.neoforge.cobble_contests.blocks.PoffinPot;
 import com.raspix.neoforge.cobble_contests.items.ItemInit;
 import com.raspix.neoforge.cobble_contests.util.TagsInit;
@@ -66,7 +67,7 @@ public class PoffinPotBlockEntity extends BaseContainerBlockEntity implements Wo
     private static final int[] SLOTS_4_DOWN = new int[]{6, 5};  //output + bucket fuel
     private static final int[] SLOTS_4_SIDES = new int[]{5}; //fuel
 
-    private static final Component TITLE = Component.translatable("container." + CobbleContests.MOD_ID + ".poffin_pot");
+    private static final Component TITLE = Component.translatable("container." + CobbleContestsForge.MOD_ID + ".poffin_pot");
 
     public PoffinPotBlockEntity(BlockEntityType<?> arg, BlockPos arg2, BlockState arg3) {
         super(arg, arg2, arg3);

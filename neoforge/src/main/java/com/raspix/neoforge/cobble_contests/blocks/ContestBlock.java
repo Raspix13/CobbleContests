@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
 import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
 import com.cobblemon.mod.common.api.storage.pc.PCStore;
 import com.raspix.common.cobble_contests.CobbleContests;
+import com.raspix.neoforge.cobble_contests.CobbleContestsForge;
 import com.raspix.neoforge.cobble_contests.blocks.entity.BlockEntityInit;
 import com.raspix.neoforge.cobble_contests.blocks.entity.ContestBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -49,7 +50,7 @@ public class ContestBlock extends Block implements EntityBlock {
 
     private static final VoxelShape SHAPE_AABB = Block.box(0F, 0F, 0F, 16F, 16F, 16F);
 
-    private static final Component TITLE = Component.translatable("container." + CobbleContests.MOD_ID + ".contest_block");
+    private static final Component TITLE = Component.translatable("container." + CobbleContestsForge.MOD_ID + ".contest_block");
 
     public ContestBlock(Properties arg) {
         super(arg);

@@ -32,7 +32,7 @@ public class CobbleContestsDataProvider implements DataProvider {
 
     public void registerDefaults(){
         CobbleContestsForge.LOGGER.info("Registering Defaults");
-        //this.register(CobbleContestsMoves.INSTANCE);
+        this.register(CobbleContestsMoves.INSTANCE);
 
 
 

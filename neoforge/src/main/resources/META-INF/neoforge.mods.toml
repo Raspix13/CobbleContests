@@ -11,21 +11,21 @@ authors="Raspix"
 description='''${mod_description}'''
 #logoFile = ""
 
-[[dependencies.cobble_contests]]
+[[dependencies.${mod_id}]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.21.1]"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.cobble_contests]]
+[[dependencies.${mod_id}]]
 modId = "neoforge"
 mandatory = true
 versionRange = "[21.1.66,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.cobble_contests]]
+[[dependencies.${mod_id}]]
 modId = "cobblemon"
 mandatory = true
 versionRange = "[1.6,)"

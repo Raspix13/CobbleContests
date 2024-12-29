@@ -1,6 +1,7 @@
 package com.raspix.fabric.cobble_contests.blocks;
 
 import com.raspix.common.cobble_contests.CobbleContests;
+import com.raspix.fabric.cobble_contests.CobbleContestsFabric;
 import com.raspix.fabric.cobble_contests.blocks.entity.BlockEntityInit;
 import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
 //import com.raspix.fabric.cobble_contests.menus.ContestMenu;
@@ -42,7 +43,7 @@ public class ContestBlock extends Block implements EntityBlock {
 
     private static final VoxelShape SHAPE_AABB = Block.box(0F, 0F, 0F, 16F, 16F, 16F);
 
-    private static final Component TITLE = Component.translatable("container." + CobbleContests.MOD_ID + ".contest_block");
+    private static final Component TITLE = Component.translatable("container." + CobbleContestsFabric.MOD_ID + ".contest_block");
 
     public ContestBlock(Properties arg) {
         super(arg);

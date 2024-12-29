@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.api.reactive.SimpleObservable;
 import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.common.cobble_contests.CobbleContests;
+import com.raspix.neoforge.cobble_contests.CobbleContestsForge;
 import com.raspix.neoforge.cobble_contests.pokemon.CVs;
 import com.raspix.neoforge.cobble_contests.pokemon.Ribbons;
 import net.minecraft.ChatFormatting;
@@ -27,7 +28,7 @@ import java.util.*;
 
 public class ContestBlockEntity extends BlockEntity implements MenuProvider {
 
-    private static final Component TITLE = Component.translatable("container." + CobbleContests.MOD_ID + ".contest_block");
+    private static final Component TITLE = Component.translatable("container." + CobbleContestsForge.MOD_ID + ".contest_block");
 
     private boolean isHost;
     private UUID hostId;

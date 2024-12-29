@@ -2,14 +2,18 @@ plugins {
     id("dev.architectury.loom")
     id("architectury-plugin")
 
-    id("eclipse")
-    id("idea")
-    id("maven-publish")
+    //id("eclipse")
+    //id("idea")
+    //id("maven-publish")
 }
 
 architectury {
     common("fabric", "neoforge")
-    platformSetupLoomIde()
+    //platformSetupLoomIde()
+}
+
+loom {
+    silentMojangMappingsLicense()
 }
 
 base {

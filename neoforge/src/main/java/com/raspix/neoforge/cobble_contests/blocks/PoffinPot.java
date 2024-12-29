@@ -3,6 +3,7 @@ package com.raspix.neoforge.cobble_contests.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.raspix.common.cobble_contests.CobbleContests;
+import com.raspix.neoforge.cobble_contests.CobbleContestsForge;
 import com.raspix.neoforge.cobble_contests.blocks.entity.BlockEntityInit;
 import com.raspix.neoforge.cobble_contests.blocks.entity.PoffinPotBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -35,7 +36,7 @@ import javax.annotation.Nullable;
 
 public class PoffinPot extends BaseEntityBlock {
 
-    private static final Component TITLE = Component.translatable("container." + CobbleContests.MOD_ID + ".poffin_pot");
+    private static final Component TITLE = Component.translatable("container." + CobbleContestsForge.MOD_ID + ".poffin_pot");
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
