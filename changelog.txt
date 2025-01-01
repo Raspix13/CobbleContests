@@ -1,4 +1,4 @@
-Cobble Contests 1.0.2 (Fabric)
+Cobble Contests 1.0.2 (Fabric + Neoforge)
 Updated for Cobblemon 1.6
 -Fixed some bugs with contest card and contest booth that caused crashing on single and multiplayer
 
