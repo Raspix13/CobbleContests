@@ -170,6 +170,9 @@ public class SBRunContest implements CustomPacketPayload {
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
+        System.out.println("HELLO");
+        System.out.println("TYPE: " + PACKET_ID);
+        System.out.println("ID: " + PACKET_ID.id());
         return PACKET_ID;
     }
 }

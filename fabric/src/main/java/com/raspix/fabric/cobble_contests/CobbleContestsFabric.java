@@ -1,6 +1,5 @@
 package com.raspix.fabric.cobble_contests;
 
-import com.raspix.common.cobble_contests.ExampleCommandRegistry;
 //import com.raspix.fabric.cobble_contests.blocks.BlockInit;
 //import com.raspix.fabric.cobble_contests.blocks.entity.BlockEntityInit;
 import com.raspix.fabric.cobble_contests.blocks.BlockInit;

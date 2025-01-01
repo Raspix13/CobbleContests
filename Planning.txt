@@ -28,10 +28,15 @@ Additions & QOL:
 -Configs to allow berries from other mods/packs
 -Add glow to poffin pot base when cooking
 
+
+
+
 Bugs & Issues:
 -Does the contest booth have different entities for the top and bottom?
 -Can multiple contests be run at the same time (Different booths)?
 -Does trading keep ribbons and stats?
+
+
 
 Things I Need to Work on Before Releasing Newest Version:
 -Each Time Checklist:
@@ -49,10 +54,14 @@ Things I Need to Work on Before Releasing Newest Version:
 -Fabric:
     *-Ballswapper tooltip cuts off screen
     *-make sure things save
+-Neoforge:
+    -Fix poffin pot text
+    -check moves text
 
 Next Update Plan Reminders:
 - make contest screen tell current level of contest for pokemon
 - fix poffin not being foul when result of berries is 0 (leppa + chesto)
+- Fix card big poke animation speed being too fast
 
 For future reference:
 -forge mod info is set in mods.toml in resources->META-INF & fabric is fabric.mod.json in resources

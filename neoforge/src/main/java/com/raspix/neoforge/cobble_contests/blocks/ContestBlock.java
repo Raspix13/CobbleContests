@@ -1,26 +1,18 @@
 package com.raspix.neoforge.cobble_contests.blocks;
 
-import com.cobblemon.mod.common.Cobblemon;
-import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
-import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
-import com.cobblemon.mod.common.api.storage.pc.PCStore;
-import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.neoforge.cobble_contests.CobbleContestsForge;
 import com.raspix.neoforge.cobble_contests.blocks.entity.BlockEntityInit;
 import com.raspix.neoforge.cobble_contests.blocks.entity.ContestBlockEntity;
-import com.raspix.neoforge.cobble_contests.menus.ContestMenu;
+import com.raspix.neoforge.cobble_contests.menus.ContestBoothMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -34,9 +26,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -127,7 +117,7 @@ public class ContestBlock extends Block implements EntityBlock {
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         return new SimpleMenuProvider((id, playerInv, arg4) -> {
-            return new ContestMenu(id, playerInv, level.getBlockEntity(pos));
+            return new ContestBoothMenu(id, playerInv, level.getBlockEntity(pos));
         }, TITLE);
     }
 

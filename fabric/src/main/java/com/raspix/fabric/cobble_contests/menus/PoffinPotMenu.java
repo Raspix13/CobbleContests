@@ -28,7 +28,7 @@ public class PoffinPotMenu extends AbstractContainerMenu {
     private final Container container;
     private final ContainerData containerData;
     private Slot ingredientSlot;
-
+    //private final ContainerLevelAccess levelAccess;
 
     public PoffinPotMenu(int containerID, Inventory playerInv, FriendlyByteBuf additionalData){
         this(containerID, playerInv, playerInv.player.level().getBlockEntity(additionalData.readBlockPos()), new SimpleContainer(7), new SimpleContainerData(4));
@@ -150,7 +150,8 @@ public class PoffinPotMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return true;//stillValid(this.levelAccess, player, BlockInit.POFFIN_POT);
+        return true;
+        //return stillValid(this.levelAccess, player, BlockInit.POFFIN_POT);
     }
 
 
@@ -168,7 +169,7 @@ public class PoffinPotMenu extends AbstractContainerMenu {
         }
 
         public boolean mayPlace(ItemStack arg) {
-            return mayPlaceItem(arg);
+            return false;//mayPlaceItem(arg);
         }
 
         public int getMaxStackSize() {

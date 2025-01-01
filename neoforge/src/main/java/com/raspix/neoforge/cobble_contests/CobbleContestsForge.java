@@ -1,24 +1,18 @@
 package com.raspix.neoforge.cobble_contests;
 
-import com.cobblemon.mod.common.api.pokemon.PokemonSpecies;
-import com.cobblemon.mod.common.pokemon.Species;
 import com.mojang.logging.LogUtils;
 import com.raspix.neoforge.cobble_contests.blocks.BlockInit;
 import com.raspix.neoforge.cobble_contests.blocks.entity.BlockEntityInit;
 import com.raspix.neoforge.cobble_contests.events.JsonLoadMoves;
 import com.raspix.neoforge.cobble_contests.items.ItemInit;
 import com.raspix.neoforge.cobble_contests.menus.MenuInit;
-import com.raspix.neoforge.cobble_contests.menus.screens.PlayerContestInfoScreen;
+import com.raspix.neoforge.cobble_contests.menus.screens.ContestBoothScreen;
+import com.raspix.neoforge.cobble_contests.menus.screens.PlayerConditionCardScreen;
 import com.raspix.neoforge.cobble_contests.menus.screens.PoffinPotScreen;
-import com.raspix.neoforge.cobble_contests.menus.screens.SecondTestScreen;
-import net.minecraft.client.gui.screens.MenuScreens;
+import com.raspix.neoforge.cobble_contests.network.MessagesInit;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.commands.Commands;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 //import net.minecraftforge.api.distmarker.Dist;
 //import net.minecraftforge.common.MinecraftForge;
@@ -39,10 +33,8 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
@@ -111,6 +103,8 @@ public class CobbleContestsForge {
         NeoForge.EVENT_BUS.register(this);
         modEventBus.addListener(this::addCreative);
         modEventBus.addListener(this::registerScreens);
+        modEventBus.addListener(this::registerPayloads);
+        //modEventBus.addListener();
         //ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
 
@@ -168,9 +162,15 @@ public class CobbleContestsForge {
 
     // Event is listened to on the mod event bus
     private void registerScreens(RegisterMenuScreensEvent event) {
-        event.register(MenuInit.CONTEST_MENU.get(), SecondTestScreen::new);
-        event.register(MenuInit.PLAYER_CONTEST_INFO_MENU.get(), PlayerContestInfoScreen::new);
+        event.register(MenuInit.CONTEST_MENU.get(), ContestBoothScreen::new);
+        event.register(MenuInit.PLAYER_CONTEST_INFO_MENU.get(), PlayerConditionCardScreen::new);
         event.register(MenuInit.POFFIN_POT_MENU.get(), PoffinPotScreen::new);
+    }
+
+    public void registerPayloads(final RegisterPayloadHandlersEvent event) {
+        //CobbleContestsForge.LOGGER.info("Registering Messages XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        //System.out.println("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLllO registerPayloads");
+        MessagesInit.register(event);
     }
 
 
@@ -202,12 +202,13 @@ public class CobbleContestsForge {
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {}
 
-    @EventBusSubscriber(modid = MOD_ID, bus = EventBusSubscriber.Bus.MOD)
-    public static class CommonModEvents{
+    /**@EventBusSubscriber(modid = MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+    public class CommonModEvents{
 
         @SubscribeEvent
         public static void commonSetup(FMLCommonSetupEvent event){
             event.enqueueWork(() -> {
+                System.out.println("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLllO in commonSetup");
                 //PacketHandler.register();
 
             });
@@ -215,16 +216,18 @@ public class CobbleContestsForge {
         }
         @SubscribeEvent
         public void addJsonListeners(AddReloadListenerEvent event) {
+            System.out.println("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLllO in addJsonListeners");
             event.addListener(JsonLoadMoves.instance);
         }
 
         @SubscribeEvent
         public static void registerPayloads(final RegisterPayloadHandlersEvent event) {
             CobbleContestsForge.LOGGER.info("Registering Messages XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            System.out.println("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLllO");
+            System.out.println("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLllO registerPayloads");
+            MessagesInit.register(event);
         }
 
-    }
+    }*/
 
 
 

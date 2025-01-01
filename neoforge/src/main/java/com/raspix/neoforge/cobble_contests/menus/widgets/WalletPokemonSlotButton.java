@@ -1,17 +1,13 @@
-package com.raspix.fabric.cobble_contests.menus.widgets;
+package com.raspix.neoforge.cobble_contests.menus.widgets;
 
 import com.cobblemon.mod.common.client.CobblemonResources;
-//import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonFloatingState;
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState;
-import com.cobblemon.mod.common.client.render.models.blockbench.PosableState;
 import com.cobblemon.mod.common.entity.PoseType;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.pokemon.status.PersistentStatusContainer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import kotlin.Pair;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +20,7 @@ import static com.cobblemon.mod.common.client.render.RenderHelperKt.*;
 import static com.cobblemon.mod.common.util.LocalizationUtilsKt.lang;
 import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 
-public class PokemonInfoSlotButton extends FixedImageButton {
+public class WalletPokemonSlotButton extends FixedImageButton {
 
     private final int WIDTH = 46;
     private final int HEIGHT = 27;
@@ -37,21 +33,20 @@ public class PokemonInfoSlotButton extends FixedImageButton {
     ResourceLocation genderIconMale = cobblemonResource("textures/gui/party/party_gender_male.png");
     ResourceLocation genderIconFemale = cobblemonResource("textures/gui/party/party_gender_female.png");
 
-    public PokemonInfoSlotButton(int i, int j, int k, int l, int m, int n, ResourceLocation arg, OnPress arg2, Pokemon pokemon) {
+    public WalletPokemonSlotButton(int i, int j, int k, int l, int m, int n, ResourceLocation arg, OnPress arg2, Pokemon pokemon) {
         this(i, j, k, l, m, n, l, arg, 256, 256, arg2, pokemon);
     }
 
-    public PokemonInfoSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, OnPress arg2, Pokemon pokemon) {
+    public WalletPokemonSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, OnPress arg2, Pokemon pokemon) {
         this(i, j, k, l, m, n, o, arg, 256, 256, arg2, pokemon);
     }
 
-    public PokemonInfoSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, int p, int q, OnPress arg2, Pokemon pokemon) {
+    public WalletPokemonSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, int p, int q, OnPress arg2, Pokemon pokemon) {
         //ResourceLocation buttonText = getSlotTexture(pokemon);
         this(i, j, k, l, m, n, o, arg, p, q, arg2, CommonComponents.EMPTY, pokemon);
     }
 
-    public PokemonInfoSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, int p, int q, OnPress arg2, Component arg3, Pokemon pokemon) {
-        //super(i, j, k, l, m, n, o, arg, p, q, arg2, arg3);
+    public WalletPokemonSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, int p, int q, OnPress arg2, Component arg3, Pokemon pokemon) {
         super(i, j, k, l, m, n, o, arg, p, q, arg2, arg3);
         this.pokemon = pokemon;
     }
@@ -63,13 +58,13 @@ public class PokemonInfoSlotButton extends FixedImageButton {
             float halfScale = 0.5f;
             PoseStack poses = guiGraphics.pose();
             drawScaledText(guiGraphics, pokemon.getDisplayName().getVisualOrderText(),
-             (Number) (this.getX() + 4),
-             (Number) (this.getY() + 20),
-             0.5f, 0.5f, 1f, 0x00FFFFFF, false, false);
+                    (Number) (this.getX() + 4),
+                    (Number) (this.getY() + 20),
+                    0.5f, 0.5f, 1f, 0x00FFFFFF, false, false);
 
-             poses.translate(this.getX() + (PORTRAIT_DIAMETER / 2.0), this.getY()-10 + 6, 0f);
-             poses.pushPose();
-             /**drawProfilePokemon(pokemon.getSpecies().getResourceIdentifier(), pokemon.getAspects(),
+            poses.translate(this.getX() + (PORTRAIT_DIAMETER / 2.0), this.getY()-10 + 6, 0f);
+            poses.pushPose();
+            /**drawProfilePokemon(pokemon.getSpecies().getResourceIdentifier(), pokemon.getAspects(),
              poses, new Quaternionf().rotationXYZ((float) Math.toRadians(13f), (float) Math.toRadians(35f), 0F),
              null, 2.42f, 12f);*/
 
@@ -84,20 +79,20 @@ public class PokemonInfoSlotButton extends FixedImageButton {
                     true, false, 1f, 1f, 1f, 1f
             );
 
-             poses.popPose();
-             poses.translate(-(this.getX() + (PORTRAIT_DIAMETER / 2.0)), -(this.getY()-10 + 6), 0f);
+            poses.popPose();
+            poses.translate(-(this.getX() + (PORTRAIT_DIAMETER / 2.0)), -(this.getY()-10 + 6), 0f);
 
 
-             drawScaledText(
-             guiGraphics, null,
-             lang("ui.lv.number", pokemon.getLevel()),
-             getX() + 31,
-             getY() + 13,
-             halfScale,
-             1F, Integer.MAX_VALUE, 0xFFFFFFFF,
-             true,
-             true, null, null
-             );
+            drawScaledText(
+                    guiGraphics, null,
+                    lang("ui.lv.number", pokemon.getLevel()),
+                    getX() + 31,
+                    getY() + 13,
+                    halfScale,
+                    1F, Integer.MAX_VALUE, 0xFFFFFFFF,
+                    true,
+                    true, null, null
+            );
             ResourceLocation stateIcon = pokemon.getState().getIcon(pokemon);
             if (stateIcon != null) {
                 int textWidth = 24;
@@ -138,7 +133,7 @@ public class PokemonInfoSlotButton extends FixedImageButton {
             float barWidth = hpRatio * barWidthMax;
             Pair<Float, Float> cols = getDepletableRedGreen(hpRatio, 0.5f, 0.2f);
 
-             blitk(
+            blitk(
                     poses,
                     CobblemonResources.INSTANCE.getWHITE(),
                     getX() + 4,
@@ -168,10 +163,6 @@ public class PokemonInfoSlotButton extends FixedImageButton {
             }
 
 
-
-
-
-
             /**if (pokemon.getGender() != Gender.GENDERLESS) {
              blitk(
              poses, (pokemon.getGender() == Gender.MALE)? genderIconMale : genderIconFemale,
@@ -180,8 +171,6 @@ public class PokemonInfoSlotButton extends FixedImageButton {
              halfScale
              );
              }*/
-
-
 
 
         }

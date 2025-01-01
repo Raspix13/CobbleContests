@@ -6,11 +6,9 @@ import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
 import com.raspix.fabric.cobble_contests.menus.ContestMenu;
 import com.raspix.fabric.cobble_contests.menus.widgets.FixedImageButton;
-import com.raspix.fabric.cobble_contests.menus.widgets.PokemonContestSlotButton;
+import com.raspix.fabric.cobble_contests.menus.widgets.PokemonContestBoothSlotButton;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +20,7 @@ import java.util.UUID;
 
 import static com.cobblemon.mod.common.client.render.RenderHelperKt.drawScaledText;
 
-public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
+public class ContestBoothScreen extends AbstractContainerScreen<ContestMenu> {
 
     private final int STARTING_PAGE = 0; // The page everyone sees at the start
     private final int CONTEST_TYPE_SELECTION = 1; // The page the user sees if trying to host or run rank
@@ -52,7 +50,7 @@ public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
     private UUID playerID;
 
 
-    public SecondTestScreen(ContestMenu containerID, Inventory playerInv, Component title) {
+    public ContestBoothScreen(ContestMenu containerID, Inventory playerInv, Component title) {
         super(containerID, playerInv, title);
         this.leftPos = 0;
         this.topPos = 0;
@@ -128,7 +126,7 @@ public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
                 int buttonX = this.leftPos + 39 + (73 * (i % 3));
                 int buttonY = this.topPos + 36 + (81 * (i / 3));
                 int finalI = i;
-                this.partyButtons.add(this.addRenderableWidget(new PokemonContestSlotButton(buttonX, buttonY, 64, 70, 418, 1, 72, TEXTURE, 1000, 750, btn -> {
+                this.partyButtons.add(this.addRenderableWidget(new PokemonContestBoothSlotButton(buttonX, buttonY, 64, 70, 418, 1, 72, TEXTURE, 1000, 750, btn -> {
                     //joinContestWithPokemon(finalI);
                     selectContestPokemon(finalI);
                 }, clientParty.get(i))));

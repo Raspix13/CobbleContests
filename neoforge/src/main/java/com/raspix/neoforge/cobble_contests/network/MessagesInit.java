@@ -6,6 +6,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
+import net.neoforged.neoforge.network.handling.MainThreadPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 //https://fabricmc.net/2024/04/19/1205.html#:%7E:text=is%20already%20broken
@@ -13,39 +14,34 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 //
 
 //@EventBusSubscriber(modid = CobbleContestsForge.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+
+//@EventBusSubscriber(modid = CobbleContestsForge.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class MessagesInit {
-    public static final ResourceLocation CHANNEL_ID = ResourceLocation.fromNamespaceAndPath(CobbleContestsForge.MOD_ID, "example");
+    public static final ResourceLocation CHANNEL_ID = ResourceLocation.fromNamespaceAndPath(CobbleContestsForge.MOD_ID, CobbleContestsForge.MOD_ID);
     public static final ResourceLocation WALLET_ID_1 = ResourceLocation.fromNamespaceAndPath(CobbleContestsForge.MOD_ID, "wallet_conditions");
     public static final ResourceLocation WALLET_ID_2 = ResourceLocation.fromNamespaceAndPath(CobbleContestsForge.MOD_ID, "wallet_conditions2");
-    public static final ResourceLocation CONTEST_BOOTH = ResourceLocation.fromNamespaceAndPath(CobbleContestsForge.MOD_ID, "contest_booth");
     public static final ResourceLocation RUN_CONTEST = ResourceLocation.fromNamespaceAndPath(CobbleContestsForge.MOD_ID, "run_contest");
-    //public static final ResourceLocation BOOTH_ID_2 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "booth_2");
 
 
     //@SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
-        CobbleContestsForge.LOGGER.info("Registering Messages XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-        // Sets the current network version
-        final PayloadRegistrar registrar = event.registrar("1");
-        registrar.commonBidirectional(
+        final PayloadRegistrar registrar = event.registrar(CobbleContestsForge.MOD_ID).optional();
+        registrar.playToServer(
                 SBWalletScreenParty.PACKET_ID, SBWalletScreenParty.PACKET_CODEC,
-                new DirectionalPayloadHandler<>(
-                        SBWalletScreenParty::handleDataOnMain,
+                new MainThreadPayloadHandler<>(
                         SBWalletScreenParty::handleDataOnMain
                 )
         );
-        registrar.commonBidirectional(
+        registrar.playToServer(
                 SBRunContest.PACKET_ID, SBRunContest.PACKET_CODEC,
-                new DirectionalPayloadHandler<>(
-                        SBRunContest::handleDataOnMain,
+                new MainThreadPayloadHandler<>(
                         SBRunContest::handleDataOnMain
                 )
         );
 
-        registrar.commonBidirectional(
+        registrar.playToClient( //.commonBidirectional
                 CBWalletScreenParty.PACKET_ID, CBWalletScreenParty.PACKET_CODEC,
-                new DirectionalPayloadHandler<>(
-                        CBWalletScreenParty::handleDataOnMain,
+                new MainThreadPayloadHandler<>( //DirectionalPayloadHandler
                         CBWalletScreenParty::handleDataOnMain
                 )
         );

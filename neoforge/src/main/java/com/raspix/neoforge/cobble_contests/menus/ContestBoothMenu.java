@@ -1,7 +1,5 @@
 package com.raspix.neoforge.cobble_contests.menus;
 
-import com.cobblemon.mod.common.Cobblemon;
-import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
 import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
 import com.cobblemon.mod.common.client.CobblemonClient;
 import com.cobblemon.mod.common.client.storage.ClientParty;
@@ -20,7 +18,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.UUID;
 
-public class ContestMenu extends AbstractContainerMenu {
+public class ContestBoothMenu extends AbstractContainerMenu {
 
     private final ContestBlockEntity blockEntity;
     private final ContainerLevelAccess levelAccess;
@@ -28,7 +26,7 @@ public class ContestMenu extends AbstractContainerMenu {
     private ClientParty playerPartyClient;
 
     //server constructor
-    public ContestMenu(int containerID, Inventory playerInv, BlockEntity blockEntity){
+    public ContestBoothMenu(int containerID, Inventory playerInv, BlockEntity blockEntity){
         super(MenuInit.CONTEST_MENU.get(), containerID);
         if(blockEntity instanceof ContestBlockEntity be){
             this.blockEntity = be;
@@ -58,7 +56,7 @@ public class ContestMenu extends AbstractContainerMenu {
     }
 
     //client constructor
-    protected ContestMenu(int containerID, Inventory playerInv, FriendlyByteBuf additionalData) {
+    protected ContestBoothMenu(int containerID, Inventory playerInv, FriendlyByteBuf additionalData) {
         this(containerID, playerInv, playerInv.player.level().getBlockEntity(additionalData.readBlockPos()));
     }
 

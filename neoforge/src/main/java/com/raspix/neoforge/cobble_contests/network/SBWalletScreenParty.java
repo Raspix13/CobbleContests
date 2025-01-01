@@ -20,8 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.UUID;
 
-public class SBWalletScreenParty implements CustomPacketPayload {//ServerPlayNetworking.PlayPayloadHandler {//
-
+public class SBWalletScreenParty implements CustomPacketPayload {
 
     public static final Type<SBWalletScreenParty> PACKET_ID = new Type<>(MessagesInit.WALLET_ID_1);
     public static final StreamCodec<FriendlyByteBuf, SBWalletScreenParty> PACKET_CODEC = new StreamCodec<FriendlyByteBuf, SBWalletScreenParty>() {
@@ -35,17 +34,7 @@ public class SBWalletScreenParty implements CustomPacketPayload {//ServerPlayNet
             FriendlyByteBuf.writeUUID(buf, walletScreenParty.getId());
         }
     };//StreamCodec.of((StreamEncoder)SBWalletScreenParty::new, SBWalletScreenParty::recieve).cast();
-
-    private static FriendlyByteBuf recieve(FriendlyByteBuf buf) {
-        System.out.println("recieve in SBWalletScreenParty was called");
-        if(buf == null){
-            System.out.println("buf is null");
-        }else {
-            System.out.println("buf is not null");
-            System.out.println("buf is " + buf);
-        }
-        return buf;
-    }
+    private final UUID id;
 
     public static void handleDataOnMain(final SBWalletScreenParty data, final IPayloadContext context) {
         System.out.println("Recieving SBWallet");
@@ -64,34 +53,19 @@ public class SBWalletScreenParty implements CustomPacketPayload {//ServerPlayNet
                     tag.put("poke" +i, new CVs().saveToNBT());
                     tag.put("poke" +i + "ribbons", new Ribbons().saveToNBT());
                 }
-
             }
             if (player != null && player instanceof ServerPlayer serverPlayer) {
                 FriendlyByteBuf bufi = new FriendlyByteBuf(Unpooled.buffer());
-                //bufi.writeUUID(id);
                 bufi.writeNbt(tag);
-                //ServerPlayNetworking.send(serverPlayer, new CBWalletScreenParty(id, tag));//MessagesInit.WALLET_ID_2, bufi);//.sendToClient(new CBWalletScreenParty(id, tag), () -> serverPlayer);
                 PacketDistributor.sendToPlayer(serverPlayer, new CBWalletScreenParty(data.getId(), tag));
             }
-
         } catch (NullPointerException e){
-
             System.out.println(e.getMessage());
         }
     }
 
-    public final UUID id;
-
-    public SBWalletScreenParty(FriendlyByteBuf buf) {
-        id = buf.readUUID();
-    }
-
     public UUID getId(){
         return id;
-    }
-
-    public void write(FriendlyByteBuf buf) {
-        buf.writeUUID(this.id);
     }
 
     public SBWalletScreenParty(UUID id){
@@ -103,6 +77,24 @@ public class SBWalletScreenParty implements CustomPacketPayload {//ServerPlayNet
         return PACKET_ID;
     }
 
+    public SBWalletScreenParty(FriendlyByteBuf buf) {
+        id = buf.readUUID();
+    }
+
+    public void write(FriendlyByteBuf buf) {
+        buf.writeUUID(this.id);
+    }
+
+    private static FriendlyByteBuf recieve(FriendlyByteBuf buf) {
+        System.out.println("recieve in SBWalletScreenParty was called");
+        if(buf == null){
+            System.out.println("buf is null");
+        }else {
+            System.out.println("buf is not null");
+            System.out.println("buf is " + buf);
+        }
+        return buf;
+    }
 
     /**public void recieve(MinecraftServer server, Player player) {
         System.out.println("Recieving SBWallet");

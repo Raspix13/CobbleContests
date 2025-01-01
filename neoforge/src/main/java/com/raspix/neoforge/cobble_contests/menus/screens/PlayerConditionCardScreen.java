@@ -15,15 +15,14 @@ import com.mojang.blaze3d.vertex.*;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.neoforge.cobble_contests.CobbleContestsMoves;
 import com.raspix.neoforge.cobble_contests.events.ContestMoves;
-import com.raspix.neoforge.cobble_contests.menus.PlayerContestInfoMenu;
+import com.raspix.neoforge.cobble_contests.menus.PlayerContestCardMenu;
 import com.raspix.neoforge.cobble_contests.menus.widgets.FixedImageButton;
-import com.raspix.neoforge.cobble_contests.menus.widgets.PokemonInfoSlotButton;
+import com.raspix.neoforge.cobble_contests.menus.widgets.WalletPokemonSlotButton;
 import com.raspix.neoforge.cobble_contests.network.SBWalletScreenParty;
 import com.raspix.neoforge.cobble_contests.pokemon.CVs;
 import com.raspix.neoforge.cobble_contests.pokemon.Ribbons;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -43,7 +42,7 @@ import static com.cobblemon.mod.common.util.LocalizationUtilsKt.lang;
 import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 
 @OnlyIn(Dist.CLIENT)
-public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerContestInfoMenu> {
+public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerContestCardMenu> {
 
     private static final int BASE_WIDTH = 349;
     private static final int BASE_HEIGHT = 205;
@@ -79,10 +78,10 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
     private PlayerPartyStore playerPartyStore;
     private ClientParty clientParty;
 
-    private PlayerContestInfoMenu contestInfoMenu;
+    private PlayerContestCardMenu contestInfoMenu;
 
 
-    public PlayerContestInfoScreen(PlayerContestInfoMenu containerID, Inventory playerInv, Component title) {
+    public PlayerConditionCardScreen(PlayerContestCardMenu containerID, Inventory playerInv, Component title) {
         super(containerID, playerInv, title);
         this.leftPos = 0;
         this.topPos = 0;
@@ -144,7 +143,7 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         for(int i = 0; i < 6; i++){
             Pokemon poke = partyPoke.get(i);
             int finalI = i;
-            this.buttons.add(this.addRenderableWidget(new PokemonInfoSlotButton(startingX + (i * xOffset),
+            this.buttons.add(this.addRenderableWidget(new WalletPokemonSlotButton(startingX + (i * xOffset),
                     startingY + (i * yOffset),
                     46, 27, 0, 0, 27, getSlotTexture(poke), 46, 54, btn -> {
                     setPokemonPage(finalI);
@@ -396,8 +395,8 @@ public class PlayerContestInfoScreen extends AbstractContainerScreen<PlayerConte
         ).renderLeftAligned(
                 guiGraphics,
                 (xPos + 80) / 0.5f,
-                (yPos + 3) / 0.5f,
-                5.5 / 0.5f,
+                (yPos + 4) / 0.5f,
+                0,
                 11,
                 ColourLibrary.WHITE,
                 1f,

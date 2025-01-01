@@ -88,7 +88,7 @@ public class PoffinPotMenu extends AbstractContainerMenu {
     public ItemStack quickMoveStack(Player arg, int i) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = (Slot)this.slots.get(i);
-        System.out.println("Index is: " + i);
+        //System.out.println("Index is: " + i);
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
@@ -149,22 +149,13 @@ public class PoffinPotMenu extends AbstractContainerMenu {
         return stillValid(this.levelAccess, player, BlockInit.POFFIN_POT.get());
     }
 
-
-    /**public int getFuel() {
-        return this.brewingStandData.get(1);
-    }
-
-    public int getBrewingTicks() {
-        return this.brewingStandData.get(0);
-    }*/
-
     static class PoffinSlot extends Slot {
         public PoffinSlot(Container arg, int i, int j, int k) {
             super(arg, i, j, k);
         }
 
         public boolean mayPlace(ItemStack arg) {
-            return mayPlaceItem(arg);
+            return false;//mayPlaceItem(arg);
         }
 
         public int getMaxStackSize() {

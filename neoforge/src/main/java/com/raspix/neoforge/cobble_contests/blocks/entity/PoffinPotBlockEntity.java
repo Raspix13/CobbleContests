@@ -645,19 +645,19 @@ public class PoffinPotBlockEntity extends BaseContainerBlockEntity implements Wo
     }
 
     public boolean canPlaceItem(int i, ItemStack arg) {
-        return true;
-        /**if (i == 6) { //result
+        //return true;
+        if (i == 6) { //result
             return false;
         } else if (i == 5) { //fuel
             ItemStack itemstack = (ItemStack) this.items.get(5);
-            return ForgeHooks.getBurnTime(arg, RecipeType.SMELTING) > 0;
+            return getBurnDuration(itemstack) > 0; //return ForgeHooks.getBurnTime(arg, RecipeType.SMELTING) > 0;
         }else if(i >= 0 && i<= 3){ //berries
             return arg.is(TagsInit.Items.COBBLEMON_BERRIES);
         }else if(i == 4){ //dough
             return arg.is(ItemInit.POFFIN_DOUGH_BASE.get());
         } else {
             return false;
-        }*/
+        }
     }
 
     @Override
@@ -679,7 +679,6 @@ public class PoffinPotBlockEntity extends BaseContainerBlockEntity implements Wo
 
         //return this.canPlaceItem(i, arg);
     }
-
 
 
     @Override

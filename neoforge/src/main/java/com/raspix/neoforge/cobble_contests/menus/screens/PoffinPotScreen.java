@@ -120,8 +120,8 @@ public class PoffinPotScreen extends AbstractContainerScreen<PoffinPotMenu> {
             ).renderLeftAligned(
                     guiGraphics,
                     (this.leftPos + 4) / 0.5f,
-                    (this.topPos + 41) / 0.5f,
-                    5.5 / 0.5f,
+                    (this.topPos + 42) / 0.5f,
+                    0,
                     11,
                     ColourLibrary.WHITE,
                     1f,

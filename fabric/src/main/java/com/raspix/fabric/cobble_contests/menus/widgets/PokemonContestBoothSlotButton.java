@@ -3,12 +3,11 @@ package com.raspix.fabric.cobble_contests.menus.widgets;
 //import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonFloatingState;
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState;
 import com.cobblemon.mod.common.entity.PoseType;
+import com.cobblemon.mod.common.pokemon.Gender;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.pokemon.status.PersistentStatusContainer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +21,7 @@ import static com.cobblemon.mod.common.client.render.RenderHelperKt.renderScaled
 import static com.cobblemon.mod.common.util.LocalizationUtilsKt.lang;
 import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 
-public class PokemonContestSlotButton extends FixedImageButton {
+public class PokemonContestBoothSlotButton extends FixedImageButton {
 
     private final int WIDTH = 46;
     private final int HEIGHT = 27;
@@ -35,20 +34,20 @@ public class PokemonContestSlotButton extends FixedImageButton {
     ResourceLocation genderIconMale = cobblemonResource("textures/gui/party/party_gender_male.png");
     ResourceLocation genderIconFemale = cobblemonResource("textures/gui/party/party_gender_female.png");
 
-    public PokemonContestSlotButton(int i, int j, int k, int l, int m, int n, ResourceLocation arg, OnPress arg2, Pokemon pokemon) {
+    public PokemonContestBoothSlotButton(int i, int j, int k, int l, int m, int n, ResourceLocation arg, OnPress arg2, Pokemon pokemon) {
         this(i, j, k, l, m, n, l, arg, 256, 256, arg2, pokemon);
     }
 
-    public PokemonContestSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, OnPress arg2, Pokemon pokemon) {
+    public PokemonContestBoothSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, OnPress arg2, Pokemon pokemon) {
         this(i, j, k, l, m, n, o, arg, 256, 256, arg2, pokemon);
     }
 
-    public PokemonContestSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, int p, int q, OnPress arg2, Pokemon pokemon) {
+    public PokemonContestBoothSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, int p, int q, OnPress arg2, Pokemon pokemon) {
         //ResourceLocation buttonText = getSlotTexture(pokemon);
         this(i, j, k, l, m, n, o, arg, p, q, arg2, CommonComponents.EMPTY, pokemon);
     }
 
-    public PokemonContestSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, int p, int q, OnPress arg2, Component arg3, Pokemon pokemon) {
+    public PokemonContestBoothSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, int p, int q, OnPress arg2, Component arg3, Pokemon pokemon) {
         super(i, j, k, l, m, n, o, arg, p, q, arg2, arg3);
         //super(i, j, k, l, new WidgetSprites(arg, arg), arg2, arg3);
         this.pokemon = pokemon;
@@ -66,7 +65,7 @@ public class PokemonContestSlotButton extends FixedImageButton {
                 int textWidth = 24;
                 int textHeight = 17;
                 blitk(
-                        poses, stateIcon, (Number)((getX() + 24.5) / halfScale), (Number)((getY() + 3) / halfScale),
+                        poses, stateIcon, (Number)((getX() + 26) / halfScale), (Number)((getY() + 3) / halfScale),
                         (Number)17, (Number)24, (Number)0, (Number)0, (Number) textWidth, (Number) textHeight, (Number)0,
                         (Number)1f, (Number)1, (Number)1, (Number)1, true, halfScale
                 );
@@ -123,23 +122,23 @@ public class PokemonContestSlotButton extends FixedImageButton {
             poses.popPose();
             poses.translate(-(this.getX() + 20 + (PORTRAIT_DIAMETER / 2.0)), -(this.getY()+10), 0f);
 
-            /**if (pokemon.getGender() != Gender.GENDERLESS) {
+            if (pokemon.getGender() != Gender.GENDERLESS) {
                 blitk(
                         poses, (pokemon.getGender() == Gender.MALE)? genderIconMale : genderIconFemale,
                         (getX() + 40) / halfScale, (getY() + 20) / halfScale, height = 7, width = 5,
                         0, 0, 5, 7, 0, 1, 1, 1, 1, true,
                         halfScale
                 );
-            }*/
+            }
 
             drawScaledText(
                     guiGraphics,
                     null,
                     lang("ui.lv.number", pokemon.getLevel()),
                     //Component.translatable("ui.lv.number", pokemon.getLevel()),
-                    getX() + 31,
+                    getX() + 32,
                     getY() + 13,
-                     halfScale,
+                    halfScale,
                     1f,
                     Integer.MAX_VALUE,
                     0x00FFFFFF,

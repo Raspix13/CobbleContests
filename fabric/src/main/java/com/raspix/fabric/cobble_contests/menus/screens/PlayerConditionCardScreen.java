@@ -17,7 +17,7 @@ import com.raspix.fabric.cobble_contests.menus.PlayerContestInfoMenu;
 import com.raspix.fabric.cobble_contests.CobbleContestsMoves;
 import com.raspix.fabric.cobble_contests.events.ContestMoves;
 import com.raspix.fabric.cobble_contests.menus.widgets.FixedImageButton;
-import com.raspix.fabric.cobble_contests.menus.widgets.PokemonInfoSlotButton;
+import com.raspix.fabric.cobble_contests.menus.widgets.WalletPokemonSlotButton;
 //import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import com.raspix.fabric.cobble_contests.network.SBWalletScreenParty;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
@@ -141,7 +141,7 @@ public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerCon
         for(int i = 0; i < 6; i++){
             Pokemon poke = partyPoke.get(i);
             int finalI = i;
-            this.buttons.add(this.addRenderableWidget(new PokemonInfoSlotButton(startingX + (i * xOffset),
+            this.buttons.add(this.addRenderableWidget(new WalletPokemonSlotButton(startingX + (i * xOffset),
                     startingY + (i * yOffset),
                     46, 27, 0, 0, 27, getSlotTexture(poke), 46, 54, btn -> {
                     setPokemonPage(finalI);

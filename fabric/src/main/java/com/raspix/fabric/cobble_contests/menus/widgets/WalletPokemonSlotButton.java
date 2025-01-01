@@ -1,6 +1,7 @@
-package com.raspix.neoforge.cobble_contests.menus.widgets;
+package com.raspix.fabric.cobble_contests.menus.widgets;
 
 import com.cobblemon.mod.common.client.CobblemonResources;
+//import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonFloatingState;
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState;
 import com.cobblemon.mod.common.entity.PoseType;
 import com.cobblemon.mod.common.pokemon.Pokemon;
@@ -8,8 +9,6 @@ import com.cobblemon.mod.common.pokemon.status.PersistentStatusContainer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import kotlin.Pair;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +21,7 @@ import static com.cobblemon.mod.common.client.render.RenderHelperKt.*;
 import static com.cobblemon.mod.common.util.LocalizationUtilsKt.lang;
 import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 
-public class PokemonInfoSlotButton extends FixedImageButton {
+public class WalletPokemonSlotButton extends FixedImageButton {
 
     private final int WIDTH = 46;
     private final int HEIGHT = 27;
@@ -35,20 +34,21 @@ public class PokemonInfoSlotButton extends FixedImageButton {
     ResourceLocation genderIconMale = cobblemonResource("textures/gui/party/party_gender_male.png");
     ResourceLocation genderIconFemale = cobblemonResource("textures/gui/party/party_gender_female.png");
 
-    public PokemonInfoSlotButton(int i, int j, int k, int l, int m, int n, ResourceLocation arg, OnPress arg2, Pokemon pokemon) {
+    public WalletPokemonSlotButton(int i, int j, int k, int l, int m, int n, ResourceLocation arg, OnPress arg2, Pokemon pokemon) {
         this(i, j, k, l, m, n, l, arg, 256, 256, arg2, pokemon);
     }
 
-    public PokemonInfoSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, OnPress arg2, Pokemon pokemon) {
+    public WalletPokemonSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, OnPress arg2, Pokemon pokemon) {
         this(i, j, k, l, m, n, o, arg, 256, 256, arg2, pokemon);
     }
 
-    public PokemonInfoSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, int p, int q, OnPress arg2, Pokemon pokemon) {
+    public WalletPokemonSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, int p, int q, OnPress arg2, Pokemon pokemon) {
         //ResourceLocation buttonText = getSlotTexture(pokemon);
         this(i, j, k, l, m, n, o, arg, p, q, arg2, CommonComponents.EMPTY, pokemon);
     }
 
-    public PokemonInfoSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, int p, int q, OnPress arg2, Component arg3, Pokemon pokemon) {
+    public WalletPokemonSlotButton(int i, int j, int k, int l, int m, int n, int o, ResourceLocation arg, int p, int q, OnPress arg2, Component arg3, Pokemon pokemon) {
+        //super(i, j, k, l, m, n, o, arg, p, q, arg2, arg3);
         super(i, j, k, l, m, n, o, arg, p, q, arg2, arg3);
         this.pokemon = pokemon;
     }
@@ -66,6 +66,9 @@ public class PokemonInfoSlotButton extends FixedImageButton {
 
              poses.translate(this.getX() + (PORTRAIT_DIAMETER / 2.0), this.getY()-10 + 6, 0f);
              poses.pushPose();
+             /**drawProfilePokemon(pokemon.getSpecies().getResourceIdentifier(), pokemon.getAspects(),
+             poses, new Quaternionf().rotationXYZ((float) Math.toRadians(13f), (float) Math.toRadians(35f), 0F),
+             null, 2.42f, 12f);*/
 
             drawProfilePokemon(
                     pokemon.getSpecies().getResourceIdentifier(),
@@ -77,10 +80,6 @@ public class PokemonInfoSlotButton extends FixedImageButton {
                     12f,
                     true, false, 1f, 1f, 1f, 1f
             );
-
-             /**drawProfilePokemon(pokemon.getSpecies().getResourceIdentifier(), pokemon.getAspects(),
-             poses, new Quaternionf().rotationXYZ((float) Math.toRadians(13f), (float) Math.toRadians(35f), 0F),
-             new PokemonFloatingState(), 2.42f, 12f);*/
 
              poses.popPose();
              poses.translate(-(this.getX() + (PORTRAIT_DIAMETER / 2.0)), -(this.getY()-10 + 6), 0f);
@@ -96,14 +95,16 @@ public class PokemonInfoSlotButton extends FixedImageButton {
              true,
              true, null, null
              );
-            /**ResourceLocation stateIcon = pokemon.getState().getIcon(pokemon);
+            ResourceLocation stateIcon = pokemon.getState().getIcon(pokemon);
             if (stateIcon != null) {
+                int textWidth = 24;
+                int textHeight = 17;
                 blitk(
                         poses, stateIcon, (Number)((getX() + 24.5) / halfScale), (Number)((getY() + 3) / halfScale),
-                        (Number)17, (Number)24, (Number)0, (Number)0, (Number) width, (Number) height, (Number)0,
+                        (Number)17, (Number)24, (Number)0, (Number)0, (Number) textWidth, (Number) textHeight, (Number)0,
                         (Number)1f, (Number)1, (Number)1, (Number)1, true, halfScale
                 );
-            }*/
+            }
 
             ResourceLocation ballIcon = cobblemonResource("textures/gui/ball/" + pokemon.getCaughtBall().getName().getPath() + ".png");
             int ballHeight = 22;
@@ -115,15 +116,19 @@ public class PokemonInfoSlotButton extends FixedImageButton {
 
 
             PersistentStatusContainer status = pokemon.getStatus();
-            /**if (!pokemon.isFainted() && status != null) {
+            if (!pokemon.isFainted() && status != null) {
                 String statusName = status.getStatus().getShowdownName();
+                String statusRL = "textures/gui/party/status_" + statusName + ".png";
+                int textWidth = 4;
+                int textHeight = 14;
+                //System.out.println("ISB: " + statusRL);
                 blitk(
-                        poses, cobblemonResource("textures/gui/party/status_$statusName.png"),
+                        poses, cobblemonResource(statusRL),
                         getX() + 42, getY() + 5, 14,
-                        4,(Number)0, (Number)0, (Number) width, (Number) height, (Number)0,
+                        4,(Number)0, (Number)0, (Number) textWidth, (Number) textHeight, (Number)0,
                         (Number)1f, (Number)1, (Number)1, (Number)1, true, 1f
                 );
-            }*/
+            }
 
             float hpRatio = pokemon.getCurrentHealth() / (float)pokemon.getHp();
             int barWidthMax = 37;

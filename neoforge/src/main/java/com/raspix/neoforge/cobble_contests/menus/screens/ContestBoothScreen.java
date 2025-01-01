@@ -2,33 +2,28 @@ package com.raspix.neoforge.cobble_contests.menus.screens;
 
 import com.cobblemon.mod.common.client.CobblemonClient;
 import com.cobblemon.mod.common.client.storage.ClientParty;
-import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.neoforge.cobble_contests.blocks.entity.ContestBlockEntity;
-import com.raspix.neoforge.cobble_contests.menus.ContestMenu;
+import com.raspix.neoforge.cobble_contests.menus.ContestBoothMenu;
 import com.raspix.neoforge.cobble_contests.menus.widgets.FixedImageButton;
-import com.raspix.neoforge.cobble_contests.menus.widgets.PokemonContestSlotButton;
-import com.raspix.neoforge.cobble_contests.network.SBWalletScreenParty;
+import com.raspix.neoforge.cobble_contests.menus.widgets.PokemonContestBoothSlotButton;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static com.cobblemon.mod.common.client.render.RenderHelperKt.drawScaledText;
-import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 
 @OnlyIn(Dist.CLIENT)
-public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
+public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu> {
 
     private final int STARTING_PAGE = 0; // The page everyone sees at the start
     private final int CONTEST_TYPE_SELECTION = 1; // The page the user sees if trying to host or run rank
@@ -53,12 +48,12 @@ public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
 
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_booth.png");
     private Inventory playerInv;
-    private ContestMenu contestInfoMenu;
+    private ContestBoothMenu contestInfoMenu;
 
     private UUID playerID;
 
 
-    public SecondTestScreen(ContestMenu containerID, Inventory playerInv, Component title) {
+    public ContestBoothScreen(ContestBoothMenu containerID, Inventory playerInv, Component title) {
         super(containerID, playerInv, title);
         this.leftPos = 0;
         this.topPos = 0;
@@ -140,7 +135,7 @@ public class SecondTestScreen extends AbstractContainerScreen<ContestMenu> {
                 int buttonX = this.leftPos + 39 + (73 * (i % 3));
                 int buttonY = this.topPos + 36 + (81 * (i / 3));
                 int finalI = i;
-                this.partyButtons.add(this.addRenderableWidget(new PokemonContestSlotButton(buttonX, buttonY, 64, 70, 418, 1, 72, TEXTURE, 1000, 750, btn -> {
+                this.partyButtons.add(this.addRenderableWidget(new PokemonContestBoothSlotButton(buttonX, buttonY, 64, 70, 418, 1, 72, TEXTURE, 1000, 750, btn -> {
                     //joinContestWithPokemon(finalI);
                     selectContestPokemon(finalI);
                 }, clientParty.get(i))));
