@@ -68,7 +68,7 @@ import org.slf4j.Logger;
  */
 
 
-
+// hello
 
 @Mod(CobbleContestsForge.MOD_ID)
 public class CobbleContestsForge {
