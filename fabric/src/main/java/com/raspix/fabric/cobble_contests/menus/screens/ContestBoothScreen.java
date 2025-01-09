@@ -4,7 +4,7 @@ import com.cobblemon.mod.common.client.CobblemonClient;
 import com.cobblemon.mod.common.client.storage.ClientParty;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
-import com.raspix.fabric.cobble_contests.menus.ContestMenu;
+import com.raspix.fabric.cobble_contests.menus.ContestBoothMenu;
 import com.raspix.fabric.cobble_contests.menus.widgets.FixedImageButton;
 import com.raspix.fabric.cobble_contests.menus.widgets.PokemonContestBoothSlotButton;
 import net.minecraft.client.gui.GuiGraphics;
@@ -20,7 +20,7 @@ import java.util.UUID;
 
 import static com.cobblemon.mod.common.client.render.RenderHelperKt.drawScaledText;
 
-public class ContestBoothScreen extends AbstractContainerScreen<ContestMenu> {
+public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu> {
 
     private final int STARTING_PAGE = 0; // The page everyone sees at the start
     private final int CONTEST_TYPE_SELECTION = 1; // The page the user sees if trying to host or run rank
@@ -45,12 +45,12 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestMenu> {
 
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_booth.png");
     private Inventory playerInv;
-    private ContestMenu contestInfoMenu;
+    private ContestBoothMenu contestInfoMenu;
 
     private UUID playerID;
 
 
-    public ContestBoothScreen(ContestMenu containerID, Inventory playerInv, Component title) {
+    public ContestBoothScreen(ContestBoothMenu containerID, Inventory playerInv, Component title) {
         super(containerID, playerInv, title);
         this.leftPos = 0;
         this.topPos = 0;

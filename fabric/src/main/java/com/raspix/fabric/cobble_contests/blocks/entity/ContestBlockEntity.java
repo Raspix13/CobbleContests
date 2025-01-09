@@ -2,15 +2,15 @@ package com.raspix.fabric.cobble_contests.blocks.entity;
 
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.reactive.SimpleObservable;
-import com.cobblemon.mod.common.api.storage.NoPokemonStoreException;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.common.cobble_contests.CobbleContests;
 //import com.raspix.fabric.cobble_contests.menus.ContestMenu;
 //import com.raspix.fabric.cobble_contests.network.MessagesInit;
-import com.raspix.fabric.cobble_contests.menus.ContestMenu;
+import com.raspix.fabric.cobble_contests.menus.ContestBoothMenu;
 import com.raspix.fabric.cobble_contests.network.BlockPosPayload;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
+import com.raspix.fabric.cobble_contests.util.ContestManager;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -71,7 +71,7 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider, Ext
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerID, @NotNull Inventory playerInv, Player player) {
-        ContestMenu menu = new ContestMenu(containerID, playerInv, this);
+        ContestBoothMenu menu = new ContestBoothMenu(containerID, playerInv, this);
         return menu;
         //return null;
     }
@@ -193,10 +193,18 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider, Ext
         if (!sPlayer.level().isClientSide()) {
             sPlayer.displayClientMessage(componentOutput, false);
             //sPlayer.displayClientMessage(Component.literal(contestOutput).withStyle(ChatFormatting.LIGHT_PURPLE), false);
+            ContestManager.INSTANCE.AddContest(id, contestType, contestLevel1, null, true, pokeIdx);
         }
 
 
         //Objects.requireNonNull().sendSystemMessage(Component.literal(contestOutput));
+    }
+
+    public void startRankedContest(UUID hostid, int pokeIdx, int contestType, int contestTier, ServerPlayer player){
+
+    }
+
+    public void startMultiplayerContest(UUID hostid, boolean hostIsContestant, int pokeIdx, int contestType, int contestTier, ServerPlayer player){
 
 
     }

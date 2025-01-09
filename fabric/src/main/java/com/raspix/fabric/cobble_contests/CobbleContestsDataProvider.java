@@ -3,23 +3,18 @@ package com.raspix.fabric.cobble_contests;
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.data.DataProvider;
 import com.cobblemon.mod.common.api.data.DataRegistry;
+import com.raspix.fabric.cobble_contests.util.CobbleContestsMoves;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.util.perf.Profiler;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 import static com.cobblemon.mod.common.util.DistributionUtilsKt.server;
 import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;

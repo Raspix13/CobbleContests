@@ -2,6 +2,7 @@ package com.raspix.fabric.cobble_contests;
 
 //import com.raspix.fabric.cobble_contests.blocks.BlockInit;
 //import com.raspix.fabric.cobble_contests.blocks.entity.BlockEntityInit;
+import com.cobblemon.mod.common.platform.events.ServerTickEvent;
 import com.raspix.fabric.cobble_contests.blocks.BlockInit;
 import com.raspix.fabric.cobble_contests.blocks.entity.BlockEntityInit;
 import com.raspix.fabric.cobble_contests.items.ItemInit;
@@ -11,10 +12,12 @@ import com.raspix.fabric.cobble_contests.items.ItemInit;
 import com.raspix.fabric.cobble_contests.menus.MenuInit;
 import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import com.raspix.fabric.cobble_contests.network.SBWalletScreenParty;
+import com.raspix.fabric.cobble_contests.util.ContestManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.world.level.BlockEventData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,12 +53,13 @@ public class CobbleContestsFabric implements ModInitializer {
 
         //dataProvider.registerDefaults();
 
+        ContestManager.INSTANCE.OnServerSetUp();
 
         //MessagesInit.registerS2CPackets();
 
+
+
     }
-
-
 
 
 }

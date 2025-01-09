@@ -15,6 +15,9 @@
     ],
     "client": [
       "com.raspix.fabric.cobble_contests.CobbleContestsFabricClient"
+    ],
+    "server": [
+      "com.raspix.fabric.cobble_contests.CobbleContestsFabricServer"
     ]
   },
   "depends": {

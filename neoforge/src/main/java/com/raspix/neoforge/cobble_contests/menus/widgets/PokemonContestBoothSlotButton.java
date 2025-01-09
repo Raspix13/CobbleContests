@@ -119,14 +119,14 @@ public class PokemonContestBoothSlotButton extends FixedImageButton {
             poses.popPose();
             poses.translate(-(this.getX() + 20 + (PORTRAIT_DIAMETER / 2.0)), -(this.getY()+10), 0f);
 
-            if (pokemon.getGender() != Gender.GENDERLESS) {
+            /**if (pokemon.getGender() != Gender.GENDERLESS) {
              blitk(
              poses, (pokemon.getGender() == Gender.MALE)? genderIconMale : genderIconFemale,
              (getX() + 40) / halfScale, (getY() + 20) / halfScale, height = 7, width = 5,
              0, 0, 5, 7, 0, 1, 1, 1, 1, true,
              halfScale
              );
-             }
+             }*/
 
             drawScaledText(
                     guiGraphics,

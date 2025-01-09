@@ -1,16 +1,14 @@
 package com.raspix.fabric.cobble_contests.blocks;
 
-import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.CobbleContestsFabric;
 import com.raspix.fabric.cobble_contests.blocks.entity.BlockEntityInit;
 import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
 //import com.raspix.fabric.cobble_contests.menus.ContestMenu;
-import com.raspix.fabric.cobble_contests.menus.ContestMenu;
+import com.raspix.fabric.cobble_contests.menus.ContestBoothMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
@@ -88,7 +86,7 @@ public class ContestBlock extends Block implements EntityBlock {
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         return new SimpleMenuProvider((id, playerInv, arg4) -> {
-            return new ContestMenu(id, playerInv, level.getBlockEntity(pos));
+            return new ContestBoothMenu(id, playerInv, level.getBlockEntity(pos));
         }, TITLE);
         //return null;
     }

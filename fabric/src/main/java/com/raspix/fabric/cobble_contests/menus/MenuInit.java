@@ -1,6 +1,7 @@
 package com.raspix.fabric.cobble_contests.menus;
 
 import com.raspix.fabric.cobble_contests.CobbleContestsFabric;
+import com.raspix.fabric.cobble_contests.menus.screens.ContestScreen;
 import com.raspix.fabric.cobble_contests.menus.screens.PlayerConditionCardScreen;
 import com.raspix.fabric.cobble_contests.menus.screens.PoffinPotScreen;
 import com.raspix.fabric.cobble_contests.menus.screens.ContestBoothScreen;
@@ -18,10 +19,11 @@ public class MenuInit {
     //public static final MenuType POFFIN_POT_MENU = registerMenu("poffin_pot_menu", new MenuType<>(() -> PoffinPotMenu::new));
 
 
-    public static final MenuType<ContestMenu> CONTEST_MENU = Registry.register(BuiltInRegistries.MENU, ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_menu"), new ExtendedScreenHandlerType<>(ContestMenu::new, BlockPosPayload.PACKET_CODEC)); // new MenuType(ContestMenu::new, FeatureFlags.DEFAULT_FLAGS));
+    public static final MenuType<ContestBoothMenu> CONTEST_BOOTH_MENU = Registry.register(BuiltInRegistries.MENU, ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_booth_menu"), new ExtendedScreenHandlerType<>(ContestBoothMenu::new, BlockPosPayload.PACKET_CODEC)); // new MenuType(ContestMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
     public static final MenuType<PoffinPotMenu> POFFIN_POT_MENU = Registry.register(BuiltInRegistries.MENU, ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "poffin_pot_menu"), new MenuType(PoffinPotMenu::new, FeatureFlags.DEFAULT_FLAGS));
-    public static final MenuType<PlayerContestInfoMenu> PLAYER_CONTEST_INFO_MENU = Registry.register(BuiltInRegistries.MENU, ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "player_contest_info_menu"), new MenuType(PlayerContestInfoMenu::new, FeatureFlags.DEFAULT_FLAGS));
+    public static final MenuType<PlayerConditionCardMenu> PLAYER_CONTEST_INFO_MENU = Registry.register(BuiltInRegistries.MENU, ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "wallet_menu"), new MenuType(PlayerConditionCardMenu::new, FeatureFlags.DEFAULT_FLAGS));
+    public static final MenuType<ContestMenu> CONTEST_MENU = Registry.register(BuiltInRegistries.MENU, ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_menu"), new MenuType<>(ContestMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
     //public static final MenuType<PoffinPotMenu> POFFIN_POT_MENU = registerMenu(new ResourceLocation(CobbleContestsFabric.MOD_ID, "poffin_pot_menu"), new MenuType<>(PoffinPotMenu::new, FeatureFlags.DEFAULT_FLAGS));
     //public static final MenuType POFFIN_POT_MENU = Registry.register(Registries.MENU, new ResourceLocation(CobbleContestsFabric.MOD_ID, "poffin_pot_menu"), new MenuType<>(PoffinPotMenu::new));
@@ -44,7 +46,8 @@ public class MenuInit {
     public static void registerScreens(){
         MenuScreens.register(MenuInit.POFFIN_POT_MENU, PoffinPotScreen::new);
         MenuScreens.register(MenuInit.PLAYER_CONTEST_INFO_MENU, PlayerConditionCardScreen::new);
-        MenuScreens.register(MenuInit.CONTEST_MENU, ContestBoothScreen::new);
+        MenuScreens.register(MenuInit.CONTEST_BOOTH_MENU, ContestBoothScreen::new);
+        MenuScreens.register(MenuInit.CONTEST_MENU, ContestScreen::new);
     }
 
 }
