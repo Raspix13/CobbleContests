@@ -15,7 +15,7 @@ import com.mojang.blaze3d.vertex.*;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.neoforge.cobble_contests.CobbleContestsMoves;
 import com.raspix.neoforge.cobble_contests.events.ContestMoves;
-import com.raspix.neoforge.cobble_contests.menus.PlayerContestCardMenu;
+import com.raspix.neoforge.cobble_contests.menus.PlayerConditionCardMenu;
 import com.raspix.neoforge.cobble_contests.menus.widgets.FixedImageButton;
 import com.raspix.neoforge.cobble_contests.menus.widgets.WalletPokemonSlotButton;
 import com.raspix.neoforge.cobble_contests.network.SBWalletScreenParty;
@@ -42,7 +42,7 @@ import static com.cobblemon.mod.common.util.LocalizationUtilsKt.lang;
 import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 
 @OnlyIn(Dist.CLIENT)
-public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerContestCardMenu> {
+public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerConditionCardMenu> {
 
     private static final int BASE_WIDTH = 349;
     private static final int BASE_HEIGHT = 205;
@@ -78,10 +78,10 @@ public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerCon
     private PlayerPartyStore playerPartyStore;
     private ClientParty clientParty;
 
-    private PlayerContestCardMenu contestInfoMenu;
+    private PlayerConditionCardMenu contestInfoMenu;
 
 
-    public PlayerConditionCardScreen(PlayerContestCardMenu containerID, Inventory playerInv, Component title) {
+    public PlayerConditionCardScreen(PlayerConditionCardMenu containerID, Inventory playerInv, Component title) {
         super(containerID, playerInv, title);
         this.leftPos = 0;
         this.topPos = 0;

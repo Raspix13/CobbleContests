@@ -29,6 +29,9 @@ Additions & QOL:
 -Add glow to poffin pot base when cooking
 
 
+Reference Links:
+- Seal Visual Effects: https://www.youtube.com/watch?v=rH77lAW7gug
+
 
 
 Bugs & Issues:
@@ -39,6 +42,9 @@ Bugs & Issues:
 
 
 Things I Need to Work on Before Releasing Newest Version:
+-Version Updates
+    -Card opens contest screen when in contest
+
 -Each Time Checklist:
     - Do recipes work?
     - Do blocks drop?
@@ -52,11 +58,9 @@ Things I Need to Work on Before Releasing Newest Version:
         - Do ingeidients only go in their spots?
         - Does the info button work?
 -Fabric:
-    *-Ballswapper tooltip cuts off screen
-    *-make sure things save
+    *
 -Neoforge:
-    -Fix poffin pot text
-    -check moves text
+    -
 
 Next Update Plan Reminders:
 - make contest screen tell current level of contest for pokemon

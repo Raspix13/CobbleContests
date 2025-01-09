@@ -1,10 +1,11 @@
-package com.raspix.fabric.cobble_contests;
+package com.raspix.fabric.cobble_contests.util;
 
 import com.cobblemon.mod.common.api.data.DataRegistry;
 import com.cobblemon.mod.common.api.data.JsonDataRegistry;
 import com.cobblemon.mod.common.api.reactive.SimpleObservable;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.raspix.fabric.cobble_contests.CobbleContestsFabric;
 import com.raspix.fabric.cobble_contests.events.ContestMoves;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
