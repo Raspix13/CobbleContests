@@ -30,7 +30,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     private final int RESULTS_PAGE = 4;
 
     private int pageIndex;
-    private int pokemonIndex;
+    private UUID pokemonIndex;
     private int contestLevel;
     private int colorIndex;
 
@@ -64,7 +64,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     @Override
     protected void init() {
         super.init();
-        pokemonIndex = 0;
+        pokemonIndex = null;
         pageIndex = 0;
         colorIndex = -1;
         clientParty = CobblemonClient.INSTANCE.getStorage().getMyParty();
@@ -135,7 +135,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     }
 
     private void selectContestPokemon(int pokeIndex) {
-        this.pokemonIndex = pokeIndex;
+        this.pokemonIndex = clientParty.get(pokeIndex).getUuid();
         setPageIndex(CONTEST_WAITING_PAGE);//CONTEST_LEVEL_SELECTION_PAGE);
     }
 
@@ -162,7 +162,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
                     (Number) (this.leftPos + 144),
                     (Number) (this.topPos + 145),
                     1f, 1f, 1f, 0x00918b99, true, false);
-            drawScaledText(guiGraphics, Component.literal("Pokemon: " + clientParty.get(pokemonIndex).getDisplayName().getString()).getVisualOrderText(),
+            drawScaledText(guiGraphics, Component.literal("Pokemon: " + clientParty.findByUUID(pokemonIndex).getDisplayName().getString()).getVisualOrderText(),
                     (Number) (this.leftPos + 40),
                     (Number) (this.topPos + 50),
                     1f, 1f, 1f, 0x00918b99, false, false);
@@ -216,7 +216,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     protected void renderLabels(GuiGraphics arg, int i, int j) {
     }
 
-    private void joinContestWithPokemon(int index){
+    private void joinContestWithPokemon(UUID index){
         pokemonIndex = index;
         setPageIndex(CONTEST_WAITING_PAGE);
 

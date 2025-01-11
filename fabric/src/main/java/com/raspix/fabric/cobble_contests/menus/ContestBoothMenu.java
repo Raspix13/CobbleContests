@@ -114,11 +114,11 @@ public class ContestBoothMenu extends AbstractContainerMenu {
         return playerPartyClient;
     }
 
-    public void startContest(int color, int pokemonIdx, UUID player){
+    public void startContest(int color, UUID pokemonIdx, UUID player){
 
         this.blockEntity.tryHosting(player);
-        this.blockEntity.startContest(color, player);
-        this.blockEntity.addContestant(player, pokemonIdx);
+        //this.blockEntity.startContest(color, player);
+        //this.blockEntity.addContestant(player, pokemonIdx);
         System.out.println(this.blockEntity.getCurrentContestInfo());
     }
 
@@ -126,11 +126,11 @@ public class ContestBoothMenu extends AbstractContainerMenu {
         return this.blockEntity.getContestResults();
     }
 
-    public void startStatAssesment(Player player, UUID playerID, int pokemonIdx, int contestType){
+    public void startStatAssesment(Player player, UUID playerID, UUID pokemonIdx, int contestType){
         System.out.println("should be starting stat assesment");
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeUUID(playerID);
-        buf.writeInt(pokemonIdx);
+        buf.writeUUID(pokemonIdx);
         buf.writeBlockPos(blockEntity.getBlockPos());
         buf.writeInt(contestType);
         buf.writeInt(0);

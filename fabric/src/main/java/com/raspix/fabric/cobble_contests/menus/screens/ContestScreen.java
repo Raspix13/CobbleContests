@@ -77,7 +77,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         this.playerId = inventory.player.getUUID();
         //this.playerInv = playerInv;
         //this.contestInfoMenu = containerID;
-        phase = Contest.ContestPhase.WAITING;
+        phase = Contest.ContestPhase.IDLE;
 
     }
 
@@ -441,15 +441,17 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         //get updated info
     }
 
-    public void setUpdatedInfo(int pokemonSlot, Contest.ContestPhase phase, int time){
-        this.pokemon = CobblemonClient.INSTANCE.getStorage().getMyParty().get(pokemonSlot);
+    public void setUpdatedInfo(UUID pokemonSlot, Contest.ContestPhase phase, int time){
+        this.pokemon = CobblemonClient.INSTANCE.getStorage().getMyParty().findByUUID(pokemonSlot);
+        if(pokemon == null){
+            this.pokemon = CobblemonClient.INSTANCE.getStorage().getPcStores().get(playerId).findByUUID(pokemonSlot);
+        }
         setPhase(phase);
         setSelectedModel();
+        //CobblemonClient.INSTANCE.getStorage().getPcStores();
         if(phase == Contest.ContestPhase.DRESSUP){
             counter.updateTime(time);
         }
-
-
 
     }
 

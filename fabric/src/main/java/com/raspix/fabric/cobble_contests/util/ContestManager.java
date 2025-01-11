@@ -43,7 +43,7 @@ public class ContestManager {
 
 
 
-    public boolean AddContest(UUID hostId, int contestType, int contestTier, ItemStack reward, boolean hostParticipates, int pokeIdx){
+    public boolean AddContest(UUID hostId, int contestType, int contestTier, ItemStack reward, boolean hostParticipates, UUID pokeIdx){
         if(IsAlreadyInContest(hostId)){
             return false;
         }

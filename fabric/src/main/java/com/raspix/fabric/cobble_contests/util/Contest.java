@@ -39,10 +39,10 @@ public class Contest {
 
     public class Contestant{
         private UUID player;
-        private int pokemon; //not sure what to reference here
+        private UUID pokemon; //not sure what to reference here
         private int hearts;
 
-        public Contestant(UUID player, int pokemon){
+        public Contestant(UUID player, UUID pokemon){
             this.player = player;
             this.pokemon = pokemon;
             this.hearts = 0;
@@ -59,11 +59,11 @@ public class Contest {
         }
 
         // Getters and Setters for pokemon
-        public int getPokemon() {
+        public UUID getPokemon() {
             return pokemon;
         }
 
-        public void setPokemon(int pokemon) {
+        public void setPokemon(UUID pokemon) {
             this.pokemon = pokemon;
         }
 
@@ -147,11 +147,13 @@ public class Contest {
         PlayerList playerList = server.getPlayerList();
         for(Contestant conts: contestants.values()){
             CompoundTag tag = new CompoundTag();
-            tag.putInt("index", conts.pokemon);
+            tag.putUUID("index", conts.pokemon);
             round.toTag(tag, "phase");
             tag.putInt("seconds", getTimer());
             ServerPlayer play = playerList.getPlayer(conts.player);
-            ServerPlayNetworking.send((ServerPlayer) play, new CBUpdateContestInfo(conts.player, tag));
+            if(play != null){
+                ServerPlayNetworking.send(play, new CBUpdateContestInfo(conts.player, tag));
+            }
         }
     }
 
@@ -168,7 +170,7 @@ public class Contest {
         this.round = ContestPhase.WAITING;
     }
 
-    public Contest(UUID hostId, int contestType, int contestTier, ItemStack reward, boolean hostParticipate, int pokeIdx){
+    public Contest(UUID hostId, int contestType, int contestTier, ItemStack reward, boolean hostParticipate, UUID pokeIdx){
         this.host = hostId;
         this.contestType = contestType;
         this.contestTier = contestTier;
@@ -178,7 +180,7 @@ public class Contest {
         addContestants(hostId, pokeIdx);
     }
 
-    public void addContestants(UUID uuid, int pokeIdx){
+    public void addContestants(UUID uuid, UUID pokeIdx){
         contestants.put(uuid, new Contestant(uuid, pokeIdx));
     }
 
@@ -204,7 +206,7 @@ public class Contest {
         return false;
     }
 
-    public int getContestentPokemon(UUID uuid){
+    public UUID getContestentPokemon(UUID uuid){
         return contestants.get(uuid).getPokemon();
     }
 
