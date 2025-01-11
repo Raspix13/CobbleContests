@@ -2,6 +2,7 @@ package com.raspix.fabric.cobble_contests;
 
 //import com.raspix.fabric.cobble_contests.blocks.BlockInit;
 //import com.raspix.fabric.cobble_contests.blocks.entity.BlockEntityInit;
+import com.cobblemon.mod.common.platform.events.PlatformEvents;
 import com.cobblemon.mod.common.platform.events.ServerTickEvent;
 import com.raspix.fabric.cobble_contests.blocks.BlockInit;
 import com.raspix.fabric.cobble_contests.blocks.entity.BlockEntityInit;
@@ -15,6 +16,7 @@ import com.raspix.fabric.cobble_contests.network.SBWalletScreenParty;
 import com.raspix.fabric.cobble_contests.util.ContestManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.level.BlockEventData;
@@ -57,7 +59,11 @@ public class CobbleContestsFabric implements ModInitializer {
 
         //MessagesInit.registerS2CPackets();
 
-
+        //ServerTickEvents.START_SERVER_TICK..register {server -> PlatformEvents.SERVER_TICK_PRE.post(new ServerTickEvent.Pre(server)) }
+        ServerTickEvents.START_SERVER_TICK.register(server ->
+                //PlatformEvents.SERVER_TICK_PRE.post(new ServerTickEvent.Pre(server))
+                ContestManager.INSTANCE.update(server)
+        ); //new ServerTickEvent.Pre(server)
 
     }
 

@@ -50,7 +50,7 @@ public class CBUpdateContestInfo implements CustomPacketPayload{
         if(Minecraft.getInstance().screen instanceof ContestScreen screen){
             //CompoundTag tag = buf.readNbt();
             System.out.println("Recieving contest Update 2a");
-            screen.setUpdatedInfo(tag.getInt("index"), Contest.ContestPhase.fromTag(tag, "phase"));
+            screen.setUpdatedInfo(tag.getInt("index"), Contest.ContestPhase.fromTag(tag, "phase"), tag.getInt("seconds"));
         }
     }
 

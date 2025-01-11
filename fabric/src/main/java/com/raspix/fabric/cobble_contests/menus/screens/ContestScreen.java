@@ -3,38 +3,33 @@ package com.raspix.fabric.cobble_contests.menus.screens;
 import com.cobblemon.mod.common.client.CobblemonClient;
 import com.cobblemon.mod.common.client.gui.trade.ModelWidget;
 import com.cobblemon.mod.common.pokemon.Pokemon;
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.*;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.menus.ContestMenu;
 import com.raspix.fabric.cobble_contests.menus.widgets.ContestMessagePane;
+import com.raspix.fabric.cobble_contests.menus.widgets.DressUpCounter;
 import com.raspix.fabric.cobble_contests.menus.widgets.FixedImageButton;
+import com.raspix.fabric.cobble_contests.menus.widgets.ParticleScreenRenderer;
 import com.raspix.fabric.cobble_contests.network.SBUpdateContestInfo;
 import com.raspix.fabric.cobble_contests.util.Contest;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.mixin.client.particle.ParticleManagerAccessor;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.particle.HeartParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
-import org.joml.Matrix4fStack;
+import org.joml.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static com.cobblemon.mod.common.client.gui.PokemonGuiUtilsKt.drawProfilePokemon;
@@ -51,6 +46,10 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
     private static final ResourceLocation CONTEST_STICKERS = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/seals.png");
     private static final ResourceLocation NUMBERS = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/numbers.png");
 
+    private static final ResourceLocation TEMP_PARTICLE = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/particle/heart.png");
+
+    private boolean isModelSet;
+
     private static final int FRAME_WIDTH = 169;
     private static final int FRAME_HEIGHT = 55;
 
@@ -62,6 +61,9 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
     private ModelWidget modelWidget; //for the pokemon being rendered
     private ContestMessagePane messageLog;
     private FixedImageButton particleEffectButton;
+    private List<FixedImageButton> dressUpButtons;
+    private DressUpCounter counter;
+    private ParticleScreenRenderer particleBox;
 
 
 
@@ -87,12 +89,33 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         this.addRenderableWidget(new FixedImageButton(5, 5, 25, 25, 0, 0, 25, CONTEST_STICKERS, 275, 200, btn -> {
             debugNextScreen();
         }));
+
+        dressUpButtons = new ArrayList<>();
+
         this.particleEffectButton = this.addRenderableWidget(new FixedImageButton(this.leftPos + 236, this.topPos + 146, 16, 15, 2, 204, 17, CONTEST_PANEL_TEXTURE, 948, 600, btn ->{
-            createParticleEffect(1, 1, 1);
+            startParticles();
+            //createParticleEffect(1, 1, 1);
         }));
+        dressUpButtons.add(particleEffectButton);
+
+        dressUpButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 103, this.topPos + 171, 93, 19, 55, 204, 21, CONTEST_PANEL_TEXTURE, 948, 600, btn ->{
+            //createParticleEffect(1, 1, 1);
+        }))); // confirm
+        dressUpButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 15, this.topPos + 170, 11, 17, 25, 204, 19, CONTEST_PANEL_TEXTURE, 948, 600, btn ->{
+            //createParticleEffect(1, 1, 1);
+        }))); // back
+        dressUpButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 30, this.topPos + 170, 11, 17, 38, 204, 19, CONTEST_PANEL_TEXTURE, 948, 600, btn ->{
+            //createParticleEffect(1, 1, 1);
+        }))); //forward
+
+        this.counter = this.addRenderableWidget(new DressUpCounter(this.leftPos + 231, this.topPos + 125, 16, 15, Component.literal("")));
+
+        isModelSet = false;
         ClientPlayNetworking.send(new SBUpdateContestInfo(playerId));
         //updateInfo();
         updateGUI();
+
+        this.particleBox = this.addRenderableWidget(new ParticleScreenRenderer(this.leftPos + 206, this.topPos + 12, 40, 40, Component.literal("Hi")));
         //get updates here
     }
 
@@ -123,7 +146,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
                 break;
             case INTRODUCTION:
                 break;
-            case SHOWOFF:
+            case TALENT:
                 break;
             case RESULTS:
                 this.renderTransparentBackground(guiGraphics);
@@ -154,7 +177,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
             case INTRODUCTION:
                 renderIntroGUI(guiGraphics);
                 break;
-            case SHOWOFF:
+            case TALENT:
                 renderShowOffGUI(guiGraphics);
                 break;
             case RESULTS:
@@ -169,16 +192,19 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
 
     private void setSelectedModel() {
         if(pokemon != null){
-            modelWidget = new ModelWidget(
-                    this.leftPos + 21 + 180,
-                    this.topPos + 27 -10,
-                    66,
-                    66,
-                    pokemon.asRenderablePokemon(),
-                    2F,
-                    35,
-                    -10.0
-            );
+            if(!isModelSet) {
+                modelWidget = new ModelWidget(
+                        this.leftPos + 25 + 180,
+                        this.topPos + 32 - 10,
+                        66,
+                        66,
+                        pokemon.asRenderablePokemon(),
+                        2F,
+                        35,
+                        -10.0
+                );
+                isModelSet = true;
+            }
         }else {
             modelWidget = null;
         }
@@ -188,8 +214,8 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         Contest.ContestPhase newPhase = switch (phase) {
             case Contest.ContestPhase.WAITING -> Contest.ContestPhase.DRESSUP;
             case Contest.ContestPhase.DRESSUP -> Contest.ContestPhase.INTRODUCTION;
-            case Contest.ContestPhase.INTRODUCTION -> Contest.ContestPhase.SHOWOFF;
-            case Contest.ContestPhase.SHOWOFF -> Contest.ContestPhase.RESULTS;
+            case Contest.ContestPhase.INTRODUCTION -> Contest.ContestPhase.TALENT;
+            case Contest.ContestPhase.TALENT -> Contest.ContestPhase.RESULTS;
             case Contest.ContestPhase.RESULTS -> Contest.ContestPhase.WAITING;
             default -> Contest.ContestPhase.WAITING;
         };
@@ -261,8 +287,6 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         //MinecraftClient.getInstance().particleManager.addParticle(particleEntity, Identifier("your_particle_type"));
         ParticleEngine particleManager = Minecraft.getInstance().particleEngine;
 
-
-
         /**PoseStack posestack = guiGraphics.pose();
         posestack.pushPose();
         posestack.translate((double)1, (double)1, 1050.0D);
@@ -292,8 +316,6 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
             System.out.println(particle);
         }
 
-
-
         /**RenderSystem.setShader(GameRenderer::getParticleShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -305,17 +327,12 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         BufferBuilder bufferBuilder = particle.getRenderType().begin(tessellator, Minecraft.getInstance().getTextureManager());
 
-
-
         //EntityRenderDispatcher entityrenderdispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         //entityrenderdispatcher.setRenderShadow(false);
         //RenderSystem.runAsFancy(() -> {
-
         try {
 
             //particle.render(bufferBuilder, CAMERA, Minecraft.getInstance().getTimer().getGameTimeDeltaTicks());
-
-
 
         } catch (Throwable var17) {
             System.out.println("OH NO A PARTICLE ERROR");
@@ -333,7 +350,6 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
 
         //BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
 
-
         //Mirage.getAlwaysBrightLTM().disable();
         matrixStack.popMatrix();
         RenderSystem.applyModelViewMatrix();
@@ -342,7 +358,6 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         RenderSystem.depthMask(true);
         RenderSystem.enableCull();
         RenderSystem.disableBlend();
-
 
         /**BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
         posestack.popPose();
@@ -354,20 +369,55 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         RenderSystem.disableBlend();*/
     }
 
+
     protected void renderWaitingGUI(GuiGraphics guiGraphics){
 
     }
+
+    private void startParticles(){
+        this.particleBox.startParticleRender();
+    }
+
+
+    /**protected void renderRotatedQuad(VertexConsumer vertexConsumer, Camera camera, Quaternionf quaternionf, float f) {
+        Vec3 vec3 = camera.getPosition();
+        float g = (float)(Mth.lerp((double)f, this.xo, this.x) - vec3.x());
+        float h = (float)(Mth.lerp((double)f, this.yo, this.y) - vec3.y());
+        float i = (float)(Mth.lerp((double)f, this.zo, this.z) - vec3.z());
+        this.renderRotatedQuad(vertexConsumer, quaternionf, g, h, i, f);
+    }*/
+
+    /**protected void renderRotatedQuad(VertexConsumer vertexConsumer, Quaternionf quaternionf, float f, float g, float h, float i) {
+        float j = 1;//this.getQuadSize(i);
+        float k = this.getU0();
+        float l = this.getU1();
+        float m = this.getV0();
+        float n = this.getV1();
+        int o = 5;//this.getLightColor(i);
+        this.renderVertex(vertexConsumer, quaternionf, f, g, h, 1.0F, -1.0F, j, l, n, o);
+        this.renderVertex(vertexConsumer, quaternionf, f, g, h, 1.0F, 1.0F, j, l, m, o);
+        this.renderVertex(vertexConsumer, quaternionf, f, g, h, -1.0F, 1.0F, j, k, m, o);
+        this.renderVertex(vertexConsumer, quaternionf, f, g, h, -1.0F, -1.0F, j, k, n, o);
+    }*/
+
+    //vert, qua, x, y, z, vertx, verty, scale, uvX, uvY, light
+    private void renderVertex(VertexConsumer vertexConsumer, Quaternionf quaternionf, float f, float g, float h, float i, float j, float k, float l, float m, int n) {
+        Vector3f vector3f = (new Vector3f(i, j, 0.0F)).rotate(quaternionf).mul(k).add(f, g, h);
+        vertexConsumer.addVertex(vector3f.x(), vector3f.y(), vector3f.z()).setUv(l, m).setColor(1f, 1f, 1f, 1f).setLight(n);
+    }
+
+
 
     protected void renderDressUpGUI(GuiGraphics guiGraphics, float partialTick){
         if (pokemon != null) {
             float halfScale = 0.5f;
             PoseStack poses = guiGraphics.pose();
             ParticleEngine particleManager = Minecraft.getInstance().particleEngine;
-            for (int i = 0; i < 5; i++) {
+            /**for (int i = 0; i < 5; i++) {
                 double posX = this.leftPos + 10;
                 double posY = this.topPos + 5;
                 particleManager.createParticle(ParticleTypes.HEART, posX, posY, 0.0, 0.0, 0.0, 0.0);
-            }
+            }*/
 
         }
         //renderParticleEffect(guiGraphics, 10, 5, 20);
@@ -375,7 +425,8 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
     }
 
     protected void renderIntroGUI(GuiGraphics guiGraphics){
-        renderParticleEffect(guiGraphics, 1, 1, 1);
+       // renderParticleEffect(guiGraphics, 1, 1, 1);
+        //renderParticle(new Vector2f(this.leftPos, this.topPos), TEMP_PARTICLE, 30, 0, 8, 0, 8);
     }
 
     protected void renderShowOffGUI(GuiGraphics guiGraphics){
@@ -390,10 +441,16 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         //get updated info
     }
 
-    public void setUpdatedInfo(int pokemonSlot, Contest.ContestPhase phase){
+    public void setUpdatedInfo(int pokemonSlot, Contest.ContestPhase phase, int time){
         this.pokemon = CobblemonClient.INSTANCE.getStorage().getMyParty().get(pokemonSlot);
         setPhase(phase);
         setSelectedModel();
+        if(phase == Contest.ContestPhase.DRESSUP){
+            counter.updateTime(time);
+        }
+
+
+
     }
 
     private void setPhase(Contest.ContestPhase phased){
@@ -405,34 +462,52 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         switch (phase){
             case WAITING:
                 messageLog.visible = true;
-                particleEffectButton.visible = false;
+                counter.visible = false;
+                //particleEffectButton.visible = false;
+                toggleButtonList(false, dressUpButtons);
                 break;
             case DRESSUP:
                 this.imageWidth = 304;
                 this.imageHeight = 202;
                 messageLog.visible = false;
-                particleEffectButton.visible = true;
+                counter.visible = true;
+                toggleButtonList(true, dressUpButtons);
+                //particleEffectButton.visible = true;
                 break;
             case INTRODUCTION:
                 messageLog.visible = true;
-                particleEffectButton.visible = false;
+                counter.visible = false;
+                toggleButtonList(false, dressUpButtons);
+                //particleEffectButton.visible = false;
                 break;
-             case SHOWOFF:
+             case TALENT:
                  messageLog.visible = false; // turn back on later
-                 particleEffectButton.visible = true;
+                 counter.visible = false;
+                 toggleButtonList(false, dressUpButtons);
+                 //particleEffectButton.visible = false;
                 break;
             case RESULTS:
                 this.imageWidth = 291;
                 this.imageHeight = 194;
                 messageLog.visible = false;
-                particleEffectButton.visible = false;
+                counter.visible = false;
+                toggleButtonList(false, dressUpButtons);
+                //particleEffectButton.visible = false;
                 break;
             default:
                 messageLog.visible = true;
-                particleEffectButton.visible = false;
+                counter.visible = false;
+                toggleButtonList(false, dressUpButtons);
+                //particleEffectButton.visible = false;
                 break;
         }
 
+    }
+
+    public void toggleButtonList(boolean state, List<FixedImageButton> butList){
+        for(int i = 0; i < butList.size(); i++){
+            butList.get(i).visible = state;
+        }
     }
 
 
@@ -450,6 +525,75 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
     }
 
 
+
+
+
+    /**private void renderParticle(Vector2f screenPos, ResourceLocation imageLoc, float scale,float uvX1, float uvX2, float uvY1, float uvY2){
+        System.out.println("Rendering Particle");
+
+        int maximum = 50;
+        int MAX_STATS = 255;
+
+        float upperHexX = (float) (Math.sin(Math.toRadians(72.0)) * (float) maximum);
+        float upperHexY = (float) (Math.cos(Math.toRadians(72.0)) * (float) maximum);
+        float lowerHexX = (float) (Math.sin(Math.toRadians(36.0)) * (float) maximum);
+        float lowerHexY = (float) (Math.cos(Math.toRadians(36.0)) * (float) maximum);
+
+        float hexCenterX = this.leftPos + (this.imageWidth / 2.0F) + 47;
+        float hexCenterY = this.topPos + (this.imageHeight / 2.0F) - 13;
+
+        float coolRatio = Math.max(0.0F, Math.min(1.0F, (float)  255/ (float)MAX_STATS))+ 0.05f;
+        float beautyRatio = Math.max(0.0F, Math.min(1.0F, (float)  255/ (float)MAX_STATS))+ 0.05f;
+
+        Vector2f centerPoint = new Vector2f(hexCenterX, hexCenterY);
+        Vector2f coolPoint = new Vector2f(hexCenterX, hexCenterY - (maximum * coolRatio));
+        Vector2f beautyPoint = new Vector2f(hexCenterX + (upperHexX * beautyRatio), hexCenterY - (upperHexY * beautyRatio));
+        Vector2f upperLeftPoint = new Vector2f(hexCenterX + (upperHexX * beautyRatio), hexCenterY - (maximum * coolRatio));
+
+        drawParticle(new Vector4f(1f, 1f, 1f, 1f), coolPoint, centerPoint, beautyPoint, upperLeftPoint, new Vector4f(0, 4, 0, 4), 0, imageLoc);
+
+
+
+        /**drawParticle(new Vector4f(45f/255f, 237f/255f, 96f/255f, 1f),
+         new Vector2f(1, -1).mul(scale).add(screenPos), new Vector2f(1, 1).mul(scale).add(screenPos),
+         new Vector2f(-1, 1).mul(scale).add(screenPos), new Vector2f(-1, -1).mul(scale).add(screenPos),
+         new Vector4f(uvX1, uvX2, uvY1, uvY2), 8, imageLoc); // vector4f(x, y, z, w)*/
+
+    /**    drawParticle(new Vector4f(45f/255f, 237f/255f, 96f/255f, 0.6f),
+                new Vector2f(-1, -1).mul(scale).add(screenPos), new Vector2f(-1, 1).mul(scale).add(screenPos),
+                new Vector2f(1, 1).mul(scale).add(screenPos), new Vector2f(1, -1).mul(scale).add(screenPos),
+                new Vector4f(uvX1, uvX2/8f, uvY1, uvY2/8f), 8, imageLoc); // vector4f(x, y, z, w)
+    }
+
+    private static final ResourceLocation MY_WHITE = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/heart.png");
+
+    private void drawParticle(Vector4f colour, Vector2f v1, Vector2f v2, Vector2f v3, Vector2f v4, Vector4f uvs, int light, ResourceLocation imageLoc) {
+        //Vector4f test = new Vector4f(1, 2, 3, 4);
+
+        System.out.println(v1 + ", " + v2 + ", " + v3 + ", " + v4);
+        //(267, 58), (267, 111), (316, 94), (316, 58)   : lb, lt, rt, rb
+        //(98, 38), (98, 98), (38, 98), (38, 38)        : br, tr, tl, bl
+
+        RenderSystem.setShaderTexture(0, MY_WHITE);//CobblemonResources.INSTANCE.getWHITE());
+        //RenderSystem.setShaderTexture(0, imageLoc);
+        RenderSystem.setShaderColor(colour.x, colour.y, colour.z, colour.w);
+        RenderSystem.depthMask(true);
+        RenderSystem.enableBlend();
+
+        Tesselator tessellator = Tesselator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);//getBuilder();
+
+        //bufferBuilder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION);
+        bufferBuilder.addVertex(v1.x, v1.y, 10.0F).setColor(colour.x, colour.y, colour.z, colour.w).setUv(uvs.x, uvs.z).setLight(light);
+        bufferBuilder.addVertex(v2.x, v2.y, 10.0F).setColor(colour.x, colour.y, colour.z, colour.w).setUv(uvs.x, uvs.w).setLight(light);
+        bufferBuilder.addVertex(v3.x, v3.y, 10.0F).setColor(colour.x, colour.y, colour.z, colour.w).setUv(uvs.y, uvs.w).setLight(light);
+        bufferBuilder.addVertex(v4.x, v4.y, 10.0F).setColor(colour.x, colour.y, colour.z, colour.w).setUv(uvs.y, uvs.z).setLight(light);
+
+        //bufferBuilder.nextElement();
+        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());
+        //tessellator.end();
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+    }*/
 
 
 
