@@ -177,6 +177,8 @@ public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerCon
         renderTooltip(guiGraphics, xMousePos, yMousePos);
 
         if(pageIndex == 0){ //stat page
+            System.out.println("UUID: " + playerInv.player.getUUID());
+            // 3c02c3d3-91ac-35cd-a553-1c3a94c6fe76
             if(clientParty != null && clientParty.getSlots().size() > 0 && clientParty.get(pokemonIndex) != null && cvList != null){
                 //System.out.println("Should render for index " + pokemonIndex);
                 Pokemon poke = clientParty.get(pokemonIndex);
@@ -410,7 +412,12 @@ public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerCon
         //display description
     }
 
-
+    /**
+     * Draws the stat hexagon on the card and the sheen
+     * @param colour the color of the hexagon
+     * @param cvs the stats to base the size of each point on
+     * @param guiGraphics something to do with graphics, needed to render the sheen
+     */
     private void drawStatHexagon(Vector3f colour, CVs cvs, GuiGraphics guiGraphics) {
         int maximum = 50;
         int minimum = 1;
@@ -447,6 +454,13 @@ public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerCon
         guiGraphics.blit(TEXTURE, this.leftPos + 163, this.topPos + 164, 292, 51, 1+ 8*sheenStars, 14, 1000, 750);
     }
 
+    /**
+     * Draws a triangle segment of the pokemon's stat hexagon on the card
+     * @param colour the color of the shape
+     * @param v1 the first vertex point on the screen, I think screen cords
+     * @param v2 the second vertex point on the screen
+     * @param v3 the third vertex point on the screen
+     */
     private void drawTriangle(Vector3f colour, Vector2f v1, Vector2f v2, Vector2f v3) {
         RenderSystem.setShaderTexture(0, CobblemonResources.INSTANCE.getWHITE());
         RenderSystem.setShaderColor(colour.x, colour.y, colour.z, 0.6F);

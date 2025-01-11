@@ -57,7 +57,7 @@ public class SBUpdateContestInfo implements CustomPacketPayload {
     }
 
     public void recieve(MinecraftServer server, Player player) {
-        System.out.println("Recieving contest Update 1");
+        //System.out.println("Recieving contest Update 1");
         //FriendlyByteBuf bufi = new FriendlyByteBuf(Unpooled.buffer());
         CompoundTag tag = new CompoundTag();
 
@@ -71,6 +71,7 @@ public class SBUpdateContestInfo implements CustomPacketPayload {
 
             tag.putInt("index", pokemonIdx);
             phase.toTag(tag, "phase");
+            tag.putInt("seconds", con.getTimer());
         }
 
 

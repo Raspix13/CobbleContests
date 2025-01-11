@@ -1,15 +1,18 @@
 package com.raspix.fabric.cobble_contests.util;
 
-import com.cobblemon.mod.common.pokemon.Pokemon;
-import com.mojang.authlib.minecraft.client.MinecraftClient;
+import com.raspix.fabric.cobble_contests.network.CBUpdateContestInfo;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.Tickable;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
 
-public class Contest implements Tickable {
+public class Contest {
     private UUID host;
     private int contestType;
     private int contestTier;
@@ -17,6 +20,12 @@ public class Contest implements Tickable {
     private Map<UUID, Contestant> contestants = new HashMap<>();
     private ContestPhase round;
     private float timer;
+    private int timerInt;
+    private static int TICKS_PER_SECOND = 20;
+    //time for each phase in seconds
+    private static int WAITING_TIME = 5;
+    private static int DRESSUP_TIME = 60;
+    private static int RESULTS_TIME = 15;
 
     /** 10 sec to explain,
      * Intro
@@ -69,10 +78,11 @@ public class Contest implements Tickable {
     }
 
     public enum ContestPhase{
+        IDLE,
         WAITING,
         DRESSUP, // select stickers
         INTRODUCTION, // the pokemon are sent out
-        SHOWOFF, // moves
+        TALENT, // moves
         RESULTS; // results
 
 
@@ -97,20 +107,56 @@ public class Contest implements Tickable {
         }
     }
 
-    @Override
-    public void tick() {
+    public void update(float timeChange, MinecraftServer server) {
 
-        timer += 1;
-
-        if(timer > 200 && timer < 12000){
-            round = ContestPhase.DRESSUP;
-        }else if(timer > 12000){
-            round = ContestPhase.INTRODUCTION;
+        if(!(round == ContestPhase.IDLE || round == ContestPhase.INTRODUCTION || round == ContestPhase.TALENT)){
+            timer += timeChange;//Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
         }
 
-        System.out.println(timer);
+        if(round == ContestPhase.IDLE || round == ContestPhase.INTRODUCTION || round == ContestPhase.TALENT) {
+
+        }else if(round == ContestPhase.WAITING && timer >= WAITING_TIME * TICKS_PER_SECOND){
+            System.out.println("Moved to Dressup phase");
+            round = ContestPhase.DRESSUP;
+            timer = 0;
+            timerInt = 0;
+            updateContestants(server);
+        }else if(round == ContestPhase.DRESSUP){
+            if(timerInt != getTimer()){
+                updateContestants(server);
+                timerInt = getTimer();
+
+            }
+            if(timer >= DRESSUP_TIME * TICKS_PER_SECOND){
+                System.out.println("Moved to INTRODUCTION phase");
+                round = ContestPhase.INTRODUCTION;
+                timer = 0;
+                updateContestants(server);
+            }
+        }else if (round == ContestPhase.RESULTS && timer >= RESULTS_TIME * TICKS_PER_SECOND){
+            System.out.println("Finished Contest");
+            round = ContestPhase.IDLE;
+            updateContestants(server);
+            EndContest();
+        }
 
 
+    }
+
+    private void updateContestants(MinecraftServer server){
+        PlayerList playerList = server.getPlayerList();
+        for(Contestant conts: contestants.values()){
+            CompoundTag tag = new CompoundTag();
+            tag.putInt("index", conts.pokemon);
+            round.toTag(tag, "phase");
+            tag.putInt("seconds", getTimer());
+            ServerPlayer play = playerList.getPlayer(conts.player);
+            ServerPlayNetworking.send((ServerPlayer) play, new CBUpdateContestInfo(conts.player, tag));
+        }
+    }
+
+    public int getTimer(){
+        return (int)(timer/20);
     }
 
     public Contest(UUID hostId, int contestType, int contestTier, ItemStack reward){
