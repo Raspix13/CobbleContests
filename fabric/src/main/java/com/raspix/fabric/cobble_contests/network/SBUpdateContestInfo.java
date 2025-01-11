@@ -67,9 +67,9 @@ public class SBUpdateContestInfo implements CustomPacketPayload {
             Contest.ContestPhase phase = con.getRound();
             System.out.println(phase);
             //System.out.println(con.getContestants().get(id));
-            int pokemonIdx = con.getContestentPokemon(id);
+            UUID pokemonIdx = con.getContestentPokemon(id);
 
-            tag.putInt("index", pokemonIdx);
+            tag.putUUID("index", pokemonIdx);
             phase.toTag(tag, "phase");
             tag.putInt("seconds", con.getTimer());
         }

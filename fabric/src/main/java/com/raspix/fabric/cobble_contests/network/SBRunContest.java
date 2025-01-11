@@ -19,7 +19,7 @@ import java.util.UUID;
 public class SBRunContest implements CustomPacketPayload {
 
     public final UUID id;
-    public final int index;
+    public final UUID index;
     public final BlockPos pos;
     public final int contestType;
     public final int contestLevel;
@@ -31,13 +31,13 @@ public class SBRunContest implements CustomPacketPayload {
         @Override
         public @NotNull SBRunContest decode(FriendlyByteBuf buf) {
             CompoundTag compoundTag = new CompoundTag();
-            return new SBRunContest(FriendlyByteBuf.readUUID(buf), buf.readInt(), FriendlyByteBuf.readBlockPos(buf), buf.readInt(), buf.readInt());
+            return new SBRunContest(FriendlyByteBuf.readUUID(buf), buf.readUUID(), FriendlyByteBuf.readBlockPos(buf), buf.readInt(), buf.readInt());
         }
 
         @Override
         public void encode(FriendlyByteBuf buf, SBRunContest payload) {
             FriendlyByteBuf.writeUUID(buf, payload.getId());
-            buf.writeInt(payload.getIndex());
+            buf.writeUUID(payload.getIndex());
             FriendlyByteBuf.writeBlockPos(buf, payload.getPos());
             buf.writeInt(payload.getContestType());
             buf.writeInt(payload.getContestLevel());
@@ -48,7 +48,7 @@ public class SBRunContest implements CustomPacketPayload {
         return id;
     }
 
-    public int getIndex(){
+    public UUID getIndex(){
         return index;
     }
 
@@ -64,7 +64,7 @@ public class SBRunContest implements CustomPacketPayload {
         return contestLevel;
     }
 
-    public SBRunContest(UUID id, int index, BlockPos pos, int contestType, int contestLevel){
+    public SBRunContest(UUID id, UUID index, BlockPos pos, int contestType, int contestLevel){
         this.id = id;
         this.index = index;
         this.pos = pos;
@@ -73,19 +73,19 @@ public class SBRunContest implements CustomPacketPayload {
     }
 
     public SBRunContest(FriendlyByteBuf buf){
-        this(buf.readUUID(), buf.readInt(), buf.readBlockPos(), buf.readInt(), buf.readInt());
+        this(buf.readUUID(), buf.readUUID(), buf.readBlockPos(), buf.readInt(), buf.readInt());
     }
 
     public void encode(FriendlyByteBuf buf){
         buf.writeUUID(this.id);
-        buf.writeInt(this.index);
+        buf.writeUUID(this.index);
         buf.writeBlockPos(this.pos);
         buf.writeInt(this.contestType);
         buf.writeInt(this.contestLevel);
     }
 
     public static SBRunContest decode(FriendlyByteBuf buf) {
-        return new SBRunContest(buf.readUUID(), buf.readInt(), buf.readBlockPos(), buf.readInt(), buf.readInt());
+        return new SBRunContest(buf.readUUID(), buf.readUUID(), buf.readBlockPos(), buf.readInt(), buf.readInt());
     }
 
 
@@ -104,7 +104,7 @@ public class SBRunContest implements CustomPacketPayload {
             System.out.println("Is client");
         }*/
         UUID id = getId();
-        int index = getIndex();
+        UUID index = getIndex();
         BlockPos pos = getPos();
         int contestType = getContestType();
         int contestLevel = getContestLevel();
