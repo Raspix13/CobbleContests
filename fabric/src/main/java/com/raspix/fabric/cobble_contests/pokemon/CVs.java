@@ -109,6 +109,17 @@ public class CVs {
         return sheen == 255? 12: (int)((12f*(float)sheen)/256f);
     }
 
+    public int getConditionFromIdx(int idx){
+        return switch (idx) {
+            case 0 -> cool;
+            case 1 -> beauty;
+            case 2 -> cute;
+            case 3 -> smart;
+            case 4 -> tough;
+            default -> sheen;
+        };
+    }
+
 
     public void increaseCVFromFlavorIndex(int flavorIdx, int bonus){
         switch (flavorIdx){
