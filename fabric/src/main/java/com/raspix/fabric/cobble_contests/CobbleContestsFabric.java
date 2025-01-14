@@ -52,6 +52,7 @@ public class CobbleContestsFabric implements ModInitializer {
 
 
         //MessagesInit.registerS2CPackets();
+        ContestConfig.loadConfig();
 
     }
 

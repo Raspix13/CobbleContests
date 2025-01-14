@@ -39,7 +39,7 @@ public class CBWalletScreenParty implements CustomPacketPayload {
     }
 
     public void recieve(Minecraft minecraft){
-        System.out.println("Recieving CBWallet");
+        //System.out.println("Recieving CBWallet");
         if(Minecraft.getInstance().screen instanceof PlayerConditionCardScreen screen){
             //CompoundTag tag = buf.readNbt();
             screen.setCVs(this.tag);

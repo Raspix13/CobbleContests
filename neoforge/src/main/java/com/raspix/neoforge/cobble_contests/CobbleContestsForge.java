@@ -106,6 +106,7 @@ public class CobbleContestsForge {
         modEventBus.addListener(this::registerPayloads);
         //modEventBus.addListener();
         //ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        ContestConfig.loadConfig();
 
 
 

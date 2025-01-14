@@ -13,6 +13,7 @@ import com.cobblemon.mod.common.item.PokeBallItem;
 import com.cobblemon.mod.common.item.battle.BagItem;
 import com.cobblemon.mod.common.pokeball.PokeBall;
 import com.cobblemon.mod.common.pokemon.Pokemon;
+import com.raspix.fabric.cobble_contests.ContestConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
@@ -82,7 +83,10 @@ public class BallSwapper extends Item implements PokemonSelectingItem {
         if(newBall != oldBall){
 
             pokemon.setCaughtBall(newBall);
-            //in release version clear ball wand's ball
+            if(!ContestConfig.ballSwapperReusable){
+                CompoundTag ballTag = new CompoundTag();
+                CustomData.set(DataComponents.CUSTOM_DATA, itemStack, ballTag);
+            }
             return InteractionResultHolder.success(itemStack);
         }else {
             serverPlayer.displayClientMessage(Component.translatable("cobble_contests.ball_swapper.same_ball", pokemon.getDisplayName().getString()).withStyle(ChatFormatting.GRAY), false);

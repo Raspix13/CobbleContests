@@ -23,7 +23,7 @@ public class ContestBoothMenu extends AbstractContainerMenu {
     private final ContestBlockEntity blockEntity;
     private final ContainerLevelAccess levelAccess;
     private PlayerPartyStore playerPartyStore;
-    private ClientParty playerPartyClient;
+    //private ClientParty playerPartyClient;
 
     //server constructor
     public ContestBoothMenu(int containerID, Inventory playerInv, BlockEntity blockEntity){
@@ -39,7 +39,7 @@ public class ContestBoothMenu extends AbstractContainerMenu {
         //try {
             UUID id = playerInv.player.getUUID();
             //playerPartyStore = Cobblemon.INSTANCE.getStorage().getParty(id);
-            playerPartyClient = CobblemonClient.INSTANCE.getStorage().getMyParty();
+            //playerPartyClient = CobblemonClient.INSTANCE.getStorage().getMyParty();
         /**}catch (NoPokemonStoreException e){
             System.out.println("you failed");
         }*/
@@ -86,9 +86,9 @@ public class ContestBoothMenu extends AbstractContainerMenu {
         return playerPartyStore;
     }
 
-    public ClientParty getPartyClient(){
+    /**public ClientParty getPartyClient(){
         return playerPartyClient;
-    }
+    }*/
 
     public void startContest(int color, int pokemonIdx, UUID player){
 

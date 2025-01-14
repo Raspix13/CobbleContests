@@ -90,7 +90,7 @@ public class SBRunContest implements CustomPacketPayload {
     }
 
     public static void handleDataOnMain(final SBRunContest data, final IPayloadContext context) {
-        System.out.println("Recieving RunContest");
+        //System.out.println("Recieving RunContest");
 
         Player player = context.player();
         Level level = player.level();
@@ -111,17 +111,17 @@ public class SBRunContest implements CustomPacketPayload {
         int contestLevel = data.getContestLevel();
         BlockEntity be  = level.getChunkAt(pos).getBlockEntity(pos, LevelChunk.EntityCreationType.IMMEDIATE); //not sure why getBlockEntity does not work
         if(be instanceof ContestBlockEntity cbe){
-            System.out.println("Should be right entity");
+            //System.out.println("Should be right entity");
             cbe.runStatAssesment(id, index, contestType, contestLevel, (ServerPlayer) player);
         }else {
-            System.out.println("Nope, wrong entity");
+            //System.out.println("Nope, wrong entity");
         }
 
     }
 
 
     public void recieve(MinecraftServer server, Player player) {
-        System.out.println("Recieving RunContest");
+        //System.out.println("Recieving RunContest");
 
         Level level = player.level();
         /**if(player instanceof ServerPlayer){
@@ -143,10 +143,10 @@ public class SBRunContest implements CustomPacketPayload {
         BlockEntity be  = level.getChunkAt(pos).getBlockEntity(pos, LevelChunk.EntityCreationType.IMMEDIATE); //not sure why getBlockEntity does not work
         //Block blockie = level.getBlockState(pos).getBlock();
         if(be instanceof ContestBlockEntity cbe){
-            System.out.println("Should be right entity");
+            //System.out.println("Should be right entity");
             cbe.runStatAssesment(id, index, contestType, contestLevel, (ServerPlayer) player);
         }else {
-            System.out.println("Nope, wrong entity");
+            //System.out.println("Nope, wrong entity");
             /**System.out.println(player);
             System.out.println(level);
             System.out.println("ID: " + id + ", Index: " + index + ", Pos: " + pos);
@@ -170,9 +170,9 @@ public class SBRunContest implements CustomPacketPayload {
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
-        System.out.println("HELLO");
+        /**System.out.println("HELLO");
         System.out.println("TYPE: " + PACKET_ID);
-        System.out.println("ID: " + PACKET_ID.id());
+        System.out.println("ID: " + PACKET_ID.id());*/
         return PACKET_ID;
     }
 }

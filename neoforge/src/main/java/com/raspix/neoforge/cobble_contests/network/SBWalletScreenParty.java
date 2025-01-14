@@ -37,7 +37,7 @@ public class SBWalletScreenParty implements CustomPacketPayload {
     private final UUID id;
 
     public static void handleDataOnMain(final SBWalletScreenParty data, final IPayloadContext context) {
-        System.out.println("Recieving SBWallet");
+        //System.out.println("Recieving SBWallet");
         PlayerPartyStore pps = null;
         CompoundTag tag = new CompoundTag();
         Player player = context.player();
@@ -86,7 +86,7 @@ public class SBWalletScreenParty implements CustomPacketPayload {
     }
 
     private static FriendlyByteBuf recieve(FriendlyByteBuf buf) {
-        System.out.println("recieve in SBWalletScreenParty was called");
+        //System.out.println("recieve in SBWalletScreenParty was called");
         if(buf == null){
             System.out.println("buf is null");
         }else {

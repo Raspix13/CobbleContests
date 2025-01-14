@@ -46,13 +46,7 @@ public class SBWalletScreenParty implements CustomPacketPayload {//ServerPlayNet
     };//StreamCodec.of((StreamEncoder)SBWalletScreenParty::new, SBWalletScreenParty::recieve).cast();
 
     private static FriendlyByteBuf recieve(FriendlyByteBuf buf) {
-        System.out.println("recieve in SBWalletScreenParty was called");
-        if(buf == null){
-            System.out.println("buf is null");
-        }else {
-            System.out.println("buf is not null");
-            System.out.println("buf is " + buf);
-        }
+        //System.out.println("recieve in SBWalletScreenParty was called");
         return buf;
     }
 
@@ -81,7 +75,7 @@ public class SBWalletScreenParty implements CustomPacketPayload {//ServerPlayNet
 
 
     public void recieve(MinecraftServer server, Player player) {
-        System.out.println("Recieving SBWallet");
+        //System.out.println("Recieving SBWallet");
         PlayerPartyStore pps = null;
         CompoundTag tag = new CompoundTag();
         try {
