@@ -65,6 +65,8 @@ public class CobbleContestsFabric implements ModInitializer {
                 ContestManager.INSTANCE.update(server)
         ); //new ServerTickEvent.Pre(server)
 
+        ContestConfig.loadConfig();
+
     }
 
 

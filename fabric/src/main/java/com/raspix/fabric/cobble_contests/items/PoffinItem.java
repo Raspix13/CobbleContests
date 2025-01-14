@@ -15,6 +15,7 @@ import com.cobblemon.mod.common.item.CobblemonItem;
 import com.cobblemon.mod.common.item.battle.BagItem;
 import com.cobblemon.mod.common.pokemon.Nature;
 import com.cobblemon.mod.common.pokemon.Pokemon;
+import com.raspix.fabric.cobble_contests.ContestConfig;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
@@ -129,28 +130,28 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
             }else {
                 flavors = getBaseFlavors();
             }
-            System.out.println(itemStack.getTags().toList().size());
+            /**System.out.println(itemStack.getTags().toList().size());
             for(TagKey key : itemStack.getTags().toList()){
                 System.out.println(key);
             }
-            System.out.println("Applying: " + Arrays.toString(flavors));
+            System.out.println("Applying: " + Arrays.toString(flavors));*/
 
             Nature nature = pokemon.getNature();
             int disliked = getIndexFromFlavor(nature.getDislikedFlavor());
             int liked = getIndexFromFlavor(nature.getFavoriteFlavor());
             float valMultiplier = 1.0f;
             if(this.mainFlavor == liked && mainFlavor >= 0 && mainFlavor != secFlavor){ //liked and has 2 flavors
-                System.out.println("liked flavor");
+                //System.out.println("liked flavor");
                 valMultiplier = 1.1f;
-                pokemon.incrementFriendship(5, true);
+                pokemon.incrementFriendship(ContestConfig.LIKED_POFFIN_FRIEND_INCREMENT, true);
             }else if(this.mainFlavor == disliked && mainFlavor >= 0 && mainFlavor != secFlavor){ //disliked and has 2 flavors
-                System.out.println("disliked flavor");
+                ///System.out.println("disliked flavor");
                 valMultiplier = 0.9f;
-                pokemon.decrementFriendship(1, true);
+                pokemon.decrementFriendship(ContestConfig.DISLIKED_POFFIN_FRIEND_DECREMENT, true);
             }else if(this.mainFlavor == -1 && this.secFlavor == -1){ //no flavor so foul
-                pokemon.decrementFriendship(20, true);
+                pokemon.decrementFriendship(ContestConfig.FOUL_POFFIN_FRIEND_DECREMENT, true);
             }else {
-                pokemon.incrementFriendship(1, true); //no opinion on flavor
+                pokemon.incrementFriendship(ContestConfig.NEUTRAL_POFFIN_FRIEND_INCREMENT, true); //no opinion on flavor
             }
 
             // need to change this so that all get buff if the primary flavor of the poffin is fav/hated
