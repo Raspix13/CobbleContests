@@ -8,6 +8,7 @@ import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
 //import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import com.raspix.fabric.cobble_contests.network.BlockPosPayload;
 import com.raspix.fabric.cobble_contests.network.SBRunContest;
+import com.raspix.fabric.cobble_contests.network.SBRunHostedContest;
 import com.raspix.fabric.cobble_contests.util.Contest;
 import com.raspix.fabric.cobble_contests.util.ContestManager;
 import io.netty.buffer.Unpooled;
@@ -132,7 +133,25 @@ public class ContestBoothMenu extends AbstractContainerMenu {
         ClientPlayNetworking.send(new SBRunContest(buf));
     }
 
-    public void startContest(int color, UUID pokemonIdx, UUID player){
+    public void startHostedContest(UUID playerID){
+        //Contest con = getJoinedContest(playerID);
+        //con.startContest(playerID);
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        buf.writeUUID(playerID);
+        ClientPlayNetworking.send(new SBRunHostedContest(buf));
+
+    }
+
+    public void startRankedContest(int color, UUID pokemonIdx, UUID player){
+
+        this.blockEntity.tryHosting(player);
+        //this.blockEntity.startContest(color, player);
+        //this.blockEntity.addContestant(player, pokemonIdx);
+        System.out.println(this.blockEntity.getCurrentContestInfo());
+    }
+
+    public void startContest(UUID player){
+
 
         this.blockEntity.tryHosting(player);
         //this.blockEntity.startContest(color, player);
@@ -162,8 +181,10 @@ public class ContestBoothMenu extends AbstractContainerMenu {
     public boolean isHostingContest(UUID playerId){
         Contest con = getJoinedContest(playerId);
         if(con == null){
+            System.out.println("can not host a missing contest");
             return false;
         }
+
         return con.isPlayerHost(playerId);
     }
 

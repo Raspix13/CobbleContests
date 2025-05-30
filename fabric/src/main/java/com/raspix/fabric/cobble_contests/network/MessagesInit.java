@@ -19,6 +19,8 @@ public class MessagesInit {
     public static final ResourceLocation CONTEST_UPDATE_1 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_update_1");
     public static final ResourceLocation CONTEST_UPDATE_2 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_update_2");
     public static final ResourceLocation PARTICLE_SENDER = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "particle_sender");
+    public static final ResourceLocation CONTEST_HOST_STARTER= ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_host_sender");
+    public static final ResourceLocation CONTESTENT_MESSAGE_SENDER= ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_message_sender");
     //public static final ResourceLocation BOOTH_ID_2 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "booth_2");
 
 
@@ -28,18 +30,23 @@ public class MessagesInit {
         //SERVERBOUND
         PayloadTypeRegistry.playC2S().register(SBWalletScreenParty.PACKET_ID, SBWalletScreenParty.PACKET_CODEC);
         PayloadTypeRegistry.playC2S().register(SBRunContest.PACKET_ID, SBRunContest.PACKET_CODEC);
+        PayloadTypeRegistry.playC2S().register(SBRunHostedContest.PACKET_ID, SBRunHostedContest.PACKET_CODEC);
         PayloadTypeRegistry.playC2S().register(SBUpdateContestInfo.PACKET_ID, SBUpdateContestInfo.PACKET_CODEC);
 
         //CLIENTBOUND
         PayloadTypeRegistry.playS2C().register(CBWalletScreenParty.PACKET_ID, CBWalletScreenParty.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(CBUpdateContestInfo.PACKET_ID, CBUpdateContestInfo.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(CBSendPlayersParticles.PACKET_ID, CBSendPlayersParticles.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(CBSendContestantMessage.PACKET_ID, CBSendContestantMessage.PACKET_CODEC);
 
 
         ServerPlayNetworking.registerGlobalReceiver(SBWalletScreenParty.PACKET_ID, (payload, context) -> {
             payload.recieve(context.server(), context.player());
         });
         ServerPlayNetworking.registerGlobalReceiver(SBRunContest.PACKET_ID, (payload, context) -> {
+            payload.recieve(context.server(), context.player());
+        });
+        ServerPlayNetworking.registerGlobalReceiver(SBRunHostedContest.PACKET_ID, (payload, context) -> {
             payload.recieve(context.server(), context.player());
         });
         ServerPlayNetworking.registerGlobalReceiver(SBUpdateContestInfo.PACKET_ID, (payload, context) -> {
@@ -59,6 +66,11 @@ public class MessagesInit {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(CBSendPlayersParticles.PACKET_ID, (payload, context) -> {
+            payload.recieve(context.client());
+
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(CBSendContestantMessage.PACKET_ID, (payload, context) -> {
             payload.recieve(context.client());
 
         });
