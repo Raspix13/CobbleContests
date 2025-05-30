@@ -8,6 +8,8 @@ import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
 //import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import com.raspix.fabric.cobble_contests.network.BlockPosPayload;
 import com.raspix.fabric.cobble_contests.network.SBRunContest;
+import com.raspix.fabric.cobble_contests.util.Contest;
+import com.raspix.fabric.cobble_contests.util.ContestManager;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -114,6 +116,22 @@ public class ContestBoothMenu extends AbstractContainerMenu {
         return playerPartyClient;
     }
 
+    public void startHosting(Player player, UUID playerID, UUID pokemonIdx, int contestType){
+
+        this.blockEntity.tryHosting(playerID);
+        //this.blockEntity.startContest(color, player);
+        //this.blockEntity.addContestant(player, pokemonIdx);
+        System.out.println(this.blockEntity.getCurrentContestInfo());
+        System.out.println("should be creating contest");
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        buf.writeUUID(playerID);
+        buf.writeUUID(pokemonIdx);
+        buf.writeBlockPos(blockEntity.getBlockPos());
+        buf.writeInt(contestType);
+        buf.writeInt(0);
+        ClientPlayNetworking.send(new SBRunContest(buf));
+    }
+
     public void startContest(int color, UUID pokemonIdx, UUID player){
 
         this.blockEntity.tryHosting(player);
@@ -135,6 +153,18 @@ public class ContestBoothMenu extends AbstractContainerMenu {
         buf.writeInt(contestType);
         buf.writeInt(0);
         ClientPlayNetworking.send(new SBRunContest(buf));
+    }
+
+    public Contest getJoinedContest(UUID playerID){
+        return ContestManager.INSTANCE.getPlayersContest(playerID);
+    }
+
+    public boolean isHostingContest(UUID playerId){
+        Contest con = getJoinedContest(playerId);
+        if(con == null){
+            return false;
+        }
+        return con.isPlayerHost(playerId);
     }
 
 }

@@ -177,7 +177,6 @@ public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerCon
         renderTooltip(guiGraphics, xMousePos, yMousePos);
 
         if(pageIndex == 0){ //stat page
-            System.out.println("UUID: " + playerInv.player.getUUID());
             // 3c02c3d3-91ac-35cd-a553-1c3a94c6fe76
             if(clientParty != null && clientParty.getSlots().size() > 0 && clientParty.get(pokemonIndex) != null && cvList != null){
                 //System.out.println("Should render for index " + pokemonIndex);

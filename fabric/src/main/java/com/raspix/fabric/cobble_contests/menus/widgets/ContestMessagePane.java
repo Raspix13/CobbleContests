@@ -1,11 +1,14 @@
 package com.raspix.fabric.cobble_contests.menus.widgets;
 
+import com.cobblemon.mod.common.client.gui.battle.widgets.BattleMessagePane;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractScrollWidget;
 import net.minecraft.client.gui.components.FittingMultiLineTextWidget;
+import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 
 import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
@@ -26,22 +29,33 @@ public class ContestMessagePane extends FittingMultiLineTextWidget {
     }
 
     @Override
-    protected int getInnerHeight() {
-        return 0;
+    public boolean mouseClicked(double d, double e, int i) {
+        System.out.println("Clicked");
+        String check = "Height: " + this.getHeight() + ", Inner: " + this.getInnerHeight() + ", Is Inner Greater?: " +  (this.getInnerHeight() > this.getHeight());
+        System.out.println(check);
+        return super.mouseClicked(d, e, i);
+
     }
 
-    @Override
+    /**@Override
+    protected int getInnerHeight() {
+        return 100;
+    }*/
+
+    /**@Override
     protected double scrollRate() {
-        return 0;
-    }
+        return 1;
+    }*/
 
     @Override
     protected void renderContents(GuiGraphics guiGraphics, int i, int j, float f) {
-
+        super.renderContents(guiGraphics, i, j, f);
     }
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+        //narrationElementOutput.add(NarratedElementType.TITLE, "hello");
+        super.updateWidgetNarration(narrationElementOutput);
 
     }
 

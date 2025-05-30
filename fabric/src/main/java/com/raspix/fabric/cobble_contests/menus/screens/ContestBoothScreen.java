@@ -7,6 +7,8 @@ import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
 import com.raspix.fabric.cobble_contests.menus.ContestBoothMenu;
 import com.raspix.fabric.cobble_contests.menus.widgets.FixedImageButton;
 import com.raspix.fabric.cobble_contests.menus.widgets.PokemonContestBoothSlotButton;
+import com.raspix.fabric.cobble_contests.util.Contest;
+import com.raspix.fabric.cobble_contests.util.ContestManager;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -27,6 +29,9 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     private final int CONTEST_WAITING_PAGE = 2; // The page all users see before the contest begins
     private final int POKEMON_SELECTION_PAGE = 3; // The page users trying to join a contest see when joining
     private final int CONTEST_LEVEL_SELECTION_PAGE = 4;
+    private final int LOBBY_PAGE = 5; // The page where people wait when someone is hosting
+    private final int FIND_A_CON_PAGE = 6; // The page where people join
+    private final int IN_RUNNING_CONTEST = 7; // The page a player sees when they are already in a contest
     private final int RESULTS_PAGE = 4;
 
     private int pageIndex;
@@ -41,6 +46,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     private List<Button> waitButtons;
     private List<Button> typeButtons;
     private List<Button> partyButtons;
+    private Button noPokemonButton;
     private Button confirmationButton;
 
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_booth.png");
@@ -78,14 +84,31 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
             setContestLevel();
         }));
 
-        setPageIndex(0);
+        Contest contest = contestInfoMenu.getJoinedContest(playerID);
+        if(contest != null){
+            setPageIndex(LOBBY_PAGE);
+            if(contestInfoMenu.isHostingContest(playerID)){
+                contestRunningType = 1;
+            }
+        }else{
+            setPageIndex(0);
+        }
+
     }
 
     private void createHomeButtons(){
         homeButtons = new ArrayList<>();
         this.homeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 110, this.topPos + 40, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
-            this.contestRunningType = 0;
+            this.contestRunningType = 0; // Single player / Ranked
             setPageIndex(CONTEST_TYPE_SELECTION);
+        })));
+        this.homeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 110, this.topPos + 80, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+            this.contestRunningType = 1; // Host
+            setPageIndex(CONTEST_TYPE_SELECTION);
+        })));
+        this.homeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 110, this.topPos + 120, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+            this.contestRunningType = 2; // Join
+            setPageIndex(FIND_A_CON_PAGE);
         })));
 
     }
@@ -93,7 +116,12 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     private void createWaitingButtons(){
         waitButtons = new ArrayList<>();
         this.waitButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 110, this.topPos + 140, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
-            startContest();
+
+            if(contestRunningType == 0) {
+                startContest();
+            }else{
+                startHosting();
+            }
             //start contest
             //setPageIndex(CONTEST_TYPE_SELECTION);
         })));
@@ -132,10 +160,17 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
                 }, clientParty.get(i))));
             }
         }
+        noPokemonButton = this.addRenderableWidget(new FixedImageButton(this.leftPos + 110, this.topPos + 200, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+            selectNoContestPokemon();
+        }));
     }
 
     private void selectContestPokemon(int pokeIndex) {
         this.pokemonIndex = clientParty.get(pokeIndex).getUuid();
+        setPageIndex(CONTEST_WAITING_PAGE);//CONTEST_LEVEL_SELECTION_PAGE);
+    }
+
+    private void selectNoContestPokemon() {
         setPageIndex(CONTEST_WAITING_PAGE);//CONTEST_LEVEL_SELECTION_PAGE);
     }
 
@@ -158,10 +193,18 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
                     (Number) (this.leftPos + 50),
                     (Number) (this.topPos + 50),
                     0.5f, 0.5f, 1f, 0x00000000, true, false);*/
-            drawScaledText(guiGraphics, Component.literal("Start Contest").getVisualOrderText(),
-                    (Number) (this.leftPos + 144),
-                    (Number) (this.topPos + 145),
-                    1f, 1f, 1f, 0x00918b99, true, false);
+            if(contestRunningType == 0){
+                drawScaledText(guiGraphics, Component.literal("Start Contest").getVisualOrderText(),
+                        (Number) (this.leftPos + 144),
+                        (Number) (this.topPos + 145),
+                        1f, 1f, 1f, 0x00918b99, true, false);
+            }else{
+                drawScaledText(guiGraphics, Component.literal("Start Hosting").getVisualOrderText(),
+                        (Number) (this.leftPos + 144),
+                        (Number) (this.topPos + 145),
+                        1f, 1f, 1f, 0x00918b99, true, false);
+            }
+
             drawScaledText(guiGraphics, Component.literal("Pokemon: " + clientParty.findByUUID(pokemonIndex).getDisplayName().getString()).getVisualOrderText(),
                     (Number) (this.leftPos + 40),
                     (Number) (this.topPos + 50),
@@ -175,6 +218,14 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
             drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.start").getVisualOrderText(),
                     (Number) (this.leftPos + 143),
                     (Number) (this.topPos + 44),
+                    1.5f, 1.5f, 1f, 0x00918b99, true, false);
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.host").getVisualOrderText(),
+                    (Number) (this.leftPos + 143),
+                    (Number) (this.topPos + 44 + 40),
+                    1.5f, 1.5f, 1f, 0x00918b99, true, false);
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.join").getVisualOrderText(),
+                    (Number) (this.leftPos + 143),
+                    (Number) (this.topPos + 44 + 80),
                     1.5f, 1.5f, 1f, 0x00918b99, true, false);
         }
         if(pageIndex == CONTEST_TYPE_SELECTION){
@@ -208,6 +259,32 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
                     (Number) (this.leftPos + 140),
                     (Number) (this.topPos + 10),
                     1f, 1f, 1f, 0x00000000, true, false);
+            if(contestRunningType == 1 || contestRunningType == 2){
+                drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.select_no_pokemon").getVisualOrderText(),
+                        (Number) (this.leftPos + 140),
+                        (Number) (this.topPos + 200),
+                        1f, 1f, 1f, 0x00000000, true, false);
+            }
+        }
+
+        if(pageIndex == LOBBY_PAGE){
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.host_lobby").getVisualOrderText(),
+                    (Number) (this.leftPos + 143),
+                    (Number) (this.topPos + 44),
+                    1.5f, 1.5f, 1f, 0x00918b99, true, false);
+        }
+        if(pageIndex == IN_RUNNING_CONTEST){
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.contest_running").getVisualOrderText(),
+                    (Number) (this.leftPos + 143),
+                    (Number) (this.topPos + 44),
+                    1.5f, 1.5f, 1f, 0x00918b99, true, false);
+        }
+
+        if(pageIndex == FIND_A_CON_PAGE){
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.fac").getVisualOrderText(),
+                    (Number) (this.leftPos + 143),
+                    (Number) (this.topPos + 44),
+                    1.5f, 1.5f, 1f, 0x00918b99, true, false);
         }
 
     }
@@ -237,6 +314,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         for (Button partyButton : partyButtons) {
             partyButton.visible = index == POKEMON_SELECTION_PAGE;
         }
+        noPokemonButton.visible = index == POKEMON_SELECTION_PAGE && contestRunningType == 1;
 
         confirmationButton.visible = index == CONTEST_LEVEL_SELECTION_PAGE;
     }
@@ -262,11 +340,23 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         //should have packet type
     }
 
+    private void startHosting(){
+        System.out.println("should start hosting");
+        menu.startHosting(playerInv.player, playerInv.player.getUUID(), pokemonIndex, colorIndex);
+        //menu.startStatAssesment(playerInv.player, playerInv.player.getUUID(), pokemonIndex, colorIndex);
+        setPageIndex(LOBBY_PAGE);
+        // should have packet
+    }
+
+    private void joinContest(){
+
+    }
+
     private void startContest(){
         System.out.println("should be starting contest");
         menu.startContest(colorIndex, pokemonIndex, playerInv.player.getUUID());
         menu.startStatAssesment(playerInv.player, playerInv.player.getUUID(), pokemonIndex, colorIndex);
-        setPageIndex(STARTING_PAGE);
+        setPageIndex(IN_RUNNING_CONTEST);
         // should have packet
     }
 
