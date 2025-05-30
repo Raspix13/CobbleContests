@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.raspix.common.cobble_contests.CobbleContests;
+import com.raspix.fabric.cobble_contests.menus.ContestBoothMenu;
 import com.raspix.fabric.cobble_contests.menus.ContestMenu;
 //import com.raspix.fabric.cobble_contests.menus.widgets.ContestMessagePane;
 import com.raspix.fabric.cobble_contests.menus.widgets.DressUpCounter;
@@ -14,6 +15,7 @@ import com.raspix.fabric.cobble_contests.menus.widgets.ParticleScreenRenderer;
 import com.raspix.fabric.cobble_contests.network.SBUpdateContestInfo;
 import com.raspix.fabric.cobble_contests.util.Contest;
 import com.raspix.fabric.cobble_contests.util.ContestManager;
+import com.raspix.fabric.cobble_contests.util.ContestManagerClient;
 import com.raspix.fabric.cobble_contests.util.ContestMessagePane;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Camera;
@@ -66,6 +68,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
     private List<FixedImageButton> dressUpButtons;
     private DressUpCounter counter;
     private ParticleScreenRenderer particleBox;
+    private ContestMenu contestInfoMenu;
 
 
 
@@ -78,7 +81,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         this.imageHeight = 194;
         this.playerId = inventory.player.getUUID();
         //this.playerInv = playerInv;
-        //this.contestInfoMenu = containerID;
+        this.contestInfoMenu = abstractContainerMenu;
         phase = Contest.ContestPhase.IDLE;
 
     }
@@ -89,7 +92,9 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         /**this.messageLog = this.addRenderableWidget(new ContestMessagePane(getAppropriateX(), getAppropriateY(), 165, 55,
                 Component.literal(placeholderText), Minecraft.getInstance().font));*/
 
-        this.messageLog = this.addRenderableWidget(new ContestMessagePane(ContestManager.INSTANCE.getPlayersContest(playerId).getContestants().get(playerId).getContestMessages()));
+        //this.messageLog = this.addRenderableWidget(new ContestMessagePane(ContestManager.INSTANCE.getPlayersContest(playerId).getContestants().get(playerId).getContestMessages()));
+        //this.messageLog = this.addRenderableWidget(new ContestMessagePane(contestInfoMenu.getJoinedContest(playerId).getContestants().get(playerId).getContestMessages()));
+        this.messageLog = this.addRenderableWidget(new ContestMessagePane(ContestManagerClient.INSTANCE.getContestantMessages(playerId)));
         this.addRenderableWidget(new FixedImageButton(5, 5, 25, 25, 0, 0, 25, CONTEST_STICKERS, 275, 200, btn -> {
             debugNextScreen();
         }));

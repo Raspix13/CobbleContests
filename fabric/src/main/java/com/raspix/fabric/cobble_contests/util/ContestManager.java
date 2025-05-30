@@ -42,15 +42,20 @@ public class ContestManager {
     }
 
     public Contest getPlayersContest(UUID potential){
+        //System.out.println("Getting Contest");
+        //System.out.println("Num contestants: " + activeContestents.size());
         if(activeContestents.containsKey(potential)){
+            //System.out.println("found contest");
             return activeContestents.get(potential);
         }
+        //System.out.println("did not find contest");
         return null;
     }
 
 
     public boolean AddContest(UUID hostId, int contestType, int contestTier, ItemStack reward, boolean hostParticipates, UUID pokeIdx){
         if(IsAlreadyInContest(hostId)){
+            System.out.println("Already in contest");
             return false;
         }
         Contest newCon = new Contest(hostId, contestType, contestTier, reward, hostParticipates, pokeIdx);

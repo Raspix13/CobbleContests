@@ -48,6 +48,9 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     private List<Button> partyButtons;
     private Button noPokemonButton;
     private Button confirmationButton;
+    private Button startHostedContestButton;
+
+    private Button debugReloadButton;
 
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_booth.png");
     private Inventory playerInv;
@@ -80,19 +83,43 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         createWaitingButtons();
         createTypeButtons();
         createPartyButtons();
+        createLobbyButtons();
         this.confirmationButton = this.addRenderableWidget(new FixedImageButton(this.leftPos + 80, this.topPos + 40, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
             setContestLevel();
         }));
 
+
+        this.debugReloadButton = this.addRenderableWidget(new FixedImageButton(this.leftPos + 40, this.topPos + 120, 18, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+            setPageIndex(pageIndex);
+        }));
+
         Contest contest = contestInfoMenu.getJoinedContest(playerID);
         if(contest != null){
-            setPageIndex(LOBBY_PAGE);
-            if(contestInfoMenu.isHostingContest(playerID)){
-                contestRunningType = 1;
+            if(contest.getRound() == Contest.ContestPhase.IDLE){
+
+                if(contestInfoMenu.isHostingContest(playerID)){
+                    contestRunningType = 1;
+                }else{
+                    contestRunningType = 2;
+                }
+                setPageIndex(LOBBY_PAGE);
+            }else{
+                //System.out.println("Round was not idle");
+                setPageIndex(IN_RUNNING_CONTEST);
             }
+
         }else{
-            setPageIndex(0);
+            //System.out.println("Contest Was null");
+            setPageIndex(STARTING_PAGE);
         }
+        //System.out.println("Type is " + contestRunningType);
+
+    }
+
+    private void createLobbyButtons(){
+        this.startHostedContestButton = this.addRenderableWidget(new FixedImageButton(this.leftPos + 80, this.topPos + 100, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+            startHostedContest();
+        }));
 
     }
 
@@ -119,7 +146,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
 
             if(contestRunningType == 0) {
                 startContest();
-            }else{
+            }else if(contestRunningType == 1){
                 startHosting();
             }
             //start contest
@@ -316,6 +343,9 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         }
         noPokemonButton.visible = index == POKEMON_SELECTION_PAGE && contestRunningType == 1;
 
+        startHostedContestButton.visible = index == LOBBY_PAGE && contestRunningType == 1;
+        //System.out.println("Test: " + (index == LOBBY_PAGE) +  " and " + (contestRunningType == 1) + " With crt = " + contestRunningType);
+
         confirmationButton.visible = index == CONTEST_LEVEL_SELECTION_PAGE;
     }
 
@@ -348,13 +378,21 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         // should have packet
     }
 
+    private void startHostedContest(){
+        System.out.println("should start hosted Contest");
+        menu.startHostedContest(playerInv.player.getUUID());
+        //menu.startStatAssesment(playerInv.player, playerInv.player.getUUID(), pokemonIndex, colorIndex);
+        setPageIndex(IN_RUNNING_CONTEST);
+        // should have packet
+    }
+
     private void joinContest(){
 
     }
 
     private void startContest(){
         System.out.println("should be starting contest");
-        menu.startContest(colorIndex, pokemonIndex, playerInv.player.getUUID());
+        menu.startRankedContest(colorIndex, pokemonIndex, playerInv.player.getUUID());
         menu.startStatAssesment(playerInv.player, playerInv.player.getUUID(), pokemonIndex, colorIndex);
         setPageIndex(IN_RUNNING_CONTEST);
         // should have packet

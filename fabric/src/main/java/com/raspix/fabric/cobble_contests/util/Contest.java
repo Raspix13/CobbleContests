@@ -8,7 +8,9 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormEntityParticlePacket;
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormParticlePacket;
 import com.cobblemon.mod.common.pokemon.Pokemon;
+import com.raspix.fabric.cobble_contests.network.CBSendContestantMessage;
 import com.raspix.fabric.cobble_contests.network.CBUpdateContestInfo;
+import com.raspix.fabric.cobble_contests.network.CBWalletScreenParty;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
 import kotlin.Unit;
@@ -157,7 +159,23 @@ public class Contest {
         }
     }
 
-    public void addContestantMessage(String transLine, Object ... objects){
+    public void addContestantMessage(MinecraftServer server, String transLine, Object ... objects){
+        PlayerList playerList = server.getPlayerList();
+
+
+        for(UUID contestantID: contestantsOrdered){
+            ServerPlayer serverPlayer = playerList.getPlayer(contestantID);
+            Component line = Component.translatable(transLine, objects).copy().withStyle(ChatFormatting.BOLD);//.withStyle(CobblemonResources.INSTANCE.getDEFAULT_LARGE());
+            if(serverPlayer != null){
+                ServerPlayNetworking.send(serverPlayer, new CBSendContestantMessage(contestantID, line.toFlatList()));
+            }
+
+            //contestants.get(contestantID).contestMessages.add(new ArrayList<>(Collections.singletonList(Component.literal(line).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.LIGHT_PURPLE).getVisualOrderText())));
+        }
+    }
+
+
+    public void addContestantMessage1(String transLine, Object ... objects){
         for(UUID contestantID: contestantsOrdered){
             Font textRenderer = Minecraft.getInstance().font;
             Component line = Component.translatable(transLine, objects).copy().withStyle(ChatFormatting.BOLD);//.withStyle(CobblemonResources.INSTANCE.getDEFAULT_LARGE());
@@ -178,13 +196,14 @@ public class Contest {
     }
 
     public boolean isPlayerHost(UUID playerID){
-        return playerID == host;
+        //System.out.println("Player " + playerID + " is checked against host " + host + " and is " + playerID.equals(host));
+        return playerID.equals(host);
     }
 
     public void update(float timeChange, MinecraftServer server) {
 
         if(round == ContestPhase.WAITING && timer == 0f){
-            addContestantMessage("The Contest is starting! Contestants should get into position\n");
+            addContestantMessage(server, "The Contest is starting! Contestants should get into position\n");
         }
 
         if(!(round == ContestPhase.ENDING)){
@@ -217,7 +236,7 @@ public class Contest {
                 timer = 0;
                 updateContestants(server);
                 evaluateIntroductionPoints(server);
-                addContestantMessage("And that's time! Now to meet the contestants!\n");
+                addContestantMessage(server, "And that's time! Now to meet the contestants!\n");
             }
         }else if (round == ContestPhase.RESULTS && timer >= RESULTS_TIME * TICKS_PER_SECOND){
             System.out.println("Finished Contest");
@@ -235,8 +254,8 @@ public class Contest {
 
                 assert poke != null;
                 //addContestantMessage(player.getDisplayName().getString() + " entered " + poke.getDisplayName().getString() + " the " + poke.getSpecies().getName());
-                //addContestantMessage("cobble_contests.contest_showoff.intro", player.getDisplayName().getString(), poke.getDisplayName().getString(), poke.getSpecies().getName());
-                addContestantMessage(Component.translatable("cobble_contests.contest_showoff.intro", player.getDisplayName().getString(), poke.getDisplayName().getString(), poke.getSpecies().getName()));
+                addContestantMessage(server, "cobble_contests.contest_showoff.intro", player.getDisplayName().getString(), poke.getDisplayName().getString(), poke.getSpecies().getName());
+                //addContestantMessage(Component.translatable("cobble_contests.contest_showoff.intro", player.getDisplayName().getString(), poke.getDisplayName().getString(), poke.getSpecies().getName()));
 
                 sendOutPokemon(server, contestantIdx);
                 this.contestantIdx += 1;
@@ -333,10 +352,10 @@ public class Contest {
         this.contestTier = contestTier;
         this.reward = reward;
         this.contestants = new HashMap<>();
-        this.round = ContestPhase.WAITING;
+        this.round = ContestPhase.IDLE;
         this.contestantIdx = 0;
         addContestants(hostId, pokeIdx);
-        StartContest();
+        //StartContest();
     }
 
     public void addContestants(UUID uuid, UUID pokeIdx){
@@ -360,9 +379,18 @@ public class Contest {
         return false;
     }
 
-    public boolean StartContest(){
-        timer = 0f;
-        this.contestantsOrdered = new ArrayList<>(contestants.keySet());
+    /**
+     * Should be used to start an already existing contest that has a lobby
+     * @param playerID the assumed host
+     * @return if the contest could be started
+     */
+    public boolean startContest(UUID playerID){
+        if(playerID.equals(host)) {
+            timer = 0f;
+            this.contestantsOrdered = new ArrayList<>(contestants.keySet());
+            this.round = ContestPhase.WAITING;
+            return true;
+        }
         return false;
     }
 
