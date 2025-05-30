@@ -1,0 +1,87 @@
+{
+  "creativetab.cobble_contests": "Cobble Contests",
+
+  "container.cobble_contests.contest_block": "メニューブロックの例",
+  "container.cobble_contests.poffin_pot": "ポフィンポット",
+
+  "block.cobble_contests.contest_booth": "コンテストブース",
+  "block.cobble_contests.poffin_pot": "ポフィンポット",
+  "item.cobble_contests.contest_booth": "コンテストブース",
+  "item.cobble_contests.poffin_pot": "ポフィンポット",
+
+  "item.cobble_contests.contest_card": "コンテストカード",
+  "item.cobble_contests.ball_swapper": "ボールリプレイサー",
+
+  "item.cobble_contests.poffin_dough_base": "ポフィン生地",
+  "item.cobble_contests.foul_poffin": "ファウル・ポフィン",
+
+  "item.cobble_contests.spicy_poffin": "Spicy Poffin",
+  "item.cobble_contests.dry_poffin": "Dry Poffin",
+  "item.cobble_contests.sweet_poffin": "Sweet Poffin",
+  "item.cobble_contests.bitter_poffin": "Bitter Poffin",
+  "item.cobble_contests.sour_poffin": "Sour Poffin",
+
+  "item.cobble_contests.spicy_dry_poffin": "Spicy Dry Poffin",
+  "item.cobble_contests.spicy_sweet_poffin": "Spicy Sweet Poffin",
+  "item.cobble_contests.spicy_bitter_poffin": "Spicy Bitter Poffin",
+  "item.cobble_contests.spicy_sour_poffin": "Spicy Sour Poffin",
+
+  "item.cobble_contests.dry_spicy_poffin": "Dry Spicy Poffin",
+  "item.cobble_contests.dry_sweet_poffin": "Dry Sweet Poffin",
+  "item.cobble_contests.dry_bitter_poffin": "Dry Bitter Poffin",
+  "item.cobble_contests.dry_sour_poffin": "Dry Sour Poffin",
+
+  "item.cobble_contests.sweet_spicy_poffin": "Sweet Spicy Poffin",
+  "item.cobble_contests.sweet_dry_poffin": "Sweet Dry Poffin",
+  "item.cobble_contests.sweet_bitter_poffin": "Sweet Bitter Poffin",
+  "item.cobble_contests.sweet_sour_poffin": "Sweet Sour Poffin",
+
+  "item.cobble_contests.bitter_spicy_poffin": "Bitter Spicy Poffin",
+  "item.cobble_contests.bitter_dry_poffin": "Bitter Dry Poffin",
+  "item.cobble_contests.bitter_sweet_poffin": "Bitter Sweet Poffin",
+  "item.cobble_contests.bitter_sour_poffin": "Bitter Sour Poffin",
+
+  "item.cobble_contests.sour_spicy_poffin": "Sour Spicy Poffin",
+  "item.cobble_contests.sour_dry_poffin": "Sour Dry Poffin",
+  "item.cobble_contests.sour_sweet_poffin": "Sour Sweet Poffin",
+  "item.cobble_contests.sour_bitter_poffin": "Sour Bitter Poffin",
+
+  "tooltip.cobble_contests.ball_swapper.tooltip.ball_type": "Currently swapping to %1$s.",
+  "tooltip.cobble_contests.ball_swapper.tooltip.empty": "empty",
+  "tooltip.cobble_contests.ball_swapper.tooltip.instructions1": "To change ball, use with new ball in offhand.",
+  "tooltip.cobble_contests.ball_swapper.tooltip.instructions2": "Use again to change the ball of a pokemon.",
+  "cobble_contests.ball_swapper.same_ball": "これは現在のボールと同じです",
+
+  "tooltip.cobble_contests.poffin_item.tooltip.poffin_stats": "辛さ: %1$s、辛口: %2$s、甘口: %3$s、苦味: %4$s、酸味: %5$s、滑らかさ: %6$s",
+
+  "cobble_contests.move_info.placeholder": "申し訳ありませんが、移動効果はまだ実装されていません。",
+
+  "cobble_contests.contest_type.cool": "いいね",
+  "cobble_contests.contest_type.beauty": "美しさ",
+  "cobble_contests.contest_type.cute": "かわいい",
+  "cobble_contests.contest_type.smart": "頭いい",
+  "cobble_contests.contest_type.tough": "厳しい",
+  "cobble_contests.sheen_name.sheen": "シーン",
+
+  "cobble_contests.contest_level.0": "普通",
+  "cobble_contests.contest_level.1": "素晴らしい",
+  "cobble_contests.contest_level.2": "ハイパー",
+  "cobble_contests.contest_level.3": "ウルトラ",
+  "cobble_contests.contest_level.4": "マスター",
+
+  "cobble_contests.poffin_pot_instructions": "ポフィン生地を鍋に入れ、燃料とベリー1～4個を加えます。ベリーを重複して使用すると、ポフィンは不味くなります。結果の統計は使用したベリーに基づきます。",
+  "cobble_contests.contest_text.start": "始める",
+  "cobble_contests.contest_text.host": "ホスト",
+  "cobble_contests.contest_text.select_type": "タイプの選択",
+  "cobble_contests.contest_text.pokemon_select": "ポケモンを選ぶ",
+  "cobble_contests.contest_text.select_no_pokemon": "ポケモンを入力しないでください",
+
+  "cobble_contests.contest_showoff.intro": "%1$s が %3$s に %2$s 入力しました",
+
+  "cobble_contests.contest_result.not_implemented": "この機能はまだ実装されていません。",
+  "cobble_contests.contest_result.won_ranked": "%1$sが%2$s %3$sコンテストで優勝しました",
+  "cobble_contests.contest_result.lost_ranked": "%1$s は %2$s %3$s コンテストで負けました",
+  "cobble_contests.contest_result.maxed_ranked": "%1$sはすでに%2$sコンテストすべてで優勝しています"
+
+
+}

@@ -1,9 +1,16 @@
 package com.raspix.fabric.cobble_contests.util;
 
+import com.cobblemon.mod.common.Cobblemon;
+import com.cobblemon.mod.common.pokemon.Pokemon;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
@@ -42,7 +49,6 @@ public class ContestManager {
     }
 
 
-
     public boolean AddContest(UUID hostId, int contestType, int contestTier, ItemStack reward, boolean hostParticipates, UUID pokeIdx){
         if(IsAlreadyInContest(hostId)){
             return false;
@@ -56,9 +62,15 @@ public class ContestManager {
 
 
 
-    public boolean EndContest(Contest endingContest){
+    public boolean EndContest(Contest endingContest, MinecraftServer server){
+        PlayerList playerList = server.getPlayerList();
+
         if(contests.contains(endingContest)){
-            for (UUID contestant : endingContest.getContestants().keySet()){
+            Map<UUID, Contest.Contestant> contestants = endingContest.getContestants();
+            for (UUID contestant : contestants.keySet()){
+                // tell players results
+                ServerPlayer play = playerList.getPlayer(contestant);
+                notifyPlayerContestResults(contestant, endingContest, play);
                 activeContestents.remove(contestant);
             }
             activeContestents.remove(endingContest.getHost());
@@ -73,12 +85,25 @@ public class ContestManager {
         //tempTimer += Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
         //System.out.println(tempTimer);
         float timeChange = 1;//Minecraft.getInstance().getTimer().getRealtimeDeltaTicks();
-        for(Contest contest: contests){
-            contest.update(timeChange, server);
+        if(!activeContestents.isEmpty()){
+            for(Contest contest: activeContestents.values()){
+                contest.update(timeChange, server);
+            }
         }
+
     }
 
+    public void notifyPlayerContestResults(UUID id, Contest endingContest, ServerPlayer player){
+        Component componentOutput;
 
+        componentOutput = endingContest.tempRunContestResults(id);
+
+        ServerPlayer sPlayer = player;//poke.getOwnerPlayer();
+        if (!sPlayer.level().isClientSide()) {
+            sPlayer.displayClientMessage(componentOutput, false);
+        }
+
+    }
 
 
 

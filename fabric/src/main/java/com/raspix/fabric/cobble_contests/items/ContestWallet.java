@@ -4,10 +4,14 @@ import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
 //import com.raspix.fabric.cobble_contests.menus.PlayerContestInfoMenu;
 //import com.raspix.fabric.cobble_contests.blocks.entity.PoffinPotBlockEntity;
 //import com.raspix.fabric.cobble_contests.menus.PlayerContestInfoMenu;
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
+import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormEntityParticlePacket;
+import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.menus.ContestMenu;
 import com.raspix.fabric.cobble_contests.menus.PlayerConditionCardMenu;
 import com.raspix.fabric.cobble_contests.util.ContestManager;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -17,6 +21,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+
+import java.util.Arrays;
+
+import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 
 public class ContestWallet extends Item {
     public ContestWallet(Properties arg) {
@@ -31,15 +39,22 @@ public class ContestWallet extends Item {
             if(ContestManager.INSTANCE.IsAlreadyInContest(pPlayer.getUUID()) && !pPlayer.isShiftKeyDown()){
                 pPlayer.openMenu(getMenuProvider2(pPlayer));
             }else{
-                if(!pPlayer.isShiftKeyDown()){
-                    pPlayer.openMenu(getMenuProvider(pPlayer));
-                }else {
-                    pPlayer.openMenu(getMenuProvider2(pPlayer));
-                }
+                //if(!pPlayer.isShiftKeyDown()){
+                pPlayer.openMenu(getMenuProvider(pPlayer));
+                //}else {
+                    //pPlayer.openMenu(getMenuProvider2(pPlayer));
+                //}
 
             }
             //pPlayer.openMenu(getMenuProvider(pPlayer));
+            new SpawnSnowstormEntityParticlePacket(cobblemonResource("loading"), pPlayer.getId(), Arrays.asList())
+                    .sendToPlayersAround(pPlayer.getX(), pPlayer.getY() + 2, pPlayer.getZ(), 64.0, pPlayer.level().dimension(), serverPlayer -> {
+                        return false;
+                    });//ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "loading.png")
+        }else{
+
         }
+
 
         pPlayer.awardStat(Stats.ITEM_USED.get(this));
         return InteractionResultHolder.sidedSuccess(itemstack, pLevel.isClientSide());

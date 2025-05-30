@@ -18,6 +18,7 @@ public class MessagesInit {
     public static final ResourceLocation RUN_CONTEST = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "run_contest");
     public static final ResourceLocation CONTEST_UPDATE_1 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_update_1");
     public static final ResourceLocation CONTEST_UPDATE_2 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_update_2");
+    public static final ResourceLocation PARTICLE_SENDER = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "particle_sender");
     //public static final ResourceLocation BOOTH_ID_2 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "booth_2");
 
 
@@ -32,6 +33,7 @@ public class MessagesInit {
         //CLIENTBOUND
         PayloadTypeRegistry.playS2C().register(CBWalletScreenParty.PACKET_ID, CBWalletScreenParty.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(CBUpdateContestInfo.PACKET_ID, CBUpdateContestInfo.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(CBSendPlayersParticles.PACKET_ID, CBSendPlayersParticles.PACKET_CODEC);
 
 
         ServerPlayNetworking.registerGlobalReceiver(SBWalletScreenParty.PACKET_ID, (payload, context) -> {
@@ -49,10 +51,14 @@ public class MessagesInit {
         ClientPlayNetworking.registerGlobalReceiver(CBWalletScreenParty.PACKET_ID, (payload, context) -> {
             // \] # written by cat (Parix), do not delete, she was helping
             payload.recieve(context.client());
-
         });
 
         ClientPlayNetworking.registerGlobalReceiver(CBUpdateContestInfo.PACKET_ID, (payload, context) -> {
+            payload.recieve(context.client());
+
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(CBSendPlayersParticles.PACKET_ID, (payload, context) -> {
             payload.recieve(context.client());
 
         });

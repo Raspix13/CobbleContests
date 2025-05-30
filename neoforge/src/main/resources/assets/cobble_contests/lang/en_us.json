@@ -74,6 +74,8 @@
   "cobble_contests.contest_text.select_type": "Select Type",
   "cobble_contests.contest_text.pokemon_select": "Choose Pokemon",
 
+  "cobble_contests.contest_showoff.intro": "%1$s entered %2$s the %3$s",
+
   "cobble_contests.contest_result.not_implemented": "This feature is not yet implemented, sorry",
   "cobble_contests.contest_result.won_ranked": "%1$s Won the %2$s %3$s Contest",
   "cobble_contests.contest_result.lost_ranked": "%1$s Lost the %2$s %3$s Contest",

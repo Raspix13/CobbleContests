@@ -2,38 +2,57 @@ package com.raspix.fabric.cobble_contests.util;
 
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.reactive.SimpleObservable;
+import com.cobblemon.mod.common.client.battle.ClientBattleMessageQueue;
+import com.cobblemon.mod.common.client.render.SnowstormParticle;
+import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
+import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormEntityParticlePacket;
+import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormParticlePacket;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.fabric.cobble_contests.network.CBUpdateContestInfo;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
+import kotlin.Unit;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.Tickable;
+import net.minecraft.client.gui.Font;
+import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
-
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.Vec3;
+import com.cobblemon.mod.common.util.PlayerExtensionsKt;
+import com.cobblemon.mod.common.client.CobblemonResources;
 import java.util.*;
+
+import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 
 public class Contest {
     private UUID host;
     private int contestType; // Cool, Beauty, Cute, Clever, Tough
-    private int contestTier; // "Normal", "Super", "Hyper", "Ultra", "Master"
+    private int contestTier; // "Normal", "Super", "Hyper", "Ultra", "Master" Only used for ranked matches
     private ItemStack reward;
     private Map<UUID, Contestant> contestants = new HashMap<>();
+    private ArrayList<UUID> contestantsOrdered;
     private ContestPhase round;
     private float timer;
     private int timerInt;
+    private int contestantIdx;
 
     private static int TICKS_PER_SECOND = 20;
     //time for each phase in seconds
-    private static int WAITING_TIME = 5;
-    private static int DRESSUP_TIME = 60;
-    private static int RESULTS_TIME = 15;
+    private static int LOBBY_TIMEOUT = 60; // The amount of time a hosted lobby can be idle before it times out and gets deleted
+    private static int WAITING_TIME = 5; // The time the contestents have to get ready for the contest to start
+    private static int DRESSUP_TIME = 10; // The time a player has to choose stickers, should be 60 sec
+    private static int RESULTS_TIME = 15; // The time the player can see the results before they are released from the contest
+    private static int SEND_OUT_TIMER = 3; // The time in between each pokemon getting sent out
+    private static int TEMP_TALENT_TIME = 5; // The placeholder timer for players in the talent portion of the contest
 
     private static int[][] INTRO_HEARTS = new int[][]{ // Max 8 hearts
             {0, 11, 21, 31, 41, 51, 61, 71, 81}, // Normal
@@ -61,11 +80,13 @@ public class Contest {
         private UUID player;
         private UUID pokemon; //not sure what to reference here
         private int hearts;
+        private ClientBattleMessageQueue contestMessages;
 
         public Contestant(UUID player, UUID pokemon){
             this.player = player;
             this.pokemon = pokemon;
             this.hearts = 0;
+            this.contestMessages = new ClientBattleMessageQueue();
         }
 
 
@@ -99,15 +120,20 @@ public class Contest {
         public void addHearts(int hearts){
             this.hearts += hearts;
         }
+
+        public ClientBattleMessageQueue getContestMessages(){
+            return contestMessages;
+        }
     }
 
     public enum ContestPhase{
-        IDLE,
-        WAITING,
-        DRESSUP, // select stickers
-        INTRODUCTION, // the pokemon are sent out
+        IDLE, // The time before the start
+        WAITING, // The few seconds at the start for contestents to get ready & in position
+        DRESSUP, // player selects stickers
+        INTRODUCTION, // the pokemon are sent out with particle effects and introduced
         TALENT, // moves
-        RESULTS; // results
+        RESULTS, // results
+        ENDING; // The contest has ended and needs a different state
 
 
         // Serialize the enum to a String
@@ -131,13 +157,48 @@ public class Contest {
         }
     }
 
+    public void addContestantMessage(String transLine, Object ... objects){
+        for(UUID contestantID: contestantsOrdered){
+            Font textRenderer = Minecraft.getInstance().font;
+            Component line = Component.translatable(transLine, objects).copy().withStyle(ChatFormatting.BOLD);//.withStyle(CobblemonResources.INSTANCE.getDEFAULT_LARGE());
+            List<FormattedCharSequence> lines = Language.getInstance().getVisualOrder(textRenderer.getSplitter().splitLines(line, ContestMessagePane.LINE_WIDTH, line.getStyle()));
+            contestants.get(contestantID).contestMessages.add(lines);
+            //contestants.get(contestantID).contestMessages.add(new ArrayList<>(Collections.singletonList(Component.literal(line).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.LIGHT_PURPLE).getVisualOrderText())));
+        }
+    }
+
+    public void addContestantMessage(Component com){
+        for(UUID contestantID: contestantsOrdered){
+            Font textRenderer = Minecraft.getInstance().font;
+            Component line = com.copy().withStyle(ChatFormatting.BOLD);//.withStyle(CobblemonResources.INSTANCE.getDEFAULT_LARGE());
+            List<FormattedCharSequence> lines = Language.getInstance().getVisualOrder(textRenderer.getSplitter().splitLines(line, ContestMessagePane.LINE_WIDTH, line.getStyle()));
+            contestants.get(contestantID).contestMessages.add(lines);
+            //contestants.get(contestantID).contestMessages.add(new ArrayList<>(Collections.singletonList(Component.literal(line).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.LIGHT_PURPLE).getVisualOrderText())));
+        }
+    }
+
+    public boolean isPlayerHost(UUID playerID){
+        return playerID == host;
+    }
+
     public void update(float timeChange, MinecraftServer server) {
 
-        if(!(round == ContestPhase.IDLE || round == ContestPhase.INTRODUCTION || round == ContestPhase.TALENT)){
+        if(round == ContestPhase.WAITING && timer == 0f){
+            addContestantMessage("The Contest is starting! Contestants should get into position\n");
+        }
+
+        if(!(round == ContestPhase.ENDING)){
             timer += timeChange;//Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
         }
 
-        if(round == ContestPhase.IDLE || round == ContestPhase.INTRODUCTION || round == ContestPhase.TALENT) {
+
+
+        if(round == ContestPhase.IDLE && timer >= LOBBY_TIMEOUT * TICKS_PER_SECOND) {
+            System.out.println("Contest Lobby Timed Out");
+            // Should notify anyone who was in the lobby
+            round = ContestPhase.ENDING;
+            updateContestants(server);
+            EndContest(server);
 
         }else if(round == ContestPhase.WAITING && timer >= WAITING_TIME * TICKS_PER_SECOND){
             System.out.println("Moved to Dressup phase");
@@ -149,7 +210,6 @@ public class Contest {
             if(timerInt != getTimer()){
                 updateContestants(server);
                 timerInt = getTimer();
-
             }
             if(timer >= DRESSUP_TIME * TICKS_PER_SECOND){
                 System.out.println("Moved to INTRODUCTION phase");
@@ -157,15 +217,87 @@ public class Contest {
                 timer = 0;
                 updateContestants(server);
                 evaluateIntroductionPoints(server);
+                addContestantMessage("And that's time! Now to meet the contestants!\n");
             }
         }else if (round == ContestPhase.RESULTS && timer >= RESULTS_TIME * TICKS_PER_SECOND){
             System.out.println("Finished Contest");
-            round = ContestPhase.IDLE;
+            round = ContestPhase.ENDING;
             updateContestants(server);
-            EndContest();
+            EndContest(server);
+        }else if(round == ContestPhase.INTRODUCTION){
+            if(timer >= ((contestantIdx * SEND_OUT_TIMER + 2) * TICKS_PER_SECOND)){
+                PlayerList playerList = server.getPlayerList();
+                Contestant contestant = contestants.get(contestantsOrdered.get(contestantIdx));
+                ServerPlayer player = playerList.getPlayer(contestant.player);
+
+                assert player != null;
+                Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(player).get(contestant.pokemon);
+
+                assert poke != null;
+                //addContestantMessage(player.getDisplayName().getString() + " entered " + poke.getDisplayName().getString() + " the " + poke.getSpecies().getName());
+                //addContestantMessage("cobble_contests.contest_showoff.intro", player.getDisplayName().getString(), poke.getDisplayName().getString(), poke.getSpecies().getName());
+                addContestantMessage(Component.translatable("cobble_contests.contest_showoff.intro", player.getDisplayName().getString(), poke.getDisplayName().getString(), poke.getSpecies().getName()));
+
+                sendOutPokemon(server, contestantIdx);
+                this.contestantIdx += 1;
+                if(contestantIdx >= contestants.size()){
+                    System.out.println("Finished Introduction");
+                    timer = 0;
+                    round = ContestPhase.TALENT;
+                    updateContestants(server);
+                }
+            }
+        }else if(round == ContestPhase.TALENT &&  timer >= (TEMP_TALENT_TIME * TICKS_PER_SECOND)){
+            System.out.println("Finished Talent");
+            round = ContestPhase.RESULTS;
+            timer = 0;
+            updateContestants(server);
         }
 
 
+    }
+
+    private void sendOutPokemon(MinecraftServer server, int contestantIndex){
+        PlayerList playerList = server.getPlayerList();
+
+        Contestant contestant = contestants.get(contestantsOrdered.get(contestantIndex));
+
+        //for(Contestant contestant: contestants.values()) {
+            ServerPlayer play = playerList.getPlayer(contestant.player);
+            Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(play).get(contestant.pokemon);
+            if(poke.getEntity() == null) {
+                Vec3 position = null;//play.raycastSafeSendout(poke, 12.0, 5.0, ClipContext.Fluid.ANY);
+                if (position != null) {
+                    poke.sendOutWithAnimation(play, play.serverLevel(), position, null, true, null, pokemonEntity -> {
+                        return Unit.INSTANCE;
+                    });
+                } else {
+                    poke.sendOutWithAnimation(play, play.serverLevel(), play.position(), null, true, null, pokemonEntity -> {
+                        return Unit.INSTANCE;
+                    });
+                }
+            }else{
+                //play cry animation
+            }
+
+            //SnowstormParticleReader.INSTANCE.loadEffect()
+
+            PokemonEntity pokeEnt = poke.getEntity();
+            //ServerPlayNetworking.send(play, new CBSendPlayersParticles(play.getId(), "rainbow", pokeEnt.position().toVector3f()));
+            new SpawnSnowstormParticlePacket(cobblemonResource("rainbow"), pokeEnt.position())
+                    .sendToPlayersAround(pokeEnt.getX(), pokeEnt.getY(), pokeEnt.getZ(), 64.0, pokeEnt.level().dimension(), serverPlayer -> {
+                        return false;
+                    });
+            new SpawnSnowstormEntityParticlePacket(cobblemonResource("rainbow"), play.getId(), Arrays.asList())
+                    .sendToPlayersAround(pokeEnt.getX(), pokeEnt.getY(), pokeEnt.getZ(), 64.0, pokeEnt.level().dimension(), serverPlayer -> {
+                        return false;
+                    });//ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "loading.png")*
+            /**new SpawnSnowstormEntityParticlePacket(cobblemonResource("shiny_ring"), it.getId(), Arrays.asList("shiny_particles", "middle"))
+                    .sendToPlayersAround(it.getX(), it.getY(), it.getZ(), 64.0, it.level().dimension(), serverPlayer -> {
+                        return false;
+                    });*/
+
+        //}
     }
 
     private void updateContestants(MinecraftServer server){
@@ -202,7 +334,9 @@ public class Contest {
         this.reward = reward;
         this.contestants = new HashMap<>();
         this.round = ContestPhase.WAITING;
+        this.contestantIdx = 0;
         addContestants(hostId, pokeIdx);
+        StartContest();
     }
 
     public void addContestants(UUID uuid, UUID pokeIdx){
@@ -228,6 +362,7 @@ public class Contest {
 
     public boolean StartContest(){
         timer = 0f;
+        this.contestantsOrdered = new ArrayList<>(contestants.keySet());
         return false;
     }
 
@@ -239,8 +374,8 @@ public class Contest {
         return contestants;
     }
 
-    public boolean EndContest(){
-        ContestManager.INSTANCE.EndContest(this);
+    public boolean EndContest(MinecraftServer server){
+        ContestManager.INSTANCE.EndContest(this, server);
         return false;
     }
 
@@ -286,4 +421,95 @@ public class Contest {
         }
     }
 
+    public String getContestTypeString(int contestType){
+        return switch (contestType) {
+            case 0 -> "Cool";
+            case 1 -> "Beauty";
+            case 2 -> "Cute";
+            case 3 -> "Smart";
+            case 4 -> "Tough";
+            default -> "ERROR";
+        };
+    }
+
+    public Component tempRunContestResults(UUID playerId){
+        Component componentOutput;
+        componentOutput = Component.translatable("cobble_contests.contest_result.maxed_ranked", "pokemon name", getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
+        /**if(contestTier < 5) {
+            Contestant playerCon = contestants.get(playerId);
+
+            boolean result = runContest(Cobblemon.INSTANCE.getStorage().getParty(player).get(pokeIdx));
+
+            if (result) {
+                componentOutput = Component.translatable("cobble_contests.contest_result.won_ranked", pokeName, getContestLevelString(contestLevel), getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
+                //contestOutput = pokeName + " Won the " + getContestLevelString(contestLevel) + " " + getContestTypeString(contestType) + " Contest";
+            } else {
+                componentOutput = Component.translatable("cobble_contests.contest_result.lost_ranked", pokeName, getContestLevelString(contestLevel), getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
+                //contestOutput = pokeName + " Lost the " + getContestLevelString(contestLevel) + " " + getContestTypeString(contestType) + " Contest";
+            }
+        }else{
+            componentOutput = Component.translatable("cobble_contests.contest_result.maxed_ranked", pokeName, getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
+            //contestOutput = pokeName + " has already beaten all " + getContestTypeString(contestType) + " Contests";
+        }*/
+        return componentOutput;
+    }
+
+    public int getContestLevel() {
+        return contestTier;
+    }
+
+    private boolean runContest(Pokemon poke) {
+        boolean result = false;
+        CVs cvs = CVs.getFromTag(poke.getPersistentData().getCompound("CVs"));
+        Ribbons ribbons = Ribbons.getFromTag(poke.getPersistentData().getCompound("Ribbons"));
+        switch (contestType) {
+            case 0:
+                if(runAppContest(poke, cvs.getCool())) {
+                    ribbons.setRankedCool(contestTier, true);
+                    result = true;
+                }
+                break;
+            case 1:
+                if(runAppContest(poke, cvs.getBeauty())) {
+                    ribbons.setRankedBeauty(contestTier, true);
+                    result = true;
+                }
+                break;
+            case 2:
+                if(runAppContest(poke, cvs.getCute())) {
+                    ribbons.setRankedCute(contestTier, true);
+                    result = true;
+                }
+                break;
+            case 3:
+                if(runAppContest(poke, cvs.getSmart())) {
+                    ribbons.setRankedSmart(contestTier, true);
+                    result = true;
+                }
+                break;
+            case 4:
+                if(runAppContest(poke, cvs.getTough())) {
+                    ribbons.setRankedTough(contestTier, true);
+                    result = true;
+                }
+                break;
+            default:
+                break;
+        }
+        Map<String, CompoundTag> myData = new HashMap<String, CompoundTag>() {};
+        myData.put("Ribbons", ribbons.saveToNBT());
+        saveRibbons(poke, myData);
+        return result;
+    }
+
+    private int[] thresholds = {5, 40, 100, 175, 245};
+
+    private boolean runAppContest(Pokemon poke, int typeVal){
+        boolean result = false;
+        if (contestTier < 5 &&
+                typeVal >= thresholds[contestTier]){
+            result = true;
+        }
+        return result;
+    }
 }
