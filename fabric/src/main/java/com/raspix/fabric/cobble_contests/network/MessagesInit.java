@@ -1,6 +1,8 @@
 package com.raspix.fabric.cobble_contests.network;
 
 import com.raspix.fabric.cobble_contests.CobbleContestsFabric;
+import com.raspix.fabric.cobble_contests.network.CB.*;
+import com.raspix.fabric.cobble_contests.network.SB.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -11,17 +13,20 @@ import net.minecraft.resources.ResourceLocation;
 //
 
 public class MessagesInit {
-    public static final ResourceLocation CHANNEL_ID = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "example");
-    public static final ResourceLocation WALLET_ID_1 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "wallet_conditions");
-    public static final ResourceLocation WALLET_ID_2 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "wallet_conditions2");
-    public static final ResourceLocation CONTEST_BOOTH = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_booth");
-    public static final ResourceLocation RUN_CONTEST = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "run_contest");
-    public static final ResourceLocation CONTEST_UPDATE_1 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_update_1");
-    public static final ResourceLocation CONTEST_UPDATE_2 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_update_2");
-    public static final ResourceLocation PARTICLE_SENDER = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "particle_sender");
-    public static final ResourceLocation CONTEST_HOST_STARTER= ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_host_sender");
-    public static final ResourceLocation CONTESTENT_MESSAGE_SENDER= ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_message_sender");
-    //public static final ResourceLocation BOOTH_ID_2 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "booth_2");
+    //public static final ResourceLocation CHANNEL_ID = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "example");
+    public static final ResourceLocation WALLET_ID_1 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "wallet_conditions"); //
+    public static final ResourceLocation WALLET_ID_2 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "wallet_conditions2");  //
+    public static final ResourceLocation CONTEST_BOOTH = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_booth"); //
+    public static final ResourceLocation RUN_CONTEST = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "run_contest"); //
+    public static final ResourceLocation CONTEST_UPDATE_1 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_update_1"); //
+    public static final ResourceLocation CONTEST_UPDATE_2 = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_update_2"); //
+    public static final ResourceLocation PARTICLE_SENDER = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "particle_sender"); //
+    public static final ResourceLocation CONTEST_HOST_STARTER= ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_host_sender"); // Used by contest hosts to start contests
+    public static final ResourceLocation CONTESTENT_MESSAGE_SENDER= ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_message_sender"); // Used to send messages to the client during contests
+    public static final ResourceLocation CONBOOTHSCREEN_REQ_HOSTLIST = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "conbooth_req_hostlist"); // Used by the contest booth screen to request a list of the hosts, CBHostListToConBoothScreen
+    public static final ResourceLocation HOSTLIST_TO_CONBOOTHSCREEN = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "hostlist_conbooth"); // a return package to give the contest booth screen the contest list, SBConBoothScrReqHostList
+    public static final ResourceLocation REQ_JOIN_LOB = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "req_join_lob"); // a package to add a player to a host's lobby
+    public static final ResourceLocation LOB_RET_REQ = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "lob_ret_req"); // a package to let the player know if they can join and update their screen, or not join
 
 
 
@@ -32,12 +37,14 @@ public class MessagesInit {
         PayloadTypeRegistry.playC2S().register(SBRunContest.PACKET_ID, SBRunContest.PACKET_CODEC);
         PayloadTypeRegistry.playC2S().register(SBRunHostedContest.PACKET_ID, SBRunHostedContest.PACKET_CODEC);
         PayloadTypeRegistry.playC2S().register(SBUpdateContestInfo.PACKET_ID, SBUpdateContestInfo.PACKET_CODEC);
+        PayloadTypeRegistry.playC2S().register(SBConBoothScrReqHostList.PACKET_ID, SBConBoothScrReqHostList.PACKET_CODEC);
 
         //CLIENTBOUND
         PayloadTypeRegistry.playS2C().register(CBWalletScreenParty.PACKET_ID, CBWalletScreenParty.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(CBUpdateContestInfo.PACKET_ID, CBUpdateContestInfo.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(CBSendPlayersParticles.PACKET_ID, CBSendPlayersParticles.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(CBSendContestantMessage.PACKET_ID, CBSendContestantMessage.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(CBHostListToConBoothScreen.PACKET_ID, CBHostListToConBoothScreen.PACKET_CODEC);
 
 
         ServerPlayNetworking.registerGlobalReceiver(SBWalletScreenParty.PACKET_ID, (payload, context) -> {
@@ -50,6 +57,9 @@ public class MessagesInit {
             payload.recieve(context.server(), context.player());
         });
         ServerPlayNetworking.registerGlobalReceiver(SBUpdateContestInfo.PACKET_ID, (payload, context) -> {
+            payload.recieve(context.server(), context.player());
+        });
+        ServerPlayNetworking.registerGlobalReceiver(SBConBoothScrReqHostList.PACKET_ID, (payload, context) -> {
             payload.recieve(context.server(), context.player());
         });
     }
@@ -73,6 +83,10 @@ public class MessagesInit {
         ClientPlayNetworking.registerGlobalReceiver(CBSendContestantMessage.PACKET_ID, (payload, context) -> {
             payload.recieve(context.client());
 
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(CBHostListToConBoothScreen.PACKET_ID, (payload, context) -> {
+            payload.recieve(context.client());
         });
 
     }

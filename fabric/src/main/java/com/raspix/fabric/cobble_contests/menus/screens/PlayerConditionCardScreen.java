@@ -19,7 +19,7 @@ import com.raspix.fabric.cobble_contests.events.ContestMoves;
 import com.raspix.fabric.cobble_contests.menus.widgets.FixedImageButton;
 import com.raspix.fabric.cobble_contests.menus.widgets.WalletPokemonSlotButton;
 //import com.raspix.fabric.cobble_contests.network.MessagesInit;
-import com.raspix.fabric.cobble_contests.network.SBWalletScreenParty;
+import com.raspix.fabric.cobble_contests.network.SB.SBWalletScreenParty;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;

@@ -1,14 +1,12 @@
-package com.raspix.fabric.cobble_contests.network;
+package com.raspix.fabric.cobble_contests.network.CB;
 
-import com.raspix.fabric.cobble_contests.menus.screens.PlayerConditionCardScreen;
-import com.raspix.fabric.cobble_contests.util.ContestManager;
+import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import com.raspix.fabric.cobble_contests.util.ContestManagerClient;
 import com.raspix.fabric.cobble_contests.util.ContestMessagePane;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.locale.Language;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;

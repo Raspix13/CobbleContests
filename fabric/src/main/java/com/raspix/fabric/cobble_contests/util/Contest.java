@@ -3,14 +3,12 @@ package com.raspix.fabric.cobble_contests.util;
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.reactive.SimpleObservable;
 import com.cobblemon.mod.common.client.battle.ClientBattleMessageQueue;
-import com.cobblemon.mod.common.client.render.SnowstormParticle;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormEntityParticlePacket;
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormParticlePacket;
 import com.cobblemon.mod.common.pokemon.Pokemon;
-import com.raspix.fabric.cobble_contests.network.CBSendContestantMessage;
-import com.raspix.fabric.cobble_contests.network.CBUpdateContestInfo;
-import com.raspix.fabric.cobble_contests.network.CBWalletScreenParty;
+import com.raspix.fabric.cobble_contests.network.CB.CBSendContestantMessage;
+import com.raspix.fabric.cobble_contests.network.CB.CBUpdateContestInfo;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
 import kotlin.Unit;
@@ -21,16 +19,13 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.Vec3;
-import com.cobblemon.mod.common.util.PlayerExtensionsKt;
-import com.cobblemon.mod.common.client.CobblemonResources;
+
 import java.util.*;
 
 import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
@@ -539,5 +534,9 @@ public class Contest {
             result = true;
         }
         return result;
+    }
+
+    public int getContestType(){
+        return contestType;
     }
 }
