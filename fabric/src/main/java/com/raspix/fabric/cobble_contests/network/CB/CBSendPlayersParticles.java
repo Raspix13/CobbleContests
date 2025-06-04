@@ -1,8 +1,7 @@
-package com.raspix.fabric.cobble_contests.network;
+package com.raspix.fabric.cobble_contests.network.CB;
 
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormEntityParticlePacket;
-import com.raspix.fabric.cobble_contests.menus.screens.ContestScreen;
-import com.raspix.fabric.cobble_contests.util.Contest;
+import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -12,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.Arrays;
-import java.util.UUID;
 
 import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 

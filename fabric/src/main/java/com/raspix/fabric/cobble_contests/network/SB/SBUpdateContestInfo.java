@@ -1,14 +1,10 @@
-package com.raspix.fabric.cobble_contests.network;
+package com.raspix.fabric.cobble_contests.network.SB;
 
-import com.cobblemon.mod.common.Cobblemon;
-import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
-import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.fabric.cobble_contests.menus.screens.ContestScreen;
-import com.raspix.fabric.cobble_contests.pokemon.CVs;
-import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
+import com.raspix.fabric.cobble_contests.network.CB.CBUpdateContestInfo;
+import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import com.raspix.fabric.cobble_contests.util.Contest;
 import com.raspix.fabric.cobble_contests.util.ContestManager;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -20,7 +16,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.UUID;
 
 public class SBUpdateContestInfo implements CustomPacketPayload {

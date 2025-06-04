@@ -1,6 +1,7 @@
-package com.raspix.fabric.cobble_contests.network;
+package com.raspix.fabric.cobble_contests.network.SB;
 
 import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
+import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;

@@ -1,6 +1,7 @@
-package com.raspix.fabric.cobble_contests.network;
+package com.raspix.fabric.cobble_contests.network.CB;
 
 import com.raspix.fabric.cobble_contests.menus.screens.PlayerConditionCardScreen;
+import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;

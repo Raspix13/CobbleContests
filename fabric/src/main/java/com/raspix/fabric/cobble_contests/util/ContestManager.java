@@ -91,8 +91,15 @@ public class ContestManager {
         //System.out.println(tempTimer);
         float timeChange = 1;//Minecraft.getInstance().getTimer().getRealtimeDeltaTicks();
         if(!activeContestents.isEmpty()){
-            for(Contest contest: activeContestents.values()){
-                contest.update(timeChange, server);
+            PlayerList playerList = server.getPlayerList();
+            for(UUID id: activeContestents.keySet()){
+                if(playerList.getPlayer(id) != null){
+                    Contest contest = activeContestents.get(id);
+                    contest.update(timeChange, server);
+                }else{
+                    activeContestents.remove(id); //if someone leaves the server before contest ends
+                }
+
             }
         }
 
@@ -108,6 +115,10 @@ public class ContestManager {
             sPlayer.displayClientMessage(componentOutput, false);
         }
 
+    }
+
+    public List<Contest> getContests(){
+        return contests;
     }
 
 

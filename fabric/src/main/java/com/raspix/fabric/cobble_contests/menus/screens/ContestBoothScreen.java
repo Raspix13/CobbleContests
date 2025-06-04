@@ -6,17 +6,25 @@ import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
 import com.raspix.fabric.cobble_contests.menus.ContestBoothMenu;
 import com.raspix.fabric.cobble_contests.menus.widgets.FixedImageButton;
+import com.raspix.fabric.cobble_contests.menus.widgets.HostedContestPanel;
 import com.raspix.fabric.cobble_contests.menus.widgets.PokemonContestBoothSlotButton;
+import com.raspix.fabric.cobble_contests.network.SB.SBConBoothScrReqHostList;
+import com.raspix.fabric.cobble_contests.network.SB.SBRunHostedContest;
 import com.raspix.fabric.cobble_contests.util.Contest;
-import com.raspix.fabric.cobble_contests.util.ContestManager;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,7 +40,6 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     private final int LOBBY_PAGE = 5; // The page where people wait when someone is hosting
     private final int FIND_A_CON_PAGE = 6; // The page where people join
     private final int IN_RUNNING_CONTEST = 7; // The page a player sees when they are already in a contest
-    private final int RESULTS_PAGE = 4;
 
     private int pageIndex;
     private UUID pokemonIndex;
@@ -51,6 +58,10 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     private Button startHostedContestButton;
 
     private Button debugReloadButton;
+
+    //private HostedContestPanel tempHostLobbyButton;
+
+    private List<HostedContestPanel> hostContestPanels;
 
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_booth.png");
     private Inventory playerInv;
@@ -89,9 +100,16 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         }));
 
 
-        this.debugReloadButton = this.addRenderableWidget(new FixedImageButton(this.leftPos + 40, this.topPos + 120, 18, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+        /**this.debugReloadButton = this.addRenderableWidget(new FixedImageButton(this.leftPos + 40, this.topPos + 120, 18, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
             setPageIndex(pageIndex);
-        }));
+        }));*/
+
+        /**this.tempHostLobbyButton = this.addRenderableWidget(new HostedContestPanel(this.leftPos + 40, this.topPos + 120, 18, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+            setPageIndex(pageIndex);
+        }));*/
+
+
+        createContestPanes();
 
         Contest contest = contestInfoMenu.getJoinedContest(playerID);
         if(contest != null){
@@ -116,12 +134,25 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
 
     }
 
+    private void createContestPanes(){
+        hostContestPanels = new ArrayList<>();
+        for(int i = 0 ; i < 5; i++){
+            int finalI = i;
+            hostContestPanels.add(this.addRenderableWidget(new HostedContestPanel(this.leftPos + 30, this.topPos + 40 * (i + 1), 18, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+                tryJoinLobby(finalI);
+            })));
+        }
+    }
+
+
     private void createLobbyButtons(){
         this.startHostedContestButton = this.addRenderableWidget(new FixedImageButton(this.leftPos + 80, this.topPos + 100, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
             startHostedContest();
         }));
 
     }
+
+
 
     private void createHomeButtons(){
         homeButtons = new ArrayList<>();
@@ -312,6 +343,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
                     (Number) (this.leftPos + 143),
                     (Number) (this.topPos + 44),
                     1.5f, 1.5f, 1f, 0x00918b99, true, false);
+
         }
 
     }
@@ -347,6 +379,18 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         //System.out.println("Test: " + (index == LOBBY_PAGE) +  " and " + (contestRunningType == 1) + " With crt = " + contestRunningType);
 
         confirmationButton.visible = index == CONTEST_LEVEL_SELECTION_PAGE;
+        //debugReloadButton.visible = index == CONTEST_LEVEL_SELECTION_PAGE;
+        //tempHostLobbyButton.visible = index == FIND_A_CON_PAGE;
+        toggleHostContestPanels(index == FIND_A_CON_PAGE);
+    }
+
+    private void toggleHostContestPanels(boolean state){
+        for(HostedContestPanel panel: hostContestPanels){
+            panel.visible = state;
+        }
+        if(state){
+            sendGetHostPanels();
+        }
     }
 
     private void setContestType(int type){
@@ -401,6 +445,60 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     private String getContestResult(){
         return menu.getContestResults();
         //should have packet
+    }
+
+    private void tryJoinLobby(int i){
+        System.out.println("(Stub) Trying to join Lobby " + i);
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        buf.writeUUID(playerID);
+        ClientPlayNetworking.send(new SBRunHostedContest(buf));
+        //TODO: should send packet
+    }
+
+    private void sendGetHostPanels(){
+        //TODO: should send packet
+        // Below is temp
+        //redoPlayerPanes(null);
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        buf.writeUUID(playerID);
+        ClientPlayNetworking.send(new SBConBoothScrReqHostList(buf));
+    }
+
+    private List<String> tempNames = Arrays.asList("Host1", "Host2", "Host3");
+
+    // Should be called by a packet
+    /**public void redoPlayerPanes(List<Contest> contests){
+        for(int i = 0; i < hostContestPanels.size(); i++){
+            HostedContestPanel pan = hostContestPanels.get(i);
+            String name = "missing";
+            if(tempNames.size() > i){
+                name = tempNames.get(i);
+            }
+            pan.setUpVisuals(name);
+        }
+    }*/
+
+    // Should be called by a packet
+    public void redoPlayerPanes(CompoundTag tag){
+        ListTag listTag = (ListTag) tag.get("contest_list");
+        System.out.println("The packet has called redoPlayerPanes");
+        for(int i = 0; i < hostContestPanels.size(); i++){
+            HostedContestPanel pan = hostContestPanels.get(i);
+            String name = "missing";
+            if(i < listTag.size()){
+                CompoundTag singleContest = (CompoundTag) listTag.get(i);
+                name = singleContest.getString("name");
+            }else{
+
+            }
+
+
+
+            //if(tempNames.size() > i){
+                //name = tempNames.get(i);
+            //}
+            pan.setUpVisuals(name);
+        }
     }
 
 }
