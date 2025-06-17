@@ -23,6 +23,7 @@ public class ContestManager {
     private static Map<UUID, Contest> activeContestents;
     private float tempTimer;
     //private static List<UUID> activeContestents;
+    private long lastTime;
 
 
     public void OnServerSetUp(){
@@ -30,6 +31,7 @@ public class ContestManager {
         activeContestents = new HashMap<>();
 
         tempTimer = 0f;
+        lastTime = System.currentTimeMillis();
 
     }
 
@@ -65,6 +67,22 @@ public class ContestManager {
         return true;
     }
 
+    public boolean startContest(Contest startingContest){
+        //PlayerList playerList = server.getPlayerList();
+
+        if(contests.contains(startingContest)){
+            Map<UUID, Contest.Contestant> contestants = startingContest.getContestants();
+            for (UUID contestant : contestants.keySet()){
+                //ServerPlayer play = playerList.getPlayer(contestant);
+                //notifyPlayerContestResults(contestant, endingContest, play);
+                activeContestents.put(contestant, startingContest);
+            }
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
 
     public boolean EndContest(Contest endingContest, MinecraftServer server){
@@ -89,8 +107,16 @@ public class ContestManager {
     public void update(MinecraftServer server){
         //tempTimer += Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
         //System.out.println(tempTimer);
-        float timeChange = 1;//Minecraft.getInstance().getTimer().getRealtimeDeltaTicks();
-        if(!activeContestents.isEmpty()){
+        float timeChange = (System.currentTimeMillis()-lastTime)/1000.0f;//server.getCurrentSmoothedTickTime()/1000f;//Minecraft.getInstance().getTimer().getRealtimeDeltaTicks();
+        lastTime = System.currentTimeMillis();
+        //System.out.println("Time Change: " + timeChange);
+        if(!contests.isEmpty()){
+            PlayerList playerList = server.getPlayerList();
+            for(Contest contest: contests){
+                contest.update(timeChange, server);
+            }
+        }
+        /**if(!activeContestents.isEmpty()){
             PlayerList playerList = server.getPlayerList();
             for(UUID id: activeContestents.keySet()){
                 if(playerList.getPlayer(id) != null){
@@ -101,7 +127,7 @@ public class ContestManager {
                 }
 
             }
-        }
+        }*/
 
     }
 

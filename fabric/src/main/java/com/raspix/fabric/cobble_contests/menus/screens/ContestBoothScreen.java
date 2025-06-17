@@ -9,6 +9,7 @@ import com.raspix.fabric.cobble_contests.menus.widgets.FixedImageButton;
 import com.raspix.fabric.cobble_contests.menus.widgets.HostedContestPanel;
 import com.raspix.fabric.cobble_contests.menus.widgets.PokemonContestBoothSlotButton;
 import com.raspix.fabric.cobble_contests.network.SB.SBConBoothScrReqHostList;
+import com.raspix.fabric.cobble_contests.network.SB.SBReqJoinLob;
 import com.raspix.fabric.cobble_contests.network.SB.SBRunHostedContest;
 import com.raspix.fabric.cobble_contests.util.Contest;
 import io.netty.buffer.Unpooled;
@@ -45,6 +46,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     private UUID pokemonIndex;
     private int contestLevel;
     private int colorIndex;
+    private int hostPanelIdx = -1;
 
     private int contestRunningType = -1; //0 is rank, 1 is host, 2 is participant
 
@@ -62,6 +64,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     //private HostedContestPanel tempHostLobbyButton;
 
     private List<HostedContestPanel> hostContestPanels;
+    private List<UUID> hostConPanelsIDs;
 
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_booth.png");
     private Inventory playerInv;
@@ -134,18 +137,34 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
 
     }
 
+    public void requestPageInfo(){
+
+    }
+
+    public void setPageInfo(){
+
+    }
+
+
+    // region Widget Creations and inits
+
     private void createContestPanes(){
         hostContestPanels = new ArrayList<>();
+
         for(int i = 0 ; i < 5; i++){
             int finalI = i;
             hostContestPanels.add(this.addRenderableWidget(new HostedContestPanel(this.leftPos + 30, this.topPos + 40 * (i + 1), 18, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
-                tryJoinLobby(finalI);
+                contestRunningType = 2;
+                hostPanelIdx = finalI;
+                setPageIndex(POKEMON_SELECTION_PAGE);
+                //tryJoinLobby(finalI);
             })));
         }
     }
 
 
     private void createLobbyButtons(){
+        this.hostConPanelsIDs = new ArrayList<>();
         this.startHostedContestButton = this.addRenderableWidget(new FixedImageButton(this.leftPos + 80, this.topPos + 100, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
             startHostedContest();
         }));
@@ -223,14 +242,9 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         }));
     }
 
-    private void selectContestPokemon(int pokeIndex) {
-        this.pokemonIndex = clientParty.get(pokeIndex).getUuid();
-        setPageIndex(CONTEST_WAITING_PAGE);//CONTEST_LEVEL_SELECTION_PAGE);
-    }
+    // endregion
 
-    private void selectNoContestPokemon() {
-        setPageIndex(CONTEST_WAITING_PAGE);//CONTEST_LEVEL_SELECTION_PAGE);
-    }
+
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int xMousePos, int yMousePos) {
@@ -352,6 +366,20 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     protected void renderLabels(GuiGraphics arg, int i, int j) {
     }
 
+
+    private void selectContestPokemon(int pokeIndex) {
+        this.pokemonIndex = clientParty.get(pokeIndex).getUuid();
+        if(contestRunningType == 2){
+            tryJoinLobby(hostPanelIdx);
+        }else{
+            setPageIndex(CONTEST_WAITING_PAGE);//CONTEST_LEVEL_SELECTION_PAGE);
+        }
+    }
+
+    private void selectNoContestPokemon() {
+        setPageIndex(CONTEST_WAITING_PAGE);//CONTEST_LEVEL_SELECTION_PAGE);
+    }
+
     private void joinContestWithPokemon(UUID index){
         pokemonIndex = index;
         setPageIndex(CONTEST_WAITING_PAGE);
@@ -382,6 +410,11 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         //debugReloadButton.visible = index == CONTEST_LEVEL_SELECTION_PAGE;
         //tempHostLobbyButton.visible = index == FIND_A_CON_PAGE;
         toggleHostContestPanels(index == FIND_A_CON_PAGE);
+    }
+
+    public void setPageToLobby(){
+        contestRunningType = 2;
+        setPageIndex(LOBBY_PAGE);
     }
 
     private void toggleHostContestPanels(boolean state){
@@ -451,13 +484,12 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         System.out.println("(Stub) Trying to join Lobby " + i);
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeUUID(playerID);
-        ClientPlayNetworking.send(new SBRunHostedContest(buf));
-        //TODO: should send packet
+        buf.writeUUID(pokemonIndex);
+        buf.writeUUID(hostConPanelsIDs.get(i));
+        ClientPlayNetworking.send(new SBReqJoinLob(buf));
     }
 
     private void sendGetHostPanels(){
-        //TODO: should send packet
-        // Below is temp
         //redoPlayerPanes(null);
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeUUID(playerID);
@@ -482,12 +514,16 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     public void redoPlayerPanes(CompoundTag tag){
         ListTag listTag = (ListTag) tag.get("contest_list");
         System.out.println("The packet has called redoPlayerPanes");
+        this.hostConPanelsIDs.clear();
         for(int i = 0; i < hostContestPanels.size(); i++){
             HostedContestPanel pan = hostContestPanels.get(i);
             String name = "missing";
             if(i < listTag.size()){
                 CompoundTag singleContest = (CompoundTag) listTag.get(i);
-                name = singleContest.getString("name");
+                hostConPanelsIDs.add(singleContest.getUUID("host_id"));
+                name = singleContest.getString("host_name");
+                System.out.println("Got Name: ");
+                System.out.println("Name Got is " + name);
             }else{
 
             }

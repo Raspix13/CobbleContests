@@ -7,6 +7,8 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormEntityParticlePacket;
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormParticlePacket;
 import com.cobblemon.mod.common.pokemon.Pokemon;
+import com.raspix.fabric.cobble_contests.network.CB.CBHostListToConBoothScreen;
+import com.raspix.fabric.cobble_contests.network.CB.CBLobRetReq;
 import com.raspix.fabric.cobble_contests.network.CB.CBSendContestantMessage;
 import com.raspix.fabric.cobble_contests.network.CB.CBUpdateContestInfo;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
@@ -197,14 +199,17 @@ public class Contest {
 
     public void update(float timeChange, MinecraftServer server) {
 
+
+
+
         if(round == ContestPhase.WAITING && timer == 0f){
             addContestantMessage(server, "The Contest is starting! Contestants should get into position\n");
         }
+        //System.out.println("Contest Time: " + timer);
 
         if(!(round == ContestPhase.ENDING)){
-            timer += timeChange;//Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
+            timer += timeChange * 20;//Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
         }
-
 
 
         if(round == ContestPhase.IDLE && timer >= LOBBY_TIMEOUT * TICKS_PER_SECOND) {
@@ -357,6 +362,30 @@ public class Contest {
         contestants.put(uuid, new Contestant(uuid, pokeIdx));
     }
 
+    public void addContestants(MinecraftServer server, ServerPlayer player, UUID uuid, UUID pokeIdx){
+        contestants.put(uuid, new Contestant(uuid, pokeIdx));
+        ServerPlayNetworking.send((ServerPlayer) player, new CBLobRetReq(uuid));
+        updateAllContestantLobbies(server);
+    }
+
+    public void removeContestants(MinecraftServer server, ServerPlayer player, UUID uuid){
+        contestants.remove(uuid);
+        // TODO: packet that updates removed player's screen and notifies them
+        //ServerPlayNetworking.send((ServerPlayer) player, new CBLobRetReq(uuid));
+        updateAllContestantLobbies(server);
+    }
+
+    public void updateAllContestantLobbies(MinecraftServer server){
+        PlayerList playerList = server.getPlayerList();
+        for(UUID contestantID: contestants.keySet()){
+            if( playerList.getPlayer(contestantID) != null){
+                ServerPlayer player = playerList.getPlayer(contestantID);
+                // TODO: tell all lobbies to reload
+            }
+
+        }
+    }
+
     public UUID getHost(){
         return host;
     }
@@ -381,9 +410,10 @@ public class Contest {
      */
     public boolean startContest(UUID playerID){
         if(playerID.equals(host)) {
-            timer = 0f;
+            timer = 0L;
             this.contestantsOrdered = new ArrayList<>(contestants.keySet());
             this.round = ContestPhase.WAITING;
+            ContestManager.INSTANCE.startContest(this);
             return true;
         }
         return false;

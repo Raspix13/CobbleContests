@@ -1,18 +1,28 @@
 
 Things I have done:
 5/28
--Got the contest dialogue pane working, added a few things to it
--Some japanese translations
+- Got the contest dialogue pane working, added a few things to it
+- Some japanese translations
+- Remove card being able to open up contests when no contest is going on
+
+5/31
+- Worked on multiplayer capabilities with hosting & lobbies
+
+6/3
+- More work on multiplayer booth gui, can now have 2 players in a contest but only host can see contest ui
+- Made sure contests made by host expire after a time
+
+6/4
+- Got contest card contest view to work for non-hosts
+- fixed server speed for contests not being correct
 
 
-Working on Activly:
+
+Working on Actively:
 - Multiplayer hosting and lobbies
-
-
-
-Cobble Contests 1.1.0 ()
-- Added config file
-- Fixed crash when using touga or hopo berries in poffin pot
+    - Get booth to network when opening to check for contest participation
+    - Contest does not start the first time it is hit
+    - Get lobby page to update when someone joins
 
 TODO:
 -Get neoforge caught up
@@ -20,10 +30,14 @@ TODO:
 -figure out how to use cobblemon font in the contest pane (Contest @addContestantMessage the method normal sending out uses from playerextensions does not work in my code for some reason)
 -pokemon already out during contests should play cry animation (Contest @SendOutPokemon)
 -Change initial win/lose message to "get ready and use contest card"
--Remove card being able to open up contests when no contest is going on
--Make sure contests made by host expire after a time
 -Fix crash that happens when no pokemon is selected by host
 -Check to make sure configs don't crash servers
+
+
+
+Cobble Contests 1.1.0 ()
+- Added config file
+- Fixed crash when using touga or hopo berries in poffin pot
 
 Cobble Contests 1.0.2 (Fabric + Neoforge)
 Updated for Cobblemon 1.6
