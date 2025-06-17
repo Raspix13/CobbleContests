@@ -58,9 +58,9 @@ public class SBConBoothScrReqHostList implements CustomPacketPayload {
         buf.writeUUID(this.id);
     }
 
-    public static SBRunContest decode(FriendlyByteBuf buf) {
-        return new SBRunContest(buf.readUUID(), buf.readUUID(), buf.readBlockPos(), buf.readInt(), buf.readInt());
-    }
+    /**public static SBConBoothScrReqHostList decode(FriendlyByteBuf buf) {
+        return new SBConBoothScrReqHostList(buf.readUUID(), buf.readUUID(), buf.readBlockPos(), buf.readInt(), buf.readInt());
+    }*/
 
 
     public void recieve(MinecraftServer server, Player player) {
@@ -85,6 +85,7 @@ public class SBConBoothScrReqHostList implements CustomPacketPayload {
             tag.putUUID("host_id", contest.getHost());
             if(playerList.getPlayer(contest.getHost()) != null){
                 tag.putString("host_name", playerList.getPlayer(contest.getHost()).getDisplayName().getString());
+                System.out.println("Name Added: " + playerList.getPlayer(contest.getHost()).getDisplayName().getString());
             }else {
                 tag.putString("host_name", "Player Not Found");
             }

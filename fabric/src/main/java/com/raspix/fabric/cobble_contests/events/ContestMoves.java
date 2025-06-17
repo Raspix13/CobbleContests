@@ -2,6 +2,10 @@ package com.raspix.fabric.cobble_contests.events;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.raspix.fabric.cobble_contests.util.ContestType;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.components.Button;
 
 import java.util.Map;
 
@@ -89,6 +93,44 @@ public class ContestMoves {
             return name;
         }
 
+    }
+
+    public static class MoveData2{
+        String name;
+        ContestType type;
+        int appeal;
+        int jam;
+        String description;
+        protected final OnUse onUse;
+
+
+        public MoveData2(String name, ContestType type, int appeal, int jam, String description, OnUse onUse){
+            this.name = name;
+            this.type = type;
+            this.appeal = appeal;
+            this.jam = jam;
+            this.description = description;
+            this.onUse = onUse;
+
+        }
+
+        public ContestType getType(){
+            return type;
+        }
+
+        public int getAppeal(){
+            return appeal;
+        }
+
+        public String getName(){
+            return name;
+        }
+
+    }
+
+    @Environment(EnvType.CLIENT)
+    public interface OnUse {
+        void onUse(MoveData2 moveData2);
     }
 
 }

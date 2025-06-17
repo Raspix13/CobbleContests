@@ -46,11 +46,10 @@ public class ContestWallet extends Item {
                 //}
 
             }
-            //pPlayer.openMenu(getMenuProvider(pPlayer));
-            new SpawnSnowstormEntityParticlePacket(cobblemonResource("loading"), pPlayer.getId(), Arrays.asList())
+            /**new SpawnSnowstormEntityParticlePacket(cobblemonResource("loading"), pPlayer.getId(), Arrays.asList())
                     .sendToPlayersAround(pPlayer.getX(), pPlayer.getY() + 2, pPlayer.getZ(), 64.0, pPlayer.level().dimension(), serverPlayer -> {
                         return false;
-                    });//ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "loading.png")
+                    });*/
         }else{
 
         }
