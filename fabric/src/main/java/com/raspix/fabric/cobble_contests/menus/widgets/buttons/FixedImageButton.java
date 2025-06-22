@@ -1,4 +1,4 @@
-package com.raspix.fabric.cobble_contests.menus.widgets;
+package com.raspix.fabric.cobble_contests.menus.widgets.buttons;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

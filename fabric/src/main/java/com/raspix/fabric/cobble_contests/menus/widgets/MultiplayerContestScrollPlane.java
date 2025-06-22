@@ -1,9 +1,9 @@
 package com.raspix.fabric.cobble_contests.menus.widgets;
 
 import com.raspix.fabric.cobble_contests.menus.screens.ContestBoothScreen;
+import com.raspix.fabric.cobble_contests.menus.widgets.buttons.FixedImageButton;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.FittingMultiLineTextWidget;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 
 import java.util.*;

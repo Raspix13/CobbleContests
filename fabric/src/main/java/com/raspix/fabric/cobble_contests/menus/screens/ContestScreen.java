@@ -2,14 +2,16 @@ package com.raspix.fabric.cobble_contests.menus.screens;
 
 import com.cobblemon.mod.common.client.CobblemonClient;
 import com.cobblemon.mod.common.client.gui.trade.ModelWidget;
+import com.cobblemon.mod.common.client.storage.ClientParty;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.menus.ContestMenu;
 //import com.raspix.fabric.cobble_contests.menus.widgets.ContestMessagePane;
+import com.raspix.fabric.cobble_contests.menus.screens.subscreens.ContestMoveGrid;
 import com.raspix.fabric.cobble_contests.menus.widgets.DressUpCounter;
-import com.raspix.fabric.cobble_contests.menus.widgets.FixedImageButton;
+import com.raspix.fabric.cobble_contests.menus.widgets.buttons.FixedImageButton;
 import com.raspix.fabric.cobble_contests.menus.widgets.ParticleScreenRenderer;
 import com.raspix.fabric.cobble_contests.network.SB.SBUpdateContestInfo;
 import com.raspix.fabric.cobble_contests.util.Contest;
@@ -66,8 +68,10 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
     private List<FixedImageButton> dressUpButtons;
     private DressUpCounter counter;
     private ParticleScreenRenderer particleBox;
+    private ContestMoveGrid moveGrid;
     private ContestMenu contestInfoMenu;
 
+    private ClientParty clientParty;
 
 
 
@@ -93,9 +97,9 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         //this.messageLog = this.addRenderableWidget(new ContestMessagePane(ContestManager.INSTANCE.getPlayersContest(playerId).getContestants().get(playerId).getContestMessages()));
         //this.messageLog = this.addRenderableWidget(new ContestMessagePane(contestInfoMenu.getJoinedContest(playerId).getContestants().get(playerId).getContestMessages()));
         this.messageLog = this.addRenderableWidget(new ContestMessagePane(ContestManagerClient.INSTANCE.getContestantMessages(playerId)));
-        this.addRenderableWidget(new FixedImageButton(5, 5, 25, 25, 0, 0, 25, CONTEST_STICKERS, 275, 200, btn -> {
+        /**this.addRenderableWidget(new FixedImageButton(5, 5, 25, 25, 0, 0, 25, CONTEST_STICKERS, 275, 200, btn -> {
             debugNextScreen();
-        }));
+        }));*/
 
         dressUpButtons = new ArrayList<>();
 
@@ -116,6 +120,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         }))); //forward
 
         this.counter = this.addRenderableWidget(new DressUpCounter(this.leftPos + 231, this.topPos + 125, 16, 15, Component.literal("")));
+        this.moveGrid = this.addRenderableWidget(new ContestMoveGrid(this.leftPos + 45, this.topPos + 70, 92, 24, Component.literal("")));
 
         isModelSet = false;
         ClientPlayNetworking.send(new SBUpdateContestInfo(playerId));
@@ -123,6 +128,8 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         updateGUI();
 
         this.particleBox = this.addRenderableWidget(new ParticleScreenRenderer(this.leftPos + 206, this.topPos + 12, 40, 40, Component.literal("Hi")));
+
+
         //get updates here
     }
 
@@ -438,6 +445,8 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
 
     protected void renderShowOffGUI(GuiGraphics guiGraphics){
 
+
+
     }
 
     protected void renderResults(GuiGraphics guiGraphics){
@@ -459,6 +468,8 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         if(phase == Contest.ContestPhase.DRESSUP){
             counter.updateTime(time);
         }
+
+        moveGrid.initializeMoves(pokemon);
 
     }
 
@@ -490,7 +501,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
                 //particleEffectButton.visible = false;
                 break;
              case TALENT:
-                 messageLog.visible = false; // turn back on later
+                 messageLog.visible = true; // turn back on later
                  counter.visible = false;
                  toggleButtonList(false, dressUpButtons);
                  //particleEffectButton.visible = false;
@@ -510,6 +521,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
                 //particleEffectButton.visible = false;
                 break;
         }
+        this.moveGrid.visible = phase == Contest.ContestPhase.TALENT;
 
     }
 

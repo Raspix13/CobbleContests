@@ -1,9 +1,8 @@
-package com.raspix.fabric.cobble_contests.menus.widgets;
+package com.raspix.fabric.cobble_contests.menus.widgets.buttons;
 
 //import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonFloatingState;
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState;
 import com.cobblemon.mod.common.entity.PoseType;
-import com.cobblemon.mod.common.pokemon.Gender;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.cobblemon.mod.common.pokemon.status.PersistentStatusContainer;
 import com.mojang.blaze3d.vertex.PoseStack;

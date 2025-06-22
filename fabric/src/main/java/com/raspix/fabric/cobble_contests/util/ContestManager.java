@@ -20,6 +20,7 @@ public class ContestManager {
 
     public static ContestManager INSTANCE = new ContestManager();
     private static List<Contest> contests;
+    private static List<Contest> activeContests;
     private static Map<UUID, Contest> activeContestents;
     private float tempTimer;
     //private static List<UUID> activeContestents;
@@ -28,6 +29,7 @@ public class ContestManager {
 
     public void OnServerSetUp(){
         contests = new ArrayList<>();
+        activeContests = new ArrayList<>();
         activeContestents = new HashMap<>();
 
         tempTimer = 0f;
@@ -77,6 +79,7 @@ public class ContestManager {
                 //notifyPlayerContestResults(contestant, endingContest, play);
                 activeContestents.put(contestant, startingContest);
             }
+            activeContests.add(startingContest);
             return true;
         }else{
             return false;
@@ -89,6 +92,8 @@ public class ContestManager {
         PlayerList playerList = server.getPlayerList();
 
         if(contests.contains(endingContest)){
+            activeContests.remove(endingContest);
+            contests.remove(endingContest);
             Map<UUID, Contest.Contestant> contestants = endingContest.getContestants();
             for (UUID contestant : contestants.keySet()){
                 // tell players results
@@ -97,7 +102,7 @@ public class ContestManager {
                 activeContestents.remove(contestant);
             }
             activeContestents.remove(endingContest.getHost());
-            contests.remove(endingContest);
+            //contests.remove(endingContest);
             return true;
         }else{
             return false;
@@ -110,9 +115,10 @@ public class ContestManager {
         float timeChange = (System.currentTimeMillis()-lastTime)/1000.0f;//server.getCurrentSmoothedTickTime()/1000f;//Minecraft.getInstance().getTimer().getRealtimeDeltaTicks();
         lastTime = System.currentTimeMillis();
         //System.out.println("Time Change: " + timeChange);
-        if(!contests.isEmpty()){
+        if(!activeContests.isEmpty()){
             PlayerList playerList = server.getPlayerList();
-            for(Contest contest: contests){
+            List<Contest> activeContests2 = new ArrayList<>(activeContests);
+            for(Contest contest: activeContests2){
                 contest.update(timeChange, server);
             }
         }

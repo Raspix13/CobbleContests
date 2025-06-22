@@ -7,11 +7,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 
 import static com.cobblemon.mod.common.api.gui.GuiUtilsKt.blitk;
 import static com.cobblemon.mod.common.client.render.RenderHelperKt.drawScaledText;
+import static com.cobblemon.mod.common.util.LocalizationUtilsKt.lang;
 import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 
 
@@ -146,6 +149,11 @@ public class ContestMessagePane extends ObjectSelectionList<ContestMessagePane.C
         @Override
         public void render(GuiGraphics context, int index, int rowTop, int rowLeft, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean isHovered, float partialTicks) {
             drawScaledText(context, line, rowLeft, rowTop - 2, 1f, 1f, pane.opacity, 0x00FFFFFF + ((int)((float)pane.opacity * 255) << 24), false, false);
+            //Style style = MutableComponent.getStyle().withFont(ChatFormatting.FONT);
+            /**drawScaledText(context, ResourceLocation.parse("uniform"), line,
+                    rowLeft,
+                    rowTop - 2,
+                    1f, pane.opacity, 2147483647, 0xFFFFFF + ((int)((float)pane.opacity * 255) << 24), false, false, null, null);*/
             //drawScaledText(context, line, rowLeft, rowTop - 2, pane.opacity);
         }
     }

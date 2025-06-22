@@ -13,6 +13,7 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.NotNull;
 
@@ -56,7 +57,7 @@ public class CBSendContestantMessage implements CustomPacketPayload{
         Font textRenderer = Minecraft.getInstance().font;
 
         for (Component message : messages) {
-            MutableComponent line = message.copy().withStyle(ChatFormatting.BOLD);
+            MutableComponent line = message.copy().withStyle(message.copy().getStyle().withFont(ResourceLocation.parse("uniform")).withBold(true));//.withStyle(ChatFormatting.BOLD)
             List<FormattedCharSequence> lines = Language.getInstance().getVisualOrder(textRenderer.getSplitter().splitLines(line, ContestMessagePane.LINE_WIDTH, line.getStyle()));
             ContestManagerClient.INSTANCE.getContestantMessages(id).add(lines);
         }

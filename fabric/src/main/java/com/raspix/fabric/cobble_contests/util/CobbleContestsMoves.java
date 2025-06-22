@@ -18,10 +18,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CobbleContestsMoves implements JsonDataRegistry<ContestMoves.MoveData> {
+public class CobbleContestsMoves implements JsonDataRegistry<ContestMoves.MoveDataOld> {
 
     public static CobbleContestsMoves INSTANCE = new CobbleContestsMoves();
-    public Map<String, ContestMoves.MoveData> allMoves = new HashMap<>();
+    public Map<String, ContestMoves.MoveDataOld> allMoves = new HashMap<>();
 
     @NotNull
     @Override
@@ -107,11 +107,11 @@ public class CobbleContestsMoves implements JsonDataRegistry<ContestMoves.MoveDa
                         for(int i = 1; i < lines.size()-2; i++){
                             if(!lines.get(i).equals("")) {
                                 Move newMove = loadLine(lines.get(i).substring(0, lines.get(i).length() - 1).replaceAll("\\s", ""), Move.class);
-                                allMoves.put(newMove.name, new ContestMoves.MoveData(newMove.name, newMove.contestStat, newMove.appeal));
+                                allMoves.put(newMove.name, new ContestMoves.MoveDataOld(newMove.name, newMove.contestStat, newMove.appeal));
                             }
                         }
                         Move lastMove = loadLine(lines.get(lines.size()-2).replaceAll("\\s", ""), Move.class);
-                        allMoves.put(lastMove.name, new ContestMoves.MoveData(lastMove.name, lastMove.contestStat, lastMove.appeal));
+                        allMoves.put(lastMove.name, new ContestMoves.MoveDataOld(lastMove.name, lastMove.contestStat, lastMove.appeal));
                         //String js = reader.lines().collect(Collectors.joining("\n"));
 
                         //Map<String, String> mapie = getGson().fromJson(js, Move.class);
@@ -156,16 +156,16 @@ public class CobbleContestsMoves implements JsonDataRegistry<ContestMoves.MoveDa
     @NotNull
     @Override
     public TypeToken getTypeToken() {
-        return TypeToken.get(ContestMoves.MoveData.class);
+        return TypeToken.get(ContestMoves.MoveDataOld.class);
     }
 
 
     @Override
-    public void reload(@NotNull Map<ResourceLocation, ? extends ContestMoves.MoveData> data) {
+    public void reload(@NotNull Map<ResourceLocation, ? extends ContestMoves.MoveDataOld> data) {
         this.allMoves.clear();
-        for (Map.Entry<ResourceLocation, ? extends ContestMoves.MoveData> entry : data.entrySet()) {
+        for (Map.Entry<ResourceLocation, ? extends ContestMoves.MoveDataOld> entry : data.entrySet()) {
             ResourceLocation identifier = entry.getKey();
-            ContestMoves.MoveData dat = entry.getValue();
+            ContestMoves.MoveDataOld dat = entry.getValue();
             try {
                 this.allMoves.put(identifier.getNamespace(), dat);
             } catch (Exception e) {

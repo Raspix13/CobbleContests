@@ -49,9 +49,9 @@ public class Contest {
     private static int LOBBY_TIMEOUT = 60; // The amount of time a hosted lobby can be idle before it times out and gets deleted
     private static int WAITING_TIME = 5; // The time the contestents have to get ready for the contest to start
     private static int DRESSUP_TIME = 10; // The time a player has to choose stickers, should be 60 sec
-    private static int RESULTS_TIME = 15; // The time the player can see the results before they are released from the contest
+    private static int RESULTS_TIME = 10; // The time the player can see the results before they are released from the contest
     private static int SEND_OUT_TIMER = 3; // The time in between each pokemon getting sent out
-    private static int TEMP_TALENT_TIME = 5; // The placeholder timer for players in the talent portion of the contest
+    private static int TEMP_TALENT_TIME = 20; // The placeholder timer for players in the talent portion of the contest
 
     private static int[][] INTRO_HEARTS = new int[][]{ // Max 8 hearts
             {0, 11, 21, 31, 41, 51, 61, 71, 81}, // Normal
