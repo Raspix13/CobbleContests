@@ -5,5 +5,6 @@ public enum ContestType {
     Cute,
     Cool,
     Tough,
-    Smart
+    Smart,
+    None
 }

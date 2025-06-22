@@ -86,7 +86,65 @@
 
   "cobble_contests.contest_text.fac": "Find A Contest",
   "cobble_contests.contest_text.host_lobby": "Host Lobby",
-  "cobble_contests.contest_text.contest_running": "The Contest has Started"
+  "cobble_contests.contest_text.contest_running": "The Contest has Started",
+
+
+
+
+
+  "cobble_contests.move_function_description.quite_appealing": "Quite an appealing move.",
+  "cobble_contests.move_function_description.reusable_appeal": "An appealing move that can be used repeatedly without boring the audience.",
+
+  "cobble_contests.move_function_description.first_boost": "Works great if the user goes first this turn.",
+  "cobble_contests.move_function_description.late_boost": "Works better the later it is used in a turn.",
+  "cobble_contests.move_function_description.last_boost": "Works great if the user goes last this turn.",
+  "cobble_contests.move_function_description.placement_boost": "Effectiveness varies depending on when it is used.",
+  "cobble_contests.move_function_description.pumped_boost": "Works well if the user is pumped up.",
+  "cobble_contests.move_function_description.dup_type_boost": "Works well if it is the same type as the move used by the last Pokémon.",
+  "cobble_contests.move_function_description.excitement_boost": "Works better the more the crowd is excited.",
+
+  "cobble_contests.move_function_description.any_excite": "Excites the audience in any kind of contest.",
+  "cobble_contests.move_function_description.block_excite": "Temporarily stops the crowd from growing excited.",
+  "cobble_contests.move_function_description.first_excitement": "Excites the audience a lot if used first.",
+  "cobble_contests.move_function_description.last_excitement": "Excites the audience a lot if used last.",
+
+  "cobble_contests.move_function_description.startle_appeals": "Badly startles all Pokémon that successfully showed their appeal.",
+  "cobble_contests.move_function_description.startle_prev": "Startles the last Pokémon to act before the user.",
+  "cobble_contests.move_function_description.badly_startle_prev": "Badly startles the last Pokémon to act before the user.",
+  "cobble_contests.move_function_description.startle_priors_1": "Startles all of the Pokémon to act before the user.",
+  "cobble_contests.move_function_description.startle_priors_2": "Startles all of the Pokémon to act before the user.",
+  "cobble_contests.move_function_description.startle_priors_3": "Startles all of the Pokémon to act before the user.",
+  "cobble_contests.move_function_description.badly_startle_priors": "Badly startles all of the Pokémon to act before the user.",
+  "cobble_contests.move_function_description.badly_startle_dup_type": "Badly startles Pokémon that used a move of the same type.",
+  "cobble_contests.move_function_description.startle_all": "Startles all other Pokémon. User cannot act in the next turn.",
+  "cobble_contests.move_function_description.startle_high_expectations": "Badly startles Pokémon that the audience has high expectations of.",
+
+  "cobble_contests.move_function_description.startle_block": "Prevents the user from being startled one time this turn.",
+  "cobble_contests.move_function_description.turn_startle_block": "Prevents the user from being startled until the turn ends.",
+  "cobble_contests.move_function_description.pump_up_self": "Gets the Pokémon pumped up. Helps prevent nervousness, too.",
+  "cobble_contests.move_function_description.appeal_risk_startle": "A very appealing move, but after using this move, the user is more easily startled.",
+  "cobble_contests.move_function_description.appeal_lose_moves": "A move of huge appeal, but using it prevents the user from taking further contest moves.",
+
+  "cobble_contests.move_function_description.discourage_audience": "Makes audience expect little of other contestants.",
+  "cobble_contests.move_function_description.expectant_audience": "Makes the audience quickly grow bored when an appeal move has little effect.",
+
+  "cobble_contests.move_function_description.drain_priors": "Brings down the energy of any Pokémon that have already used a move this turn.",
+  "cobble_contests.move_function_description.intimidate_posts": "Makes the remaining Pokémon nervous.",
+
+  "cobble_contests.move_function_description.copy_prev": "Affected by how well the previous Pokémon's move went.",
+  "cobble_contests.move_function_description.average_priors": "Shows off the Pokémon's appeal about as well as all the moves before it this turn.",
+  "cobble_contests.move_function_description.appeal_prev": "Shows off the Pokémon's appeal about as well as the move used just before it.",
+
+  "cobble_contests.move_function_description.move_earlier": "Causes the user to move earlier on the next turn.",
+  "cobble_contests.move_function_description.scramble": "Scrambles the order in which Pokémon will move on the next turn.",
+  "cobble_contests.move_function_description.move_later": "Causes the user to move later on the next turn."
+
+
+
+
+
+
+
 
 
 }

@@ -16,6 +16,21 @@ Things I have done:
 - Got contest card contest view to work for non-hosts
 - fixed server speed for contests not being correct
 
+6/17
+- Implemented makeshift move data
+- Added names & description movedata for all cute & beauty moves (appeal and jam not yet done)
+- fixed concurrent list editing crash
+
+6/18
+- Added names & description movedata for all smart, cool & tough moves (appeal and jam not yet done)
+- Worked on contest showoff button gui
+
+6/19
+- Made list of move functions + descriptions (translatable)
+- Worked more on contest showoff button gui
+
+6/21
+- Updated move list to reference function (Some still need _1 _2 _3 corrections)
 
 
 Working on Actively:

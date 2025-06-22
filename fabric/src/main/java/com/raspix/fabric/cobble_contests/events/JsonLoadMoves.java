@@ -16,7 +16,7 @@ public class JsonLoadMoves extends SimpleJsonResourceReloadListener {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static JsonLoadMoves instance = new JsonLoadMoves(GSON, "moves");
 
-    public Map<String, ContestMoves.MoveData> moves;
+    public Map<String, ContestMoves.MoveDataOld> moves;
 
     public JsonLoadMoves(Gson gson, String string) {
         super(gson, string);

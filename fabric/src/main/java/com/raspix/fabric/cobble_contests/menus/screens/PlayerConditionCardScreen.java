@@ -14,14 +14,14 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.menus.PlayerConditionCardMenu;
-import com.raspix.fabric.cobble_contests.util.CobbleContestsMoves;
 import com.raspix.fabric.cobble_contests.events.ContestMoves;
-import com.raspix.fabric.cobble_contests.menus.widgets.FixedImageButton;
-import com.raspix.fabric.cobble_contests.menus.widgets.WalletPokemonSlotButton;
+import com.raspix.fabric.cobble_contests.menus.widgets.buttons.FixedImageButton;
+import com.raspix.fabric.cobble_contests.menus.widgets.buttons.WalletPokemonSlotButton;
 //import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import com.raspix.fabric.cobble_contests.network.SB.SBWalletScreenParty;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
+import com.raspix.fabric.cobble_contests.util.ContestType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -72,6 +72,7 @@ public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerCon
 
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_profile.png");
     private static final ResourceLocation MOVE_PANELS = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/move_panels.png");
+    private static final ResourceLocation HEARTS = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/hearts.png");
     private static final ResourceLocation RANK_RIBBONS = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/badges.png");
     private Inventory playerInv;
     private PlayerPartyStore playerPartyStore;
@@ -355,32 +356,37 @@ public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerCon
         String moveName = move.getName();
         int panelOffset = 0;
         int appeal = 1;
+        int jam = 0;
         PoseStack poses = guiGraphics.pose();
-        String description = "placeholder";
-        Map<String, ContestMoves.MoveData> contestMoves = CobbleContestsMoves.INSTANCE.allMoves;//CobbleContestsfabric.contestMoves;'
+        String description = "cobble_contests.move_info." + "placeholder";
+        //Map<String, ContestMoves.MoveData> contestMoves = CobbleContestsMoves.INSTANCE.allMoves;//CobbleContestsfabric.contestMoves;'
+        Map<String, ContestMoves.MoveData> contestMoves = ContestMoves.instance.allMoves;//CobbleContestsfabric.contestMoves;'
         if(contestMoves.containsKey(moveName)) {
             ContestMoves.MoveData data = contestMoves.get(moveName);
-            String type = data.getType();
+            ContestType type = data.getType();
             switch (type) {
-                case "Cool":
+                case ContestType.Cool:
                     panelOffset = 32;
                     break;
-                case "Beauty":
+                case ContestType.Beauty:
                     panelOffset = 64;
                     break;
-                case "Cute":
+                case ContestType.Cute:
                     panelOffset = 96;
                     break;
-                case "Smart":
+                case ContestType.Smart:
                     panelOffset = 128;
                     break;
-                case "Tough":
+                case ContestType.Tough:
                     panelOffset = 160;
                     break;
                 default:
                     break;
             }
-            appeal = data.getAppeal();
+            appeal = ContestMoves.instance.ALL_FUNCTION_DATA.get(data.getFunctionType()).getAppeal();
+            jam = ContestMoves.instance.ALL_FUNCTION_DATA.get(data.getFunctionType()).getJam();
+            //appeal = data.getAppeal();
+            description = "cobble_contests.move_function_description." + data.getFunctionType();//ContestMoves.instance.ALL_FUNCTION_DATA.get(data.getFunctionType()).getDescription(); //data.getDescription();
         }
         guiGraphics.blit(MOVE_PANELS, xPos, yPos, 0, panelOffset, 186, 32, 291, 400);
         drawScaledText(guiGraphics, null, lang("move." + moveName),
@@ -389,11 +395,12 @@ public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerCon
                 1f, 1f, 2147483647, 0x00FFFFFF, true, true, null, null);
         //System.out.println(lang("move", moveName));
         guiGraphics.blit(MOVE_PANELS, xPos + 75 - (1 + appeal * 8), yPos + 21, 1, 193, 1 + appeal * 8, 9, 291, 400);
+        guiGraphics.blit(HEARTS, xPos + 10, yPos + 21, 1, 23, jam == 0? 0: 1 + jam * 8, 9, 83, 33);
 
         poses.pushPose();
         poses.scale(0.5f, 0.5f, 1F);
         MultiLineLabelK.Companion.create(
-                Component.translatable("cobble_contests.move_info." + description),
+                Component.translatable(description),
                 100 / 0.5f,
                 5
         ).renderLeftAligned(

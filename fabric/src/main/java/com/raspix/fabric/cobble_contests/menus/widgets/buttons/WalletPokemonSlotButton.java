@@ -1,4 +1,4 @@
-package com.raspix.fabric.cobble_contests.menus.widgets;
+package com.raspix.fabric.cobble_contests.menus.widgets.buttons;
 
 import com.cobblemon.mod.common.client.CobblemonResources;
 //import com.cobblemon.mod.common.client.render.models.blockbench.pokemon.PokemonFloatingState;
