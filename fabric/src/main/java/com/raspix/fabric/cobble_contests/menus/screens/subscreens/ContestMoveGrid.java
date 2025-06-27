@@ -8,7 +8,10 @@ import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.events.ContestMoves;
-import com.raspix.fabric.cobble_contests.util.ContestType;
+import com.raspix.fabric.cobble_contests.network.SB.SBUpdateContestInfo;
+import com.raspix.fabric.cobble_contests.network.SB.SBUseContestMove;
+import com.raspix.fabric.cobble_contests.util.data.ContestType;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -33,12 +36,15 @@ public class ContestMoveGrid extends ParentWidget {
     private MoveTile move3;
     private MoveTile move4;
 
+    private UUID playerId;
+
     private static final ResourceLocation moveTex = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_move.png");
 
 
-    public ContestMoveGrid(int i, int j, int k, int l, Component component) {
+    public ContestMoveGrid(int i, int j, int k, int l, Component component, UUID playerID) {
         super(i, j, k, l, component);
         this.buttons = new ArrayList<>();
+        this.playerId = playerID;
 
         move1 = new MoveTile(this.getX(), this.getY());
         move2 = new MoveTile(this.getX() + MOVE_HORIZONTAL_SPACING + MOVE_WIDTH, this.getY());
@@ -93,10 +99,12 @@ public class ContestMoveGrid extends ParentWidget {
         /**for(int i = 0; i < buttons.size(); i++){
             buttons.get(i).render(guiGraphics, mouseX, mouseX, partialTicks);
         }*/
-        move1.render(guiGraphics, mouseX, mouseY, partialTicks);
-        move2.render(guiGraphics, mouseX, mouseY, partialTicks);
-        move3.render(guiGraphics, mouseX, mouseY, partialTicks);
         move4.render(guiGraphics, mouseX, mouseY, partialTicks);
+        move3.render(guiGraphics, mouseX, mouseY, partialTicks);
+        move2.render(guiGraphics, mouseX, mouseY, partialTicks);
+        move1.render(guiGraphics, mouseX, mouseY, partialTicks);
+
+
     }
 
     @Override
@@ -113,6 +121,22 @@ public class ContestMoveGrid extends ParentWidget {
     }
 
     public boolean mousePrimaryClicked(double mouseX, double mouseY) {
+
+        if(this.visible){
+            if(move1.isHovered(mouseX, mouseY)){
+                move1.onClick();
+                ClientPlayNetworking.send(new SBUseContestMove(playerId, move1.getName()));
+            }else if (move2.isHovered(mouseX, mouseY)){
+                move2.onClick();
+                ClientPlayNetworking.send(new SBUseContestMove(playerId, move2.getName()));
+            }else if (move3.isHovered(mouseX, mouseY)){
+                move3.onClick();
+                ClientPlayNetworking.send(new SBUseContestMove(playerId, move3.getName()));
+            }else if (move4.isHovered(mouseX, mouseY)){
+                move4.onClick();
+                ClientPlayNetworking.send(new SBUseContestMove(playerId, move4.getName()));
+            }
+        }
 
         /**if (temp.isHovered(mouseX, mouseY)) {
             //move = m;

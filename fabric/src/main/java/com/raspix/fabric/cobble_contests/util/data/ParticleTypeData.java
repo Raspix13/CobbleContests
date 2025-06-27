@@ -1,4 +1,4 @@
-package com.raspix.fabric.cobble_contests.util;
+package com.raspix.fabric.cobble_contests.util.data;
 
 import com.raspix.common.cobble_contests.CobbleContests;
 import net.minecraft.resources.ResourceLocation;

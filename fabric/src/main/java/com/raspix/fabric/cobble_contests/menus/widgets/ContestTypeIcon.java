@@ -1,6 +1,6 @@
 package com.raspix.fabric.cobble_contests.menus.widgets;
 
-import com.raspix.fabric.cobble_contests.util.ContestType;
+import com.raspix.fabric.cobble_contests.util.data.ContestType;
 import net.minecraft.client.gui.GuiGraphics;
 
 import java.awt.*;

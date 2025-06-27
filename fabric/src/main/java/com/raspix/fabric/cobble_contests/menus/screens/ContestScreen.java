@@ -44,6 +44,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
     private UUID playerId;
     private Pokemon pokemon;
     private Contest.ContestPhase phase;
+    private int showcaseRound;
 
     private static final ResourceLocation BATTLE_MESSAGE_PANE_FRAME_RESOURCE = cobblemonResource("textures/gui/battle/battle_log.png");
     private static final ResourceLocation CONTEST_PANEL_TEXTURE = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/intro_editor_screen.png");
@@ -53,6 +54,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
     private static final ResourceLocation TEMP_PARTICLE = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/particle/heart.png");
 
     private boolean isModelSet;
+    private boolean isMoveChosen;
 
     private static final int FRAME_WIDTH = 169;
     private static final int FRAME_HEIGHT = 55;
@@ -120,7 +122,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         }))); //forward
 
         this.counter = this.addRenderableWidget(new DressUpCounter(this.leftPos + 231, this.topPos + 125, 16, 15, Component.literal("")));
-        this.moveGrid = this.addRenderableWidget(new ContestMoveGrid(this.leftPos + 45, this.topPos + 70, 92, 24, Component.literal("")));
+        this.moveGrid = this.addRenderableWidget(new ContestMoveGrid(this.leftPos - 35, this.topPos + 140, 92, 24, Component.literal(""), playerId));
 
         isModelSet = false;
         ClientPlayNetworking.send(new SBUpdateContestInfo(playerId));
@@ -465,13 +467,53 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         setPhase(phase);
         setSelectedModel();
         //CobblemonClient.INSTANCE.getStorage().getPcStores();
-        if(phase == Contest.ContestPhase.DRESSUP){
+        if(phase == Contest.ContestPhase.DRESSUP || phase == Contest.ContestPhase.TALENT){
             counter.updateTime(time);
         }
 
         moveGrid.initializeMoves(pokemon);
 
     }
+
+    public void setUpdatedInfo(UUID pokemonSlot, Contest.ContestPhase phase, int time, int round, boolean pickMoves){
+        this.pokemon = CobblemonClient.INSTANCE.getStorage().getMyParty().findByUUID(pokemonSlot);
+        this.showcaseRound = round;
+        System.out.println("Can I Pick Moves?: " + pickMoves);
+        this.isMoveChosen = !pickMoves;
+        if(pokemon == null){
+            this.pokemon = CobblemonClient.INSTANCE.getStorage().getPcStores().get(playerId).findByUUID(pokemonSlot);
+        }
+        setPhase(phase);
+        setSelectedModel();
+        //CobblemonClient.INSTANCE.getStorage().getPcStores();
+        if(phase == Contest.ContestPhase.DRESSUP || phase == Contest.ContestPhase.TALENT){
+            counter.updateTime(time);
+        }
+
+        moveGrid.initializeMoves(pokemon);
+
+    }
+
+    public void setMoveSelected(){
+        /**this.pokemon = CobblemonClient.INSTANCE.getStorage().getMyParty().findByUUID(pokemonSlot);
+        if(pokemon == null){
+            this.pokemon = CobblemonClient.INSTANCE.getStorage().getPcStores().get(playerId).findByUUID(pokemonSlot);
+        }*/
+        //setPhase(phase);
+        //setSelectedModel();
+        //CobblemonClient.INSTANCE.getStorage().getPcStores();
+
+        //moveGrid.initializeMoves(pokemon);
+        this.isMoveChosen = true;
+        moveGrid.visible = false;
+    }
+
+    public void setMoveUnselected(){
+        this.isMoveChosen = false;
+        moveGrid.visible = true;
+
+    }
+
 
     private void setPhase(Contest.ContestPhase phased){
         this.phase = phased;
@@ -502,7 +544,8 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
                 break;
              case TALENT:
                  messageLog.visible = true; // turn back on later
-                 counter.visible = false;
+                 counter.changePos(this.leftPos - 10, this.topPos + 30);
+                 counter.visible = true;
                  toggleButtonList(false, dressUpButtons);
                  //particleEffectButton.visible = false;
                 break;
@@ -521,7 +564,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
                 //particleEffectButton.visible = false;
                 break;
         }
-        this.moveGrid.visible = phase == Contest.ContestPhase.TALENT;
+        this.moveGrid.visible = phase == Contest.ContestPhase.TALENT && !isMoveChosen;
 
     }
 

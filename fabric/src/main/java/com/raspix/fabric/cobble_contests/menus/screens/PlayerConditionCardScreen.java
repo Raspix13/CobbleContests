@@ -21,7 +21,7 @@ import com.raspix.fabric.cobble_contests.menus.widgets.buttons.WalletPokemonSlot
 import com.raspix.fabric.cobble_contests.network.SB.SBWalletScreenParty;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
-import com.raspix.fabric.cobble_contests.util.ContestType;
+import com.raspix.fabric.cobble_contests.util.data.ContestType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;

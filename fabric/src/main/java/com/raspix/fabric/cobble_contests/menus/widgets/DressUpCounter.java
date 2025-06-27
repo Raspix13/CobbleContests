@@ -42,4 +42,15 @@ public class DressUpCounter extends AbstractWidget {
         this.tenstDigit = time / 10;
         this.onesDigit = time % 10;
     }
+
+    public void updateTime(int maxSeconds, int seconds){
+        int time = maxSeconds - seconds;
+        this.tenstDigit = time / 10;
+        this.onesDigit = time % 10;
+    }
+
+    public void changePos(int newX, int newY){
+        this.leftPos = newX;
+        this.topPos = newY;
+    }
 }

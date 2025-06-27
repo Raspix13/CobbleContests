@@ -1,19 +1,8 @@
 package com.raspix.fabric.cobble_contests.menus.screens.subscreens;
 
-import com.cobblemon.mod.common.api.moves.MoveSet;
-import com.cobblemon.mod.common.api.moves.MoveTemplate;
-import com.cobblemon.mod.common.battles.InBattleMove;
-import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.common.cobble_contests.CobbleContests;
-import com.raspix.fabric.cobble_contests.events.ContestMoves;
-import com.raspix.fabric.cobble_contests.menus.widgets.ContestTypeIcon;
 import com.raspix.fabric.cobble_contests.menus.widgets.buttons.FixedImageButton;
-import com.raspix.fabric.cobble_contests.util.ContestType;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-
-import java.util.List;
-import java.util.ArrayList;
 
 import static com.cobblemon.mod.common.api.gui.GuiUtilsKt.blitk;
 
