@@ -27,6 +27,9 @@ public class MessagesInit {
     public static final ResourceLocation HOSTLIST_TO_CONBOOTHSCREEN = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "hostlist_conbooth"); // a return package to give the contest booth screen the contest list, SBConBoothScrReqHostList
     public static final ResourceLocation REQ_JOIN_LOB = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "req_join_lob"); // a package to add a player to a host's lobby, SBReqJoinLob
     public static final ResourceLocation LOB_RET_REQ = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "lob_ret_req"); // a package to let the player know if they can join and update their screen, or not join
+    public static final ResourceLocation USE_MOVE = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "use_move"); // a package to have a player choose a contest move
+    public static final ResourceLocation ACCEPT_MOVE = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "accept_move"); // a package to let the player client know their move was used
+    public static final ResourceLocation CLEAR_QUEUE = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "clear_message_queue"); // clears the message queue for a player
 
 
 
@@ -39,6 +42,7 @@ public class MessagesInit {
         PayloadTypeRegistry.playC2S().register(SBUpdateContestInfo.PACKET_ID, SBUpdateContestInfo.PACKET_CODEC);
         PayloadTypeRegistry.playC2S().register(SBConBoothScrReqHostList.PACKET_ID, SBConBoothScrReqHostList.PACKET_CODEC);
         PayloadTypeRegistry.playC2S().register(SBReqJoinLob.PACKET_ID, SBReqJoinLob.PACKET_CODEC);
+        PayloadTypeRegistry.playC2S().register(SBUseContestMove.PACKET_ID, SBUseContestMove.PACKET_CODEC);
 
         //CLIENTBOUND
         PayloadTypeRegistry.playS2C().register(CBWalletScreenParty.PACKET_ID, CBWalletScreenParty.PACKET_CODEC);
@@ -47,6 +51,8 @@ public class MessagesInit {
         PayloadTypeRegistry.playS2C().register(CBSendContestantMessage.PACKET_ID, CBSendContestantMessage.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(CBHostListToConBoothScreen.PACKET_ID, CBHostListToConBoothScreen.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(CBLobRetReq.PACKET_ID, CBLobRetReq.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(CBPlayerMoveAccepted.PACKET_ID, CBPlayerMoveAccepted.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(CBClearMessageQueue.PACKET_ID, CBClearMessageQueue.PACKET_CODEC);
 
 
         ServerPlayNetworking.registerGlobalReceiver(SBWalletScreenParty.PACKET_ID, (payload, context) -> {
@@ -65,6 +71,9 @@ public class MessagesInit {
             payload.recieve(context.server(), context.player());
         });
         ServerPlayNetworking.registerGlobalReceiver(SBReqJoinLob.PACKET_ID, (payload, context) -> {
+            payload.recieve(context.server(), context.player());
+        });
+        ServerPlayNetworking.registerGlobalReceiver(SBUseContestMove.PACKET_ID, (payload, context) -> {
             payload.recieve(context.server(), context.player());
         });
     }
@@ -91,6 +100,12 @@ public class MessagesInit {
             payload.recieve(context.client());
         });
         ClientPlayNetworking.registerGlobalReceiver(CBLobRetReq.PACKET_ID, (payload, context) -> {
+            payload.recieve(context.client());
+        });
+        ClientPlayNetworking.registerGlobalReceiver(CBPlayerMoveAccepted.PACKET_ID, (payload, context) -> {
+            payload.recieve(context.client());
+        });
+        ClientPlayNetworking.registerGlobalReceiver(CBClearMessageQueue.PACKET_ID, (payload, context) -> {
             payload.recieve(context.client());
         });
 

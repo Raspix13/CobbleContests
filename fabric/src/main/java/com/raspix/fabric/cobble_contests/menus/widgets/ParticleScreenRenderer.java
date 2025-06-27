@@ -2,8 +2,7 @@ package com.raspix.fabric.cobble_contests.menus.widgets;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.raspix.common.cobble_contests.CobbleContests;
-import com.raspix.fabric.cobble_contests.util.ParticleTypeData;
+import com.raspix.fabric.cobble_contests.util.data.ParticleTypeData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;

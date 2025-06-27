@@ -1,23 +1,28 @@
 package com.raspix.fabric.cobble_contests.menus.screens.subscreens;
 
+import com.cobblemon.mod.common.CobblemonSounds;
+import com.cobblemon.mod.common.api.gui.ColourLibrary;
+//import com.cobblemon.mod.common.api.gui.MultiLineLabelK;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.raspix.common.cobble_contests.CobbleContests;
-import com.raspix.fabric.cobble_contests.util.ContestType;
+import com.raspix.fabric.cobble_contests.menus.widgets.MultiLineLabel;
+import com.raspix.fabric.cobble_contests.util.data.ContestType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Tuple;
 import org.joml.Matrix4f;
 
-import java.awt.*;
 import java.util.HashMap;
 
 import static com.cobblemon.mod.common.api.gui.GuiUtilsKt.blitk;
+import static com.cobblemon.mod.common.api.gui.GuiUtilsKt.drawString;
 import static com.cobblemon.mod.common.client.render.RenderHelperKt.drawScaledText;
 import static com.cobblemon.mod.common.util.LocalizationUtilsKt.lang;
-import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 
 public class MoveTile {
 
@@ -30,6 +35,8 @@ public class MoveTile {
     private final ResourceLocation moveOverlayTexture = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_move_overlay.png");
     private final ResourceLocation contestTypeIcons = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_type_icons.png");
     private final ResourceLocation hearts = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/hearts.png");
+
+    private final ResourceLocation pokeFont = ResourceLocation.parse("uniform");
 
     private final float x;
     private final float y;
@@ -78,8 +85,11 @@ public class MoveTile {
         return true;
     }
 
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
+    public String getName(){
+        return name;
+    }
 
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
 
         this.blit(context, moveTexture, (int) this.x, (int) this.y, 0, isSelectable() && isHovered(mouseX, mouseY) ? MOVE_HEIGHT : 0, MOVE_WIDTH, MOVE_HEIGHT, 92, 48, ((hue & 0xFF0000) >> 16)/255f, ((hue & 0xFF00) >> 8)/255f, (hue & 0xFF)/255f, 1f);
         context.blit(moveOverlayTexture, (int) this.x, (int) this.y, 0, 0, MOVE_WIDTH, MOVE_HEIGHT, 92, 24);
@@ -90,7 +100,7 @@ public class MoveTile {
                 (Number) (this.y + 4),
                 0.8f, 0.8f, 1f, 0xffffff, false, false);*/
 
-        drawScaledText(context, ResourceLocation.parse("uniform"), lang("move." + name),
+        drawScaledText(context, pokeFont, lang("move." + name),
                 (Number) (this.x + 15),
                 (Number) (this.y + 4),
                 1f, 1f, 2147483647, 0xFFFFFF, false, false, null, null);
@@ -116,6 +126,63 @@ public class MoveTile {
                 true,
                 0.5f
         );
+
+        if(isInfoHovered(mouseX, mouseY)){
+            //context.blit(moveTexture, mouseX, mouseY, 50, 50, 116, 49, 948, 600);
+            context.pose().pushPose();
+            context.pose().scale(1, 1, 1F);
+            blitk(
+                    context.pose(),
+                    moveTexture,
+                    mouseX,
+                    mouseY,
+                    50,
+                    100,
+                    116,
+                    49,
+                    948, 600,
+                    0,
+                    1,
+                    1,
+                    1,
+                    1f,
+                    true,
+                    1f
+            );
+            context.pose().popPose();
+            Component component = Component.translatable(description).setStyle(Component.translatable("").copy().getStyle().withFont(pokeFont));
+
+
+            /**drawScaledText(context, pokeFont, component.copy(),
+                    mouseX + 5,
+                    mouseY + 5,
+                    1f, 1f, 500, 0xFFFFFF, false, true, null, null);*/
+            /**drawString(
+                    context,
+                    component.getString(),
+                    mouseX + 5,
+                    mouseY + 5,
+                    ColourLibrary.WHITE,
+                    true,
+                    pokeFont
+            );*/
+
+            MultiLineLabel.create(component,
+                    47 / 0.5f,
+                    5,
+                    pokeFont
+            ).renderLeftAligned(
+                    context,
+                    mouseX + 3,
+                    mouseY + 1,
+                    0,
+                    8,
+                    ColourLibrary.WHITE,
+                    1f,
+                    true
+            );
+
+        }
 
 
     }
@@ -152,11 +219,19 @@ public class MoveTile {
         return mouseX >= x && mouseX <= x + MOVE_WIDTH && mouseY >= y && mouseY <= y + MOVE_HEIGHT;
     }
 
+    public boolean isInfoHovered(double mouseX, double mouseY) {
+        return mouseX >= x + 80 && mouseX <= x + MOVE_WIDTH && mouseY >= y && mouseY <= y + ((double) MOVE_HEIGHT / 2);
+    }
+
     public void onClick() {
         if (!isSelectable()) return;
-        //moveSelection.playDownSound(Minecraft.getInstance().getSoundManager());
-        System.out.println("Huh");
+        playDownSound(Minecraft.getInstance().getSoundManager());
+        //System.out.println("Huh");
         //moveSelection.getBattleGUI().selectAction(moveSelection.getRequest(), getResponse());
+    }
+
+    public void playDownSound(SoundManager soundManager) {
+        soundManager.play(SimpleSoundInstance.forUI(CobblemonSounds.GUI_CLICK, 1.0F));
     }
 }
 

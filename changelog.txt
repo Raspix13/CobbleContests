@@ -31,6 +31,20 @@ Things I have done:
 
 6/21
 - Updated move list to reference function (Some still need _1 _2 _3 corrections)
+- made sure contest card and buttons reference functiondata
+
+6/22
+- Added move info to contest move in battle
+
+6/24
+- Message queue should now clear at end of contest
+- Should no longer be able to click move when invisible
+- Worked on networking for move usage and ui
+
+6/27
+- Fixed message clear crash on server
+- Spacing out showdown move usage in gui
+- Worked on basic move usage
 
 
 Working on Actively:
@@ -40,7 +54,7 @@ Working on Actively:
     - Get lobby page to update when someone joins
 
 TODO:
--Get neoforge caught up
+-Get neoforge caught up/ buildable
 -get the pokemon thrown out farther away when summoned in contest (Contest @SendOutPokemon)
 -figure out how to use cobblemon font in the contest pane (Contest @addContestantMessage the method normal sending out uses from playerextensions does not work in my code for some reason)
 -pokemon already out during contests should play cry animation (Contest @SendOutPokemon)
@@ -50,9 +64,10 @@ TODO:
 
 
 
-Cobble Contests 1.1.0 ()
+Cobble Contests 1.1.0 (Fabric)
 - Added config file
 - Fixed crash when using touga or hopo berries in poffin pot
+- Added Japanese translation
 
 Cobble Contests 1.0.2 (Fabric + Neoforge)
 Updated for Cobblemon 1.6

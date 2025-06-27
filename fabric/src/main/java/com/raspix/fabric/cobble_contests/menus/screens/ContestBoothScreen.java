@@ -11,6 +11,7 @@ import com.raspix.fabric.cobble_contests.menus.widgets.buttons.PokemonContestBoo
 import com.raspix.fabric.cobble_contests.network.SB.SBConBoothScrReqHostList;
 import com.raspix.fabric.cobble_contests.network.SB.SBReqJoinLob;
 import com.raspix.fabric.cobble_contests.util.Contest;
+import com.raspix.fabric.cobble_contests.util.data.ContestType;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphics;
@@ -206,19 +207,19 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     private void createTypeButtons(){
         typeButtons = new ArrayList<>();
         this.typeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 134, this.topPos + 49, 20, 20, 288, 0, 21, TEXTURE, 1000, 750, btn -> {
-            setContestType(0);
+            setContestType(ContestType.Cool.getIntValue());
         })));
         this.typeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 210, this.topPos + 78, 20, 20, 308, 0, 21, TEXTURE, 1000, 750, btn -> {
-            setContestType(1);
+            setContestType(ContestType.Beauty.getIntValue());
         })));
         this.typeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 173, this.topPos + 155, 20, 20, 328, 0, 21, TEXTURE, 1000, 750, btn -> {
-            setContestType(2);
+            setContestType(ContestType.Cute.getIntValue());
         })));
         this.typeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 95, this.topPos + 155, 20, 20, 348, 0, 21, TEXTURE, 1000, 750, btn -> {
-            setContestType(3);
+            setContestType(ContestType.Smart.getIntValue());
         })));
         this.typeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 58, this.topPos + 78, 20, 20, 368, 0, 21, TEXTURE, 1000, 750, btn -> {
-            setContestType(4);
+            setContestType(ContestType.Tough.getIntValue());
         })));
     }
 

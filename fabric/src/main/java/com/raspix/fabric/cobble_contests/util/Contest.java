@@ -7,12 +7,13 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormEntityParticlePacket;
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormParticlePacket;
 import com.cobblemon.mod.common.pokemon.Pokemon;
-import com.raspix.fabric.cobble_contests.network.CB.CBHostListToConBoothScreen;
+import com.raspix.fabric.cobble_contests.events.ContestMoves;
 import com.raspix.fabric.cobble_contests.network.CB.CBLobRetReq;
 import com.raspix.fabric.cobble_contests.network.CB.CBSendContestantMessage;
 import com.raspix.fabric.cobble_contests.network.CB.CBUpdateContestInfo;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
+import com.raspix.fabric.cobble_contests.util.data.ContestType;
 import kotlin.Unit;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
@@ -30,7 +31,14 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 
+import static com.cobblemon.mod.common.util.LocalizationUtilsKt.lang;
 import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
+
+/**
+ * This is some really bad code, so sorry to anyone looking at it
+ *
+ */
+
 
 public class Contest {
     private UUID host;
@@ -52,6 +60,10 @@ public class Contest {
     private static int RESULTS_TIME = 10; // The time the player can see the results before they are released from the contest
     private static int SEND_OUT_TIMER = 3; // The time in between each pokemon getting sent out
     private static int TEMP_TALENT_TIME = 20; // The placeholder timer for players in the talent portion of the contest
+    private static int SHOWCASE_ROUND_TIME = 30; // The max time to choose moves
+    private static int SHOWCASE_PER_CONTESTANT = 5; // The time for each contestant to showcase their moves
+
+    private static int NUM_SHOWCASE_ROUNDS = 2;
 
     private static int[][] INTRO_HEARTS = new int[][]{ // Max 8 hearts
             {0, 11, 21, 31, 41, 51, 61, 71, 81}, // Normal
@@ -61,9 +73,18 @@ public class Contest {
             {0, 321, 361, 401, 441, 481, 521, 561, 601} // Master
     };
 
-    public static final String[] CONTEST_TYPES = new String[]{
-            ""
-    };
+    int showcaseRound = 0; // Which round of showcase moves it is
+    boolean roundReady; // are all moves chosen
+    boolean runningRound;
+
+    private static final HashMap<ContestType, List<ContestType>> oppositeType = new HashMap<>(){{
+        put(ContestType.Beauty, Arrays.asList(ContestType.Tough, ContestType.Smart));
+        put(ContestType.Cool, Arrays.asList(ContestType.Cute, ContestType.Smart));
+        put(ContestType.Smart, Arrays.asList(ContestType.Beauty, ContestType.Cool));
+        put(ContestType.Cute, Arrays.asList(ContestType.Cool, ContestType.Tough));
+        put(ContestType.Tough, Arrays.asList(ContestType.Cute, ContestType.Beauty));
+        put(ContestType.None, Arrays.asList(ContestType.None, ContestType.None));
+    }};
 
     /** 10 sec to explain,
      * Intro
@@ -73,6 +94,27 @@ public class Contest {
      *      -time for all out
      */
 
+    public Contest(UUID hostId, int contestType, int contestTier, ItemStack reward){
+        this.host = hostId;
+        this.contestType = contestType;
+        this.contestTier = contestTier;
+        this.reward = reward;
+        this.contestants = new HashMap<>();
+        this.round = ContestPhase.WAITING;
+        this.roundReady = false;
+    }
+
+    public Contest(UUID hostId, int contestType, int contestTier, ItemStack reward, boolean hostParticipate, UUID pokeIdx){
+        this.host = hostId;
+        this.contestType = contestType;
+        this.contestTier = contestTier;
+        this.reward = reward;
+        this.contestants = new HashMap<>();
+        this.round = ContestPhase.IDLE;
+        this.contestantIdx = 0;
+        addContestants(hostId, pokeIdx);
+        //StartContest();
+    }
 
 
     public class Contestant{
@@ -81,11 +123,25 @@ public class Contest {
         private int hearts;
         private ClientBattleMessageQueue contestMessages;
 
+
+        String currentMove;
+        String lastMove;
+        int cumulativeHearts;
+        int turnHearts;
+        int turnJam;
+
+
         public Contestant(UUID player, UUID pokemon){
             this.player = player;
             this.pokemon = pokemon;
             this.hearts = 0;
             this.contestMessages = new ClientBattleMessageQueue();
+            this.currentMove = "";
+            this.lastMove = "";
+            this.cumulativeHearts = 0;
+            this.turnHearts = 0;
+            this.turnJam = 0;
+
         }
 
 
@@ -116,13 +172,140 @@ public class Contest {
             this.hearts = hearts;
         }
 
+        public void setTurnHearts(int hearts) {
+            this.turnHearts = hearts;
+        }
+
         public void addHearts(int hearts){
             this.hearts += hearts;
         }
 
-        public ClientBattleMessageQueue getContestMessages(){
-            return contestMessages;
+
+        public boolean setMove(String newMove){
+            if(currentMove.isEmpty()){
+                this.currentMove = newMove;
+                return true;
+            }
+            return false;
         }
+
+        public String getCurrentMove(){
+            return currentMove;
+        }
+
+        public boolean isMoveChosen(){
+            return !currentMove.isEmpty();
+        }
+
+        public void formatForNextTurn(){
+            this.lastMove = currentMove;
+            this.currentMove = "";
+            this.turnHearts = 0;
+            this.turnJam = 0;
+        }
+
+        /**private void useMove(String usingMove, ContestType type){
+            ContestMoves.MoveData moveData = ContestMoves.instance.getMoveData(usingMove);
+            ContestMoves.FunctionData functionData = ContestMoves.instance.ALL_FUNCTION_DATA.get(moveData.getFunctionType());
+
+            int typeMod = 0;
+            if(type.equals(moveData.getType())){
+                typeMod = 1;
+            }else if(type.equals(oppositeType.get(type).getFirst()) || type.equals(oppositeType.get(type).get(1))){
+                typeMod = -1;
+            }
+
+            this.turnHearts = functionData.getAppeal() + typeMod;
+
+        }
+
+        private void useMove(ContestType type){
+            ContestMoves.MoveData moveData = ContestMoves.instance.getMoveData(currentMove);
+            ContestMoves.FunctionData functionData = ContestMoves.instance.ALL_FUNCTION_DATA.get(moveData.getFunctionType());
+
+            int typeMod = 0;
+            if(type.equals(moveData.getType())){
+                typeMod = 1;
+            }else if(type.equals(oppositeType.get(type).getFirst()) || type.equals(oppositeType.get(type).get(1))){
+                typeMod = -1;
+            }
+
+            this.turnHearts = functionData.getAppeal() + typeMod;
+
+            //functionData.onUse(this);
+
+        }*/
+
+        private void applyTurn(){
+            this.cumulativeHearts += turnHearts;
+            formatForNextTurn();
+        }
+
+    }
+
+    // TODO: look into combo moves
+
+    public class ContestantShowcaseState{
+
+        Contest contest;
+        ContestType type = ContestType.None;
+
+
+
+        int showcaseRound;
+
+
+        String currentMove;
+        String lastMove;
+        int cumulativeHearts;
+        int turnHearts;
+        int turnJam;
+
+        public ContestantShowcaseState(Contest contest){
+            this.contest = contest;
+        }
+
+
+
+        private void useMove(String usingMove){
+            ContestMoves.MoveData moveData = ContestMoves.instance.getMoveData(usingMove);
+            ContestMoves.FunctionData functionData = ContestMoves.instance.ALL_FUNCTION_DATA.get(moveData.getFunctionType());
+
+            int typeMod = 0;
+            if(this.type.equals(moveData.getType())){
+                typeMod = 1;
+            }else if(this.type.equals(oppositeType.get(this.type).getFirst()) || this.type.equals(oppositeType.get(this.type).get(1))){
+                typeMod = -1;
+            }
+
+            this.turnHearts = functionData.getAppeal() + typeMod;
+
+        }
+
+        private void applyTurn(){
+            this.cumulativeHearts += turnHearts;
+            this.turnHearts = 0;
+        }
+
+
+    }
+
+
+    public class ShowcaseHelper{
+
+
+        private List<UUID> contestantsOrderer;
+        private int applause; // 0-5, goes up when type move is used
+
+
+
+
+
+
+
+
+
+
     }
 
     public enum ContestPhase{
@@ -156,6 +339,60 @@ public class Contest {
         }
     }
 
+
+    public boolean contestantPickMove(UUID playerId, String moveName){
+        //System.out.println("Player picked a move");
+        if(!contestants.containsKey(playerId) || roundReady){
+            return false;
+        }
+        Contestant con = contestants.get(playerId);
+        if(con.setMove(moveName)){
+            checkIfMoveReady();
+            return true;
+        }
+        return false;
+    }
+
+    public void checkIfMoveReady(){
+        boolean ready = true;
+        for(Contestant contestant: contestants.values()){
+            if(!contestant.isMoveChosen()){
+                ready = false;
+                break;
+            }
+        }
+        roundReady = ready;
+        System.out.println("All contestants chosen?: " + roundReady);
+    }
+
+    public void runMoves(){
+
+        for(UUID contestantID: contestantsOrdered){
+            Contestant contestant = contestants.get(contestantID);
+            //contestant.useMove(ContestType.Beauty);
+        }
+        applyMoves();
+    }
+
+    public void runContestantMove(Contestant contestant){
+        //contestant.useMove(ContestType.getFromInt(contestType));
+        ContestMoves.MoveData moveData = ContestMoves.instance.getMoveData(contestant.currentMove);
+        ContestMoves.FunctionData functionData = ContestMoves.instance.ALL_FUNCTION_DATA.get(moveData.getFunctionType());
+
+        functionData.onUse(this, contestant);
+
+    }
+
+    public void applyMoves(){
+
+        for(UUID contestantID: contestantsOrdered){
+            Contestant contestant = contestants.get(contestantID);
+            contestant.applyTurn();
+        }
+        roundReady = false;
+    }
+
+
     public void addContestantMessage(MinecraftServer server, String transLine, Object ... objects){
         PlayerList playerList = server.getPlayerList();
 
@@ -164,7 +401,7 @@ public class Contest {
             ServerPlayer serverPlayer = playerList.getPlayer(contestantID);
             Component line = Component.translatable(transLine, objects).copy().withStyle(ChatFormatting.BOLD);//.withStyle(CobblemonResources.INSTANCE.getDEFAULT_LARGE());
             if(serverPlayer != null){
-                ServerPlayNetworking.send(serverPlayer, new CBSendContestantMessage(contestantID, line.toFlatList()));
+                ServerPlayNetworking.send(serverPlayer, new CBSendContestantMessage(contestantID, new ArrayList<>(){{add(line);}}));
             }
 
             //contestants.get(contestantID).contestMessages.add(new ArrayList<>(Collections.singletonList(Component.literal(line).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.LIGHT_PURPLE).getVisualOrderText())));
@@ -263,16 +500,80 @@ public class Contest {
                     System.out.println("Finished Introduction");
                     timer = 0;
                     round = ContestPhase.TALENT;
+                    this.showcaseRound = 0;
                     updateContestants(server);
                 }
             }
-        }else if(round == ContestPhase.TALENT &&  timer >= (TEMP_TALENT_TIME * TICKS_PER_SECOND)){
-            System.out.println("Finished Talent");
-            round = ContestPhase.RESULTS;
-            timer = 0;
-            updateContestants(server);
+        }else if(round == ContestPhase.TALENT){
+            if(timerInt != getTimer()){
+                updateContestants(server);
+                timerInt = getTimer();
+            }
+            if(runningRound){
+
+                if(timer >= (2 + (contestantIdx * SHOWCASE_PER_CONTESTANT)) * TICKS_PER_SECOND) {
+
+                    if (contestantIdx < contestantsOrdered.size()) {
+
+                        System.out.println("Move being performed");
+                        PlayerList playerList = server.getPlayerList();
+                        Contestant contestant = contestants.get(contestantsOrdered.get(contestantIdx));
+                        ServerPlayer player = playerList.getPlayer(contestant.player);
+
+                        assert player != null;
+                        Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(player).get(contestant.pokemon);
+
+                        assert poke != null;
+                        addContestantMessage(server, "cobble_contests.contest_showoff.move_used", poke.getDisplayName().getString(), lang("move." + contestant.getCurrentMove()));
+
+                        runContestantMove(contestants.get(contestantsOrdered.get(contestantIdx)));
+                    }
+                    contestantIdx += 1;
+
+                }
+
+                if (contestantIdx > contestantsOrdered.size()) { // When all contestants have gone
+                    System.out.println("All moves performed");
+                    timer = 0;
+                    runningRound = false;
+                    showcaseRound += 1;
+                    roundReady = false;
+                    contestantIdx = 0;
+                    applyMoves();
+                    reorderContestants();
+                    updateContestantsWithRound(server);
+                }
+
+                updateContestants(server);
+
+            }else if(roundReady || timer >= SHOWCASE_ROUND_TIME * TICKS_PER_SECOND){ // End of move choice
+
+                addContestantMessage(server, "cobble_contests.contest_showoff.start_round", showcaseRound);
+
+                System.out.println("Move Choice Done");
+                runningRound = true;
+                roundReady = false;
+                timer = 0;
+                contestantIdx = 0;
+                updateContestants(server);
+
+
+
+            }
+            //if(timer >= (TEMP_TALENT_TIME * TICKS_PER_SECOND)){
+            if(showcaseRound >= 2){ // Ends showcase
+                System.out.println("Finished Talent");
+                round = ContestPhase.RESULTS;
+                timer = 0;
+                updateContestants(server);
+            }
+
         }
 
+
+    }
+
+    private void reorderContestants(){
 
     }
 
@@ -326,6 +627,9 @@ public class Contest {
             tag.putUUID("index", conts.pokemon);
             round.toTag(tag, "phase");
             tag.putInt("seconds", getTimer());
+
+            //tag.putInt("showcase_round", showcaseRound);
+            //tag.putBoolean("can_choose_move", getCanChooseMove());
             ServerPlayer play = playerList.getPlayer(conts.player);
             if(play != null){
                 ServerPlayNetworking.send(play, new CBUpdateContestInfo(conts.player, tag));
@@ -333,30 +637,36 @@ public class Contest {
         }
     }
 
+    private void updateContestantsWithRound(MinecraftServer server){
+        PlayerList playerList = server.getPlayerList();
+        for(Contestant conts: contestants.values()){
+            CompoundTag tag = new CompoundTag();
+            tag.putUUID("index", conts.pokemon);
+            round.toTag(tag, "phase");
+            tag.putInt("seconds", getTimer());
+
+            tag.putInt("showcase_round", showcaseRound);
+            tag.putBoolean("can_choose_move", getCanChooseMove());
+            ServerPlayer play = playerList.getPlayer(conts.player);
+            if(play != null){
+                ServerPlayNetworking.send(play, new CBUpdateContestInfo(conts.player, tag));
+            }
+        }
+    }
+
+    public int getShowcaseRound(){
+        return showcaseRound;
+    }
+
+    public boolean getCanChooseMove(){
+        return !runningRound;
+    }
+
     public int getTimer(){
         return (int)(timer/20);
     }
 
-    public Contest(UUID hostId, int contestType, int contestTier, ItemStack reward){
-        this.host = hostId;
-        this.contestType = contestType;
-        this.contestTier = contestTier;
-        this.reward = reward;
-        this.contestants = new HashMap<>();
-        this.round = ContestPhase.WAITING;
-    }
 
-    public Contest(UUID hostId, int contestType, int contestTier, ItemStack reward, boolean hostParticipate, UUID pokeIdx){
-        this.host = hostId;
-        this.contestType = contestType;
-        this.contestTier = contestTier;
-        this.reward = reward;
-        this.contestants = new HashMap<>();
-        this.round = ContestPhase.IDLE;
-        this.contestantIdx = 0;
-        addContestants(hostId, pokeIdx);
-        //StartContest();
-    }
 
     public void addContestants(UUID uuid, UUID pokeIdx){
         contestants.put(uuid, new Contestant(uuid, pokeIdx));
@@ -428,6 +738,7 @@ public class Contest {
     }
 
     public boolean EndContest(MinecraftServer server){
+
         ContestManager.INSTANCE.EndContest(this, server);
         return false;
     }
@@ -566,7 +877,8 @@ public class Contest {
         return result;
     }
 
-    public int getContestType(){
-        return contestType;
+    public ContestType getContestType(){
+        // TODO: make it return right type
+        return ContestType.getFromInt(contestType);//ContestType.Beauty; // contestType;
     }
 }

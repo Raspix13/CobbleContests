@@ -2,8 +2,11 @@ package com.raspix.fabric.cobble_contests.util;
 
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.pokemon.Pokemon;
+import com.raspix.fabric.cobble_contests.network.CB.CBClearMessageQueue;
+import com.raspix.fabric.cobble_contests.network.CB.CBUpdateContestInfo;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -100,6 +103,8 @@ public class ContestManager {
                 ServerPlayer play = playerList.getPlayer(contestant);
                 notifyPlayerContestResults(contestant, endingContest, play);
                 activeContestents.remove(contestant);
+                ServerPlayNetworking.send((ServerPlayer) play, new CBClearMessageQueue(contestant));
+                //ContestManagerClient.INSTANCE.deleteContestantMessage(contestant);
             }
             activeContestents.remove(endingContest.getHost());
             //contests.remove(endingContest);

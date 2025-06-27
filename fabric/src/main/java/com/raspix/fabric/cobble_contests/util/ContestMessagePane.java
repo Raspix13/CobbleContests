@@ -85,7 +85,16 @@ public class ContestMessagePane extends ObjectSelectionList<ContestMessagePane.C
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         correctSize();
-        blitk(guiGraphics.pose(), expanded ? BATTLE_MESSAGE_PANE_FRAME_EXPANDED_RESOURCE : BATTLE_MESSAGE_PANE_FRAME_RESOURCE, this.getX(), getAppropriateY(), expanded ? FRAME_EXPANDED_HEIGHT : FRAME_HEIGHT, FRAME_WIDTH, opacity);
+        blitk(guiGraphics.pose(),
+                expanded ? BATTLE_MESSAGE_PANE_FRAME_EXPANDED_RESOURCE : BATTLE_MESSAGE_PANE_FRAME_RESOURCE,
+                this.getX(),
+                getAppropriateY(),
+                expanded ? FRAME_EXPANDED_HEIGHT : FRAME_HEIGHT,
+                FRAME_WIDTH,
+                0, 0,
+                FRAME_WIDTH,
+                expanded ? FRAME_EXPANDED_HEIGHT : FRAME_HEIGHT,
+                opacity);
         int textBoxHeight = expanded ? TEXT_BOX_HEIGHT * 2 : TEXT_BOX_HEIGHT;
         guiGraphics.enableScissor(this.getX() + 5, getAppropriateY() + 6, this.getX() + 5 + width, getAppropriateY() + 6 + textBoxHeight);
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTicks);

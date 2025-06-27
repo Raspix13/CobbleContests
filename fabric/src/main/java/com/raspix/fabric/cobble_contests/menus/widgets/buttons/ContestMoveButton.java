@@ -2,11 +2,9 @@ package com.raspix.fabric.cobble_contests.menus.widgets.buttons;
 
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.events.ContestMoves;
-import com.raspix.fabric.cobble_contests.util.ContestType;
+import com.raspix.fabric.cobble_contests.util.data.ContestType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-
-import java.awt.*;
 
 public class ContestMoveButton extends FixedImageButton{
 

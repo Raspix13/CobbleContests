@@ -1,6 +1,7 @@
 package com.raspix.fabric.cobble_contests.network.SB;
 
 import com.raspix.fabric.cobble_contests.menus.screens.ContestScreen;
+import com.raspix.fabric.cobble_contests.network.CB.CBPlayerMoveAccepted;
 import com.raspix.fabric.cobble_contests.network.CB.CBUpdateContestInfo;
 import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import com.raspix.fabric.cobble_contests.util.Contest;
@@ -18,65 +19,76 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class SBUpdateContestInfo implements CustomPacketPayload {
+public class SBUseContestMove implements CustomPacketPayload {
 
     public final UUID id;
+    public final String moveName;
 
-    public static final CustomPacketPayload.Type<SBUpdateContestInfo> PACKET_ID = new CustomPacketPayload.Type<>(MessagesInit.CONTEST_UPDATE_1);
-    public static final StreamCodec<FriendlyByteBuf, SBUpdateContestInfo> PACKET_CODEC = new StreamCodec<FriendlyByteBuf, SBUpdateContestInfo>() {
+    public static final CustomPacketPayload.Type<SBUseContestMove> PACKET_ID = new CustomPacketPayload.Type<>(MessagesInit.USE_MOVE);
+    public static final StreamCodec<FriendlyByteBuf, SBUseContestMove> PACKET_CODEC = new StreamCodec<FriendlyByteBuf, SBUseContestMove>() {
         @Override
-        public @NotNull SBUpdateContestInfo decode(FriendlyByteBuf buf) {
-            return new SBUpdateContestInfo(FriendlyByteBuf.readUUID(buf));
+        public @NotNull SBUseContestMove decode(FriendlyByteBuf buf) {
+            return new SBUseContestMove(FriendlyByteBuf.readUUID(buf), new String(buf.readByteArray()));
         }
 
         @Override
-        public void encode(FriendlyByteBuf buf, SBUpdateContestInfo walletScreenParty) {
-            FriendlyByteBuf.writeUUID(buf, walletScreenParty.getId());
+        public void encode(FriendlyByteBuf buf, SBUseContestMove useContestMove) {
+            FriendlyByteBuf.writeUUID(buf, useContestMove.getId());
+            FriendlyByteBuf.writeByteArray(buf, useContestMove.getMoveNameBytes());
         }
     };
 
-    public SBUpdateContestInfo(UUID uuid) {
+    public SBUseContestMove(UUID uuid, String moveName) {
         this.id = uuid;
+        this.moveName = moveName;
     }
 
     public UUID getId(){
         return id;
     }
 
-    public void recieve(Minecraft minecraft){
-        System.out.println("Recieving CBWallet");
+    public String getMoveName(){
+        return moveName;
+    }
+
+    public byte[] getMoveNameBytes(){
+        return moveName.getBytes();
+    }
+
+    /**public void recieve(Minecraft minecraft){
+        System.out.println("Recieving SBUseContestMove");
         if(Minecraft.getInstance().screen instanceof ContestScreen screen){
             //CompoundTag tag = buf.readNbt();
             //screen.setUpdatedInfo(tag.getInt("index"), Contest.ContestPhase.fromTag(tag, "phase"));
         }
-    }
+    }*/
 
     public void recieve(MinecraftServer server, Player player) {
         //System.out.println("Recieving contest Update 1");
         //FriendlyByteBuf bufi = new FriendlyByteBuf(Unpooled.buffer());
         CompoundTag tag = new CompoundTag();
+        boolean wasMoveAccepted = false;
 
 
         if(ContestManager.INSTANCE.IsAlreadyInContest(id)){
             Contest con = ContestManager.INSTANCE.getPlayersContest(id);
             Contest.ContestPhase phase = con.getRound();
             System.out.println(phase);
-            //System.out.println(con.getContestants().get(id));
             UUID pokemonIdx = con.getContestentPokemon(id);
 
-            tag.putUUID("index", pokemonIdx);
-            phase.toTag(tag, "phase");
-            tag.putInt("seconds", con.getTimer());
-            tag.putInt("showcase_round", con.getShowcaseRound());
-            tag.putBoolean("can_choose_move", con.getCanChooseMove());
+            wasMoveAccepted = con.contestantPickMove(id, moveName);
+
+            //tag.putUUID("index", pokemonIdx);
+            //phase.toTag(tag, "phase");
+            //tag.putInt("seconds", con.getTimer());
         }
 
 
 
-        if (player != null && player instanceof ServerPlayer serverPlayer) {
+        if (player != null && player instanceof ServerPlayer serverPlayer && wasMoveAccepted) {
 
 
-            ServerPlayNetworking.send((ServerPlayer) player, new CBUpdateContestInfo(id, tag));
+            ServerPlayNetworking.send((ServerPlayer) player, new CBPlayerMoveAccepted(id));
         }
 
     }

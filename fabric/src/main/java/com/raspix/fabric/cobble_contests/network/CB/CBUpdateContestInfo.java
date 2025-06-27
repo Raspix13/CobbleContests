@@ -16,6 +16,8 @@ public class CBUpdateContestInfo implements CustomPacketPayload{
 
     public final UUID id;
     CompoundTag tag;
+    //public int round;
+    //public boolean shouldPickMoves;
 
     public static final CustomPacketPayload.Type<CBUpdateContestInfo> PACKET_ID = new CustomPacketPayload.Type<>(MessagesInit.CONTEST_UPDATE_2);
     public static final StreamCodec<FriendlyByteBuf, CBUpdateContestInfo> PACKET_CODEC = new StreamCodec<FriendlyByteBuf, CBUpdateContestInfo>() {
@@ -49,7 +51,12 @@ public class CBUpdateContestInfo implements CustomPacketPayload{
         System.out.println("Recieving contest Update 2");
         if(Minecraft.getInstance().screen instanceof ContestScreen screen){
             //CompoundTag tag = buf.readNbt();
-            screen.setUpdatedInfo(tag.getUUID("index"), Contest.ContestPhase.fromTag(tag, "phase"), tag.getInt("seconds"));
+
+            if(tag.contains("showcase_round")){
+                screen.setUpdatedInfo(tag.getUUID("index"), Contest.ContestPhase.fromTag(tag, "phase"), tag.getInt("seconds"), tag.getInt("showcase_round"), tag.getBoolean("can_choose_move"));
+            }else {
+                screen.setUpdatedInfo(tag.getUUID("index"), Contest.ContestPhase.fromTag(tag, "phase"), tag.getInt("seconds"));
+            }
         }
     }
 
