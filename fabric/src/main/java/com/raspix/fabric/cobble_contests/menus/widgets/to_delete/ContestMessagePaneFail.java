@@ -1,4 +1,4 @@
-package com.raspix.fabric.cobble_contests.menus.widgets;
+package com.raspix.fabric.cobble_contests.menus.widgets.to_delete;
 
 import com.cobblemon.mod.common.client.battle.ClientBattleMessageQueue;
 import com.cobblemon.mod.common.client.gui.CobblemonRenderable;

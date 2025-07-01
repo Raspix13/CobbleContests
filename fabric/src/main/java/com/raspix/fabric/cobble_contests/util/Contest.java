@@ -4,13 +4,14 @@ import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.api.reactive.SimpleObservable;
 import com.cobblemon.mod.common.client.battle.ClientBattleMessageQueue;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
-import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormEntityParticlePacket;
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormParticlePacket;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.fabric.cobble_contests.events.ContestMoves;
 import com.raspix.fabric.cobble_contests.network.CB.CBLobRetReq;
 import com.raspix.fabric.cobble_contests.network.CB.CBSendContestantMessage;
+import com.raspix.fabric.cobble_contests.network.CB.CBSendContestantStatus;
 import com.raspix.fabric.cobble_contests.network.CB.CBUpdateContestInfo;
+import com.raspix.fabric.cobble_contests.network.NetworkablePokemonData;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
 import com.raspix.fabric.cobble_contests.util.data.ContestType;
@@ -22,12 +23,14 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.locale.Language;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import com.cobblemon.mod.common.api.pokemon.PokemonPropertyExtractor;
 
 import java.util.*;
 
@@ -174,6 +177,10 @@ public class Contest {
 
         public void setTurnHearts(int hearts) {
             this.turnHearts = hearts;
+        }
+
+        public int getTurnHearts(){
+            return turnHearts;
         }
 
         public void addHearts(int hearts){
@@ -371,37 +378,105 @@ public class Contest {
             Contestant contestant = contestants.get(contestantID);
             //contestant.useMove(ContestType.Beauty);
         }
-        applyMoves();
     }
 
-    public void runContestantMove(Contestant contestant){
+    public void runContestantMove(MinecraftServer server, Contestant contestant){
         //contestant.useMove(ContestType.getFromInt(contestType));
         ContestMoves.MoveData moveData = ContestMoves.instance.getMoveData(contestant.currentMove);
         ContestMoves.FunctionData functionData = ContestMoves.instance.ALL_FUNCTION_DATA.get(moveData.getFunctionType());
 
         functionData.onUse(this, contestant);
 
+        sendEveryoneContestants(server);
+
     }
 
-    public void applyMoves(){
+    public void applyMoves(MinecraftServer server){
 
         for(UUID contestantID: contestantsOrdered){
             Contestant contestant = contestants.get(contestantID);
             contestant.applyTurn();
         }
+        sendEveryoneContestants(server);
+
         roundReady = false;
     }
 
 
-    public void addContestantMessage(MinecraftServer server, String transLine, Object ... objects){
+    private CompoundTag generateContestantDataTag(MinecraftServer server){
+        CompoundTag tag = new CompoundTag();
+
+        PlayerList playerList = server.getPlayerList();
+        tag.putInt("contestants_size", contestants.size());
+
+
+
+        for(int i = 0; i < contestantsOrdered.size(); i ++){
+            UUID contestantID = contestantsOrdered.get(i);
+            Contestant contestant = contestants.get(contestantID);
+            ServerPlayer serverPlayer = playerList.getPlayer(contestantID);
+
+            Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(serverPlayer).get(contestant.pokemon);
+
+            NetworkablePokemonData data = new NetworkablePokemonData(
+                    poke.getUuid(),
+                    contestantID,
+                    poke.getDisplayName().getString(),
+                    serverPlayer.getDisplayName().getString(),
+                    0, 0,
+                    contestant.getTurnHearts(),
+                    0,
+                    poke.createPokemonProperties(PokemonPropertyExtractor.SPECIES, PokemonPropertyExtractor.GENDER, PokemonPropertyExtractor.SHINY, PokemonPropertyExtractor.FORM),
+                    poke.getAspects());
+
+            //data.getAsBuf(buf);
+            tag.put("contestant" + i, data.getAsTag());
+        }
+
+        return tag;
+    }
+
+    private void sendEveryoneContestants(MinecraftServer server){// TODO: send out packet here?
+
+        PlayerList playerList = server.getPlayerList();
+
+        CompoundTag tag = generateContestantDataTag(server);
+
+        for(UUID contestantID: contestantsOrdered){ // TODO: should send to all viewers
+            ServerPlayer serverPlayer = playerList.getPlayer(contestantID);
+
+            if(serverPlayer != null){
+                ServerPlayNetworking.send(serverPlayer, new CBSendContestantStatus(serverPlayer.getUUID(), tag.copy()));
+            }
+        }
+    }
+
+    /**
+     * When a player reloads their screen by opening it or resizing it
+     */
+    public void sendPlayerContestants(MinecraftServer server, ServerPlayer serverPlayer){
+        CompoundTag tag = generateContestantDataTag(server);
+
+        if(serverPlayer != null){
+            ServerPlayNetworking.send(serverPlayer, new CBSendContestantStatus(serverPlayer.getUUID(), tag.copy()));
+        }
+
+    }
+
+
+    public void addContestantMessage(MinecraftServer server, ChatFormatting optionalColor, String transLine, Object ... objects){
         PlayerList playerList = server.getPlayerList();
 
 
         for(UUID contestantID: contestantsOrdered){
             ServerPlayer serverPlayer = playerList.getPlayer(contestantID);
-            Component line = Component.translatable(transLine, objects).copy().withStyle(ChatFormatting.BOLD);//.withStyle(CobblemonResources.INSTANCE.getDEFAULT_LARGE());
+            MutableComponent line = Component.translatable(transLine, objects).copy().withStyle(ChatFormatting.BOLD);//.withStyle(CobblemonResources.INSTANCE.getDEFAULT_LARGE());
+            if(optionalColor != null){
+                line = line.withStyle(optionalColor);
+            }
+            Component finalLine = line;
             if(serverPlayer != null){
-                ServerPlayNetworking.send(serverPlayer, new CBSendContestantMessage(contestantID, new ArrayList<>(){{add(line);}}));
+                ServerPlayNetworking.send(serverPlayer, new CBSendContestantMessage(contestantID, new ArrayList<>(){{add(finalLine);}}));
             }
 
             //contestants.get(contestantID).contestMessages.add(new ArrayList<>(Collections.singletonList(Component.literal(line).withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.LIGHT_PURPLE).getVisualOrderText())));
@@ -440,7 +515,7 @@ public class Contest {
 
 
         if(round == ContestPhase.WAITING && timer == 0f){
-            addContestantMessage(server, "The Contest is starting! Contestants should get into position\n");
+            addContestantMessage(server, null, "The Contest is starting! Contestants should get into position\n");
         }
         //System.out.println("Contest Time: " + timer);
 
@@ -473,7 +548,7 @@ public class Contest {
                 timer = 0;
                 updateContestants(server);
                 evaluateIntroductionPoints(server);
-                addContestantMessage(server, "And that's time! Now to meet the contestants!\n");
+                addContestantMessage(server, null, "And that's time! Now to meet the contestants!\n");
             }
         }else if (round == ContestPhase.RESULTS && timer >= RESULTS_TIME * TICKS_PER_SECOND){
             System.out.println("Finished Contest");
@@ -491,7 +566,7 @@ public class Contest {
 
                 assert poke != null;
                 //addContestantMessage(player.getDisplayName().getString() + " entered " + poke.getDisplayName().getString() + " the " + poke.getSpecies().getName());
-                addContestantMessage(server, "cobble_contests.contest_showoff.intro", player.getDisplayName().getString(), poke.getDisplayName().getString(), poke.getSpecies().getName());
+                addContestantMessage(server, null, "cobble_contests.contest_showoff.intro", player.getDisplayName().getString(), poke.getDisplayName().getString(), poke.getSpecies().getName());
                 //addContestantMessage(Component.translatable("cobble_contests.contest_showoff.intro", player.getDisplayName().getString(), poke.getDisplayName().getString(), poke.getSpecies().getName()));
 
                 sendOutPokemon(server, contestantIdx);
@@ -502,6 +577,7 @@ public class Contest {
                     round = ContestPhase.TALENT;
                     this.showcaseRound = 0;
                     updateContestants(server);
+                    sendEveryoneContestants(server);
                 }
             }
         }else if(round == ContestPhase.TALENT){
@@ -511,7 +587,7 @@ public class Contest {
             }
             if(runningRound){
 
-                if(timer >= (2 + (contestantIdx * SHOWCASE_PER_CONTESTANT)) * TICKS_PER_SECOND) {
+                if(timer >= (2 + (contestantIdx * SHOWCASE_PER_CONTESTANT)) * TICKS_PER_SECOND) {// For each contestant to do their moves
 
                     if (contestantIdx < contestantsOrdered.size()) {
 
@@ -524,9 +600,9 @@ public class Contest {
                         Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(player).get(contestant.pokemon);
 
                         assert poke != null;
-                        addContestantMessage(server, "cobble_contests.contest_showoff.move_used", poke.getDisplayName().getString(), lang("move." + contestant.getCurrentMove()));
+                        addContestantMessage(server, null, "cobble_contests.contest_showoff.move_used", poke.getDisplayName().getString(), lang("move." + contestant.getCurrentMove()));
 
-                        runContestantMove(contestants.get(contestantsOrdered.get(contestantIdx)));
+                        runContestantMove(server, contestants.get(contestantsOrdered.get(contestantIdx)));
                     }
                     contestantIdx += 1;
 
@@ -539,7 +615,7 @@ public class Contest {
                     showcaseRound += 1;
                     roundReady = false;
                     contestantIdx = 0;
-                    applyMoves();
+                    applyMoves(server);
                     reorderContestants();
                     updateContestantsWithRound(server);
                 }
@@ -548,7 +624,7 @@ public class Contest {
 
             }else if(roundReady || timer >= SHOWCASE_ROUND_TIME * TICKS_PER_SECOND){ // End of move choice
 
-                addContestantMessage(server, "cobble_contests.contest_showoff.start_round", showcaseRound);
+                addContestantMessage(server, null,"cobble_contests.contest_showoff.start_round", showcaseRound);
 
                 System.out.println("Move Choice Done");
                 runningRound = true;
@@ -608,7 +684,7 @@ public class Contest {
                     .sendToPlayersAround(pokeEnt.getX(), pokeEnt.getY(), pokeEnt.getZ(), 64.0, pokeEnt.level().dimension(), serverPlayer -> {
                         return false;
                     });
-            new SpawnSnowstormEntityParticlePacket(cobblemonResource("rainbow"), play.getId(), Arrays.asList())
+            /**new SpawnSnowstormEntityParticlePacket(cobblemonResource("rainbow"), play.getId(), Arrays.asList())
                     .sendToPlayersAround(pokeEnt.getX(), pokeEnt.getY(), pokeEnt.getZ(), 64.0, pokeEnt.level().dimension(), serverPlayer -> {
                         return false;
                     });//ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "loading.png")*
@@ -618,6 +694,8 @@ public class Contest {
                     });*/
 
         //}
+
+        addContestantMessage(server, ChatFormatting.AQUA, "Wow, the audience seems to really like this pokemon");
     }
 
     private void updateContestants(MinecraftServer server){

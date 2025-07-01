@@ -878,8 +878,6 @@ public class ContestMoves {
 
 
     public void NothingExtra(Contest contest, Contest.Contestant contestant){
-        System.out.println("Hey");
-
         String move = contestant.getCurrentMove();
 
         ContestMoves.MoveData moveData = ContestMoves.instance.getMoveData(move);

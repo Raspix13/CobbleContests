@@ -54,7 +54,7 @@
 
   "tooltip.cobble_contests.poffin_item.tooltip.poffin_stats": "Spicy: %1$s Dry: %2$s Sweet: %3$s Bitter: %4$s Sour: %5$s Smoothness: %6$s",
 
-  "cobble_contests.move_info.placeholder": "Move Effects not yet implemented, sorry.",
+  "cobble_contests.move_info.placeholder": "You should not be seeing this unless I missed a move or something.",
 
   "cobble_contests.contest_type.cool": "Cool",
   "cobble_contests.contest_type.beauty": "Beauty",
@@ -78,6 +78,7 @@
   "cobble_contests.contest_text.select_no_pokemon": "Don't Enter Pokemon",
 
   "cobble_contests.contest_showoff.intro": "%1$s entered %2$s the %3$s",
+  "cobble_contests.contest_showoff.contestant_and_poke": "%1$s & %2$s",
   "cobble_contests.contest_showoff.start_round": "Contestants have chosen, now starting round %1$s",
   "cobble_contests.contest_showoff.move_used": "%1$s used %2$s",
 

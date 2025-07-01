@@ -1,73 +1,11 @@
 
-Things I have done:
-5/28
-- Got the contest dialogue pane working, added a few things to it
-- Some japanese translations
-- Remove card being able to open up contests when no contest is going on
-
-5/31
-- Worked on multiplayer capabilities with hosting & lobbies
-
-6/3
-- More work on multiplayer booth gui, can now have 2 players in a contest but only host can see contest ui
-- Made sure contests made by host expire after a time
-
-6/4
-- Got contest card contest view to work for non-hosts
-- fixed server speed for contests not being correct
-
-6/17
-- Implemented makeshift move data
-- Added names & description movedata for all cute & beauty moves (appeal and jam not yet done)
-- fixed concurrent list editing crash
-
-6/18
-- Added names & description movedata for all smart, cool & tough moves (appeal and jam not yet done)
-- Worked on contest showoff button gui
-
-6/19
-- Made list of move functions + descriptions (translatable)
-- Worked more on contest showoff button gui
-
-6/21
-- Updated move list to reference function (Some still need _1 _2 _3 corrections)
-- made sure contest card and buttons reference functiondata
-
-6/22
-- Added move info to contest move in battle
-
-6/24
-- Message queue should now clear at end of contest
-- Should no longer be able to click move when invisible
-- Worked on networking for move usage and ui
-
-6/27
-- Fixed message clear crash on server
-- Spacing out showdown move usage in gui
-- Worked on basic move usage
-
-
-Working on Actively:
-- Multiplayer hosting and lobbies
-    - Get booth to network when opening to check for contest participation
-    - Contest does not start the first time it is hit
-    - Get lobby page to update when someone joins
-
-TODO:
--Get neoforge caught up/ buildable
--get the pokemon thrown out farther away when summoned in contest (Contest @SendOutPokemon)
--figure out how to use cobblemon font in the contest pane (Contest @addContestantMessage the method normal sending out uses from playerextensions does not work in my code for some reason)
--pokemon already out during contests should play cry animation (Contest @SendOutPokemon)
--Change initial win/lose message to "get ready and use contest card"
--Fix crash that happens when no pokemon is selected by host
--Check to make sure configs don't crash servers
-
-
-
 Cobble Contests 1.1.0 (Fabric)
 - Added config file
+- Added bad Japanese translation
 - Fixed crash when using touga or hopo berries in poffin pot
-- Added Japanese translation
+- Added contest showcase
+- Added multiplayer and hosting contests
+
 
 Cobble Contests 1.0.2 (Fabric + Neoforge)
 Updated for Cobblemon 1.6

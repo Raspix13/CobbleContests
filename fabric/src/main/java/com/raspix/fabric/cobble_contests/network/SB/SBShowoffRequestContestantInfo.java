@@ -18,24 +18,24 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class SBUpdateContestInfo implements CustomPacketPayload {
+public class SBShowoffRequestContestantInfo implements CustomPacketPayload {
 
     public final UUID id;
 
-    public static final CustomPacketPayload.Type<SBUpdateContestInfo> PACKET_ID = new CustomPacketPayload.Type<>(MessagesInit.CONTEST_UPDATE_1);
-    public static final StreamCodec<FriendlyByteBuf, SBUpdateContestInfo> PACKET_CODEC = new StreamCodec<FriendlyByteBuf, SBUpdateContestInfo>() {
+    public static final CustomPacketPayload.Type<SBShowoffRequestContestantInfo> PACKET_ID = new CustomPacketPayload.Type<>(MessagesInit.REQUEST_CONTESTANTS);
+    public static final StreamCodec<FriendlyByteBuf, SBShowoffRequestContestantInfo> PACKET_CODEC = new StreamCodec<FriendlyByteBuf, SBShowoffRequestContestantInfo>() {
         @Override
-        public @NotNull SBUpdateContestInfo decode(FriendlyByteBuf buf) {
-            return new SBUpdateContestInfo(FriendlyByteBuf.readUUID(buf));
+        public @NotNull SBShowoffRequestContestantInfo decode(FriendlyByteBuf buf) {
+            return new SBShowoffRequestContestantInfo(FriendlyByteBuf.readUUID(buf));
         }
 
         @Override
-        public void encode(FriendlyByteBuf buf, SBUpdateContestInfo walletScreenParty) {
+        public void encode(FriendlyByteBuf buf, SBShowoffRequestContestantInfo walletScreenParty) {
             FriendlyByteBuf.writeUUID(buf, walletScreenParty.getId());
         }
     };
 
-    public SBUpdateContestInfo(UUID uuid) {
+    public SBShowoffRequestContestantInfo(UUID uuid) {
         this.id = uuid;
     }
 
@@ -43,40 +43,22 @@ public class SBUpdateContestInfo implements CustomPacketPayload {
         return id;
     }
 
-    public void recieve(Minecraft minecraft){
+    /**public void recieve(Minecraft minecraft){
         System.out.println("Recieving ContestUpdate1");
         if(Minecraft.getInstance().screen instanceof ContestScreen screen){
             //CompoundTag tag = buf.readNbt();
             //screen.setUpdatedInfo(tag.getInt("index"), Contest.ContestPhase.fromTag(tag, "phase"));
         }
-    }
+    }*/
 
     public void recieve(MinecraftServer server, Player player) {
-        //System.out.println("Recieving contest Update 1");
-        //FriendlyByteBuf bufi = new FriendlyByteBuf(Unpooled.buffer());
-        CompoundTag tag = new CompoundTag();
-
+        System.out.println("Recieving ShowoffRequestContestantInfo");
 
         if(ContestManager.INSTANCE.IsAlreadyInContest(id)){
             Contest con = ContestManager.INSTANCE.getPlayersContest(id);
-            Contest.ContestPhase phase = con.getRound();
-            System.out.println(phase);
-            //System.out.println(con.getContestants().get(id));
-            UUID pokemonIdx = con.getContestentPokemon(id);
-
-            tag.putUUID("index", pokemonIdx);
-            phase.toTag(tag, "phase");
-            tag.putInt("seconds", con.getTimer());
-            tag.putInt("showcase_round", con.getShowcaseRound());
-            tag.putBoolean("can_choose_move", con.getCanChooseMove());
-        }
+            con.sendPlayerContestants(server, (ServerPlayer) player);
 
 
-
-        if (player != null && player instanceof ServerPlayer serverPlayer) {
-
-
-            ServerPlayNetworking.send((ServerPlayer) player, new CBUpdateContestInfo(id, tag));
         }
 
     }

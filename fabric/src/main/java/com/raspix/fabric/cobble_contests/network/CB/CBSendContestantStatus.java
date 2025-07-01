@@ -2,7 +2,6 @@ package com.raspix.fabric.cobble_contests.network.CB;
 
 import com.raspix.fabric.cobble_contests.menus.screens.ContestScreen;
 import com.raspix.fabric.cobble_contests.network.MessagesInit;
-import com.raspix.fabric.cobble_contests.util.Contest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -12,29 +11,30 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class CBUpdateContestInfo implements CustomPacketPayload{
+
+public class CBSendContestantStatus implements CustomPacketPayload {
 
     public final UUID id;
     CompoundTag tag;
     //public int round;
     //public boolean shouldPickMoves;
 
-    public static final CustomPacketPayload.Type<CBUpdateContestInfo> PACKET_ID = new CustomPacketPayload.Type<>(MessagesInit.CONTEST_UPDATE_2);
-    public static final StreamCodec<FriendlyByteBuf, CBUpdateContestInfo> PACKET_CODEC = new StreamCodec<FriendlyByteBuf, CBUpdateContestInfo>() {
+    public static final CustomPacketPayload.Type<CBSendContestantStatus> PACKET_ID = new CustomPacketPayload.Type<>(MessagesInit.SEND_CONTESTANTS);
+    public static final StreamCodec<FriendlyByteBuf, CBSendContestantStatus> PACKET_CODEC = new StreamCodec<FriendlyByteBuf, CBSendContestantStatus>() {
         @Override
-        public @NotNull CBUpdateContestInfo decode(FriendlyByteBuf buf) {
+        public @NotNull CBSendContestantStatus decode(FriendlyByteBuf buf) {
             CompoundTag compoundTag = new CompoundTag();
-            return new CBUpdateContestInfo(FriendlyByteBuf.readUUID(buf), FriendlyByteBuf.readNbt(buf));
+            return new CBSendContestantStatus(FriendlyByteBuf.readUUID(buf), FriendlyByteBuf.readNbt(buf));
         }
 
         @Override
-        public void encode(FriendlyByteBuf buf, CBUpdateContestInfo contestInfo) {
+        public void encode(FriendlyByteBuf buf, CBSendContestantStatus contestInfo) {
             FriendlyByteBuf.writeUUID(buf, contestInfo.getId());
             FriendlyByteBuf.writeNbt(buf, contestInfo.getTag());
         }
     };
 
-    public CBUpdateContestInfo(UUID id, CompoundTag buf) {
+    public CBSendContestantStatus(UUID id, CompoundTag buf) {
         this.id = id;
         this.tag = buf;
     }
@@ -48,15 +48,13 @@ public class CBUpdateContestInfo implements CustomPacketPayload{
     }
 
     public void recieve(Minecraft minecraft){
-        //System.out.println("Recieving contest Update 2");
+        System.out.println("Recieving CBSendContestants");
         if(Minecraft.getInstance().screen instanceof ContestScreen screen){
             //CompoundTag tag = buf.readNbt();
 
-            if(tag.contains("showcase_round")){
-                screen.setUpdatedInfo(tag.getUUID("index"), Contest.ContestPhase.fromTag(tag, "phase"), tag.getInt("seconds"), tag.getInt("showcase_round"), tag.getBoolean("can_choose_move"));
-            }else {
-                screen.setUpdatedInfo(tag.getUUID("index"), Contest.ContestPhase.fromTag(tag, "phase"), tag.getInt("seconds"));
-            }
+
+            screen.setShowdownContestantsData(tag);
+
         }
     }
 

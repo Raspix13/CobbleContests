@@ -38,6 +38,7 @@ public class ContestMoveGrid extends ParentWidget {
 
     private UUID playerId;
 
+
     private static final ResourceLocation moveTex = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_move.png");
 
 
@@ -46,10 +47,16 @@ public class ContestMoveGrid extends ParentWidget {
         this.buttons = new ArrayList<>();
         this.playerId = playerID;
 
-        move1 = new MoveTile(this.getX(), this.getY());
+        move1 = new MoveTile(0, 0);
+        move2 = new MoveTile(MOVE_HORIZONTAL_SPACING + MOVE_WIDTH, 0);
+        move3 = new MoveTile(0, MOVE_HEIGHT + MOVE_VERTICAL_SPACING);
+        move4 = new MoveTile(MOVE_HORIZONTAL_SPACING + MOVE_WIDTH, MOVE_HEIGHT + MOVE_VERTICAL_SPACING);
+
+
+        /**move1 = new MoveTile(this.getX(), this.getY());
         move2 = new MoveTile(this.getX() + MOVE_HORIZONTAL_SPACING + MOVE_WIDTH, this.getY());
         move3 = new MoveTile(this.getX(), this.getY() + MOVE_HEIGHT + MOVE_VERTICAL_SPACING);
-        move4 = new MoveTile(this.getX() + MOVE_HORIZONTAL_SPACING + MOVE_WIDTH, this.getY() + MOVE_HEIGHT + MOVE_VERTICAL_SPACING);
+        move4 = new MoveTile(this.getX() + MOVE_HORIZONTAL_SPACING + MOVE_WIDTH, this.getY() + MOVE_HEIGHT + MOVE_VERTICAL_SPACING);*/
         //buttons.add(new ContestMoveButton(this.getX(), this.getY(), MOVE_WIDTH, MOVE_HEIGHT, btn -> { pressMove();}));
         //buttons.add(new FixedImageButton(5, 5, MOVE_WIDTH, MOVE_HEIGHT, 0, 0, 24, moveTex, 92, 48, btn -> { pressMove();}));
         /**for (int index = 0; index < 4; index++) {

@@ -8,8 +8,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.menus.ContestMenu;
-//import com.raspix.fabric.cobble_contests.menus.widgets.ContestMessagePane;
+//import com.raspix.fabric.cobble_contests.menus.widgets.to_delete.ContestMessagePane;
 import com.raspix.fabric.cobble_contests.menus.screens.subscreens.ContestMoveGrid;
+import com.raspix.fabric.cobble_contests.menus.screens.subscreens.ContestantStatsGrid;
 import com.raspix.fabric.cobble_contests.menus.widgets.DressUpCounter;
 import com.raspix.fabric.cobble_contests.menus.widgets.buttons.FixedImageButton;
 import com.raspix.fabric.cobble_contests.menus.widgets.ParticleScreenRenderer;
@@ -26,6 +27,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -71,6 +73,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
     private DressUpCounter counter;
     private ParticleScreenRenderer particleBox;
     private ContestMoveGrid moveGrid;
+    private ContestantStatsGrid contestantGrid;
     private ContestMenu contestInfoMenu;
 
     private ClientParty clientParty;
@@ -123,6 +126,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
 
         this.counter = this.addRenderableWidget(new DressUpCounter(this.leftPos + 231, this.topPos + 125, 16, 15, Component.literal("")));
         this.moveGrid = this.addRenderableWidget(new ContestMoveGrid(this.leftPos - 35, this.topPos + 140, 92, 24, Component.literal(""), playerId));
+        this.contestantGrid = this.addRenderableWidget(new ContestantStatsGrid(this.leftPos - 35, this.topPos + 140, 92, 24, Component.literal(""), playerId));
 
         isModelSet = false;
         ClientPlayNetworking.send(new SBUpdateContestInfo(playerId));
@@ -134,6 +138,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
 
         //get updates here
     }
+
 
     // needed to prevent always having grayed out background
     @Override
@@ -446,7 +451,9 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
     }
 
     protected void renderShowOffGUI(GuiGraphics guiGraphics){
+        if(!isMoveChosen){
 
+        }
 
 
     }
@@ -494,6 +501,10 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
 
     }
 
+    public void setUpdatedContestantInfo(){
+
+    }
+
     public void setMoveSelected(){
         /**this.pokemon = CobblemonClient.INSTANCE.getStorage().getMyParty().findByUUID(pokemonSlot);
         if(pokemon == null){
@@ -512,6 +523,10 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         this.isMoveChosen = false;
         moveGrid.visible = true;
 
+    }
+
+    public void setShowdownContestantsData(CompoundTag tag){
+        contestantGrid.setShowdownContestantsData(tag);
     }
 
 
@@ -544,7 +559,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
                 break;
              case TALENT:
                  messageLog.visible = true; // turn back on later
-                 counter.changePos(this.leftPos - 10, this.topPos + 30);
+                 counter.changePos(this.leftPos - 10, this.topPos + 30, 30);
                  counter.visible = true;
                  toggleButtonList(false, dressUpButtons);
                  //particleEffectButton.visible = false;
@@ -565,6 +580,8 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
                 break;
         }
         this.moveGrid.visible = phase == Contest.ContestPhase.TALENT && !isMoveChosen;
+        this.contestantGrid.visible = phase == Contest.ContestPhase.TALENT;
+        this.contestantGrid.setExpanded(phase == Contest.ContestPhase.TALENT && isMoveChosen);
 
     }
 

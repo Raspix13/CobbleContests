@@ -15,41 +15,41 @@
   "item.cobble_contests.poffin_dough_base": "ポフィン生地",
   "item.cobble_contests.foul_poffin": "ファウル・ポフィン",
 
-  "item.cobble_contests.spicy_poffin": "Spicy Poffin",
-  "item.cobble_contests.dry_poffin": "Dry Poffin",
-  "item.cobble_contests.sweet_poffin": "Sweet Poffin",
-  "item.cobble_contests.bitter_poffin": "Bitter Poffin",
-  "item.cobble_contests.sour_poffin": "Sour Poffin",
+  "item.cobble_contests.spicy_poffin": "スパイシーポフィン",
+  "item.cobble_contests.dry_poffin": "ドライポフィン",
+  "item.cobble_contests.sweet_poffin": "スイートポフィン",
+  "item.cobble_contests.bitter_poffin": "ビターポフィン",
+  "item.cobble_contests.sour_poffin": "サワーポフィン",
 
-  "item.cobble_contests.spicy_dry_poffin": "Spicy Dry Poffin",
-  "item.cobble_contests.spicy_sweet_poffin": "Spicy Sweet Poffin",
-  "item.cobble_contests.spicy_bitter_poffin": "Spicy Bitter Poffin",
-  "item.cobble_contests.spicy_sour_poffin": "Spicy Sour Poffin",
+  "item.cobble_contests.spicy_dry_poffin": "スパイシードライポフィン",
+  "item.cobble_contests.spicy_sweet_poffin": "スパイシースイートポフィン",
+  "item.cobble_contests.spicy_bitter_poffin": "スパイシービターポフィン",
+  "item.cobble_contests.spicy_sour_poffin": "スパイシーサワーポフィン",
 
-  "item.cobble_contests.dry_spicy_poffin": "Dry Spicy Poffin",
-  "item.cobble_contests.dry_sweet_poffin": "Dry Sweet Poffin",
-  "item.cobble_contests.dry_bitter_poffin": "Dry Bitter Poffin",
-  "item.cobble_contests.dry_sour_poffin": "Dry Sour Poffin",
+  "item.cobble_contests.dry_spicy_poffin": "ドライスパイシーポフィン",
+  "item.cobble_contests.dry_sweet_poffin": "ドライスイートポフィン",
+  "item.cobble_contests.dry_bitter_poffin": "ドライビターポフィン",
+  "item.cobble_contests.dry_sour_poffin": "ドライサワーポフィン",
 
-  "item.cobble_contests.sweet_spicy_poffin": "Sweet Spicy Poffin",
-  "item.cobble_contests.sweet_dry_poffin": "Sweet Dry Poffin",
-  "item.cobble_contests.sweet_bitter_poffin": "Sweet Bitter Poffin",
-  "item.cobble_contests.sweet_sour_poffin": "Sweet Sour Poffin",
+  "item.cobble_contests.sweet_spicy_poffin": "スイートスパイシーポフィン",
+  "item.cobble_contests.sweet_dry_poffin": "スイートドライポフィン",
+  "item.cobble_contests.sweet_bitter_poffin": "スイートビターポフィン",
+  "item.cobble_contests.sweet_sour_poffin": "スイートサワーポフィン",
 
-  "item.cobble_contests.bitter_spicy_poffin": "Bitter Spicy Poffin",
-  "item.cobble_contests.bitter_dry_poffin": "Bitter Dry Poffin",
-  "item.cobble_contests.bitter_sweet_poffin": "Bitter Sweet Poffin",
-  "item.cobble_contests.bitter_sour_poffin": "Bitter Sour Poffin",
+  "item.cobble_contests.bitter_spicy_poffin": "ビタースパイシーポフィン",
+  "item.cobble_contests.bitter_dry_poffin": "ビタードライポフィン",
+  "item.cobble_contests.bitter_sweet_poffin": "ビタースイートポフィン",
+  "item.cobble_contests.bitter_sour_poffin": "ビターサワーポフィン",
 
-  "item.cobble_contests.sour_spicy_poffin": "Sour Spicy Poffin",
-  "item.cobble_contests.sour_dry_poffin": "Sour Dry Poffin",
-  "item.cobble_contests.sour_sweet_poffin": "Sour Sweet Poffin",
-  "item.cobble_contests.sour_bitter_poffin": "Sour Bitter Poffin",
+  "item.cobble_contests.sour_spicy_poffin": "サワースパイシーポフィン",
+  "item.cobble_contests.sour_dry_poffin": "サワードライポフィン",
+  "item.cobble_contests.sour_sweet_poffin": "サワースイートポフィン",
+  "item.cobble_contests.sour_bitter_poffin": "サワービターポフィン",
 
-  "tooltip.cobble_contests.ball_swapper.tooltip.ball_type": "Currently swapping to %1$s.",
-  "tooltip.cobble_contests.ball_swapper.tooltip.empty": "empty",
-  "tooltip.cobble_contests.ball_swapper.tooltip.instructions1": "To change ball, use with new ball in offhand.",
-  "tooltip.cobble_contests.ball_swapper.tooltip.instructions2": "Use again to change the ball of a pokemon.",
+  "tooltip.cobble_contests.ball_swapper.tooltip.ball_type": "現在 %1$s に切り替え中。",
+  "tooltip.cobble_contests.ball_swapper.tooltip.empty": "空",
+  "tooltip.cobble_contests.ball_swapper.tooltip.instructions1": "ボールを変更するには、新しいボールをオフハンドで使用してください。",
+  "tooltip.cobble_contests.ball_swapper.tooltip.instructions2": "再度使用してポケモンのボールを変更します。",
   "cobble_contests.ball_swapper.same_ball": "これは現在のボールと同じです",
 
   "tooltip.cobble_contests.poffin_item.tooltip.poffin_stats": "辛さ: %1$s、辛口: %2$s、甘口: %3$s、苦味: %4$s、酸味: %5$s、滑らかさ: %6$s",
@@ -72,16 +72,78 @@
   "cobble_contests.poffin_pot_instructions": "ポフィン生地を鍋に入れ、燃料とベリー1～4個を加えます。ベリーを重複して使用すると、ポフィンは不味くなります。結果の統計は使用したベリーに基づきます。",
   "cobble_contests.contest_text.start": "始める",
   "cobble_contests.contest_text.host": "ホスト",
+  "cobble_contests.contest_text.join": "Join",
   "cobble_contests.contest_text.select_type": "タイプの選択",
   "cobble_contests.contest_text.pokemon_select": "ポケモンを選ぶ",
   "cobble_contests.contest_text.select_no_pokemon": "ポケモンを入力しないでください",
 
   "cobble_contests.contest_showoff.intro": "%1$s が %3$s に %2$s 入力しました",
+  "cobble_contests.contest_showoff.contestant_and_poke": "%1$s & %2$s",
+  "cobble_contests.contest_showoff.start_round": "参加者が選択しました、今ラウンド %1$s を開始します",
+  "cobble_contests.contest_showoff.move_used": "%1$s が %2$s を使用しました",
 
   "cobble_contests.contest_result.not_implemented": "この機能はまだ実装されていません。",
   "cobble_contests.contest_result.won_ranked": "%1$sが%2$s %3$sコンテストで優勝しました",
   "cobble_contests.contest_result.lost_ranked": "%1$s は %2$s %3$s コンテストで負けました",
-  "cobble_contests.contest_result.maxed_ranked": "%1$sはすでに%2$sコンテストすべてで優勝しています"
+  "cobble_contests.contest_result.maxed_ranked": "%1$sはすでに%2$sコンテストすべてで優勝しています",
+
+  "cobble_contests.contest_text.fac": "コンテストを見つける",
+  "cobble_contests.contest_text.host_lobby": "ホストロビー",
+  "cobble_contests.contest_text.contest_running": "コンテストが始まりました",
+
+
+
+
+
+  "cobble_contests.move_function_description.quite_appealing": "かなり魅力的な動きです。",
+  "cobble_contests.move_function_description.reusable_appeal": "観客を飽きさせることなく繰り返し使用できる魅力的な動きです。",
+
+  "cobble_contests.move_function_description.first_boost": "ユーザーがこのターン最初に行動すると効果的です。",
+  "cobble_contests.move_function_description.late_boost": "ターンの後半に使われるほど効果的です。",
+  "cobble_contests.move_function_description.last_boost": "ユーザーがこのターン最後に行動すると効果的です。",
+  "cobble_contests.move_function_description.placement_boost": "使用時期によって効果が異なります。",
+  "cobble_contests.move_function_description.pumped_boost": "ユーザーがテンションを高めている場合に効果的です。",
+  "cobble_contests.move_function_description.dup_type_boost": "直前のポケモンが使用した技と同じタイプであれば効果的です。",
+  "cobble_contests.move_function_description.excitement_boost": "観客が興奮しているほど効果的です。",
+
+  "cobble_contests.move_function_description.any_excite": "どんな種類のコンテストでも観客を興奮させます。",
+  "cobble_contests.move_function_description.block_excite": "一時的に観客の興奮を抑えます。",
+  "cobble_contests.move_function_description.first_excitement": "最初に使用すると観客を大いに興奮させます。",
+  "cobble_contests.move_function_description.last_excitement": "最後に使用すると観客を大いに興奮させます。",
+
+  "cobble_contests.move_function_description.startle_appeals": "アピールに成功したすべてのポケモンをひどく驚かせます。",
+  "cobble_contests.move_function_description.startle_prev": "ユーザーの前に行動した最後のポケモンを驚かせます。",
+  "cobble_contests.move_function_description.badly_startle_prev": "ユーザーの前に行動した最後のポケモンをひどく驚かせます。",
+  "cobble_contests.move_function_description.startle_priors_1": "ユーザーの前に行動したすべてのポケモンを驚かせます。",
+  "cobble_contests.move_function_description.startle_priors_2": "ユーザーの前に行動したすべてのポケモンを驚かせます。",
+  "cobble_contests.move_function_description.startle_priors_3": "ユーザーの前に行動したすべてのポケモンを驚かせます。",
+  "cobble_contests.move_function_description.badly_startle_priors": "ユーザーの前に行動したすべてのポケモンをひどく驚かせます。",
+  "cobble_contests.move_function_description.badly_startle_dup_type": "同じタイプの技を使用したポケモンをひどく驚かせます。",
+  "cobble_contests.move_function_description.startle_all": "他のすべてのポケモンを驚かせます。ユーザーは次のターンに行動できません。",
+  "cobble_contests.move_function_description.startle_high_expectations": "観客が高い期待を寄せているポケモンをひどく驚かせます。",
+
+  "cobble_contests.move_function_description.startle_block": "今回のターン中、ユーザーが一度も驚かれないよう防ぎます。",
+  "cobble_contests.move_function_description.turn_startle_block": "ターンが終わるまで、ユーザーが驚かれないよう防ぎます。",
+  "cobble_contests.move_function_description.pump_up_self": "ポケモンをテンションアップさせます。緊張を和らげるのにも役立ちます。",
+  "cobble_contests.move_function_description.appeal_risk_startle": "非常に魅力的な動きですが、この動きを使用した後、ユーザーはより簡単に驚かれます。",
+  "cobble_contests.move_function_description.appeal_lose_moves": "非常に魅力的な動きですが、これを使用するとユーザーはさらにコンテストの動きを取ることができなくなります。",
+
+  "cobble_contests.move_function_description.discourage_audience": "観客が他の参加者に対して期待を少なくするようにします。",
+  "cobble_contests.move_function_description.expectant_audience": "アピールの効果が少ない場合、観客がすぐに飽きるようにします。",
+
+  "cobble_contests.move_function_description.drain_priors": "このターンで既に技を使用したポケモンのエネルギーを下げます。",
+  "cobble_contests.move_function_description.intimidate_posts": "残りのポケモンを緊張させます。",
+
+  "cobble_contests.move_function_description.copy_prev": "前のポケモンの動きがどれだけうまくいったかに影響を受けます。",
+  "cobble_contests.move_function_description.average_priors": "このターンのそれまでの全ての動きと同じくらいポケモンの魅力を見せます。",
+  "cobble_contests.move_function_description.appeal_prev": "直前に使用された動きと同じくらいポケモンの魅力を見せます。",
+
+  "cobble_contests.move_function_description.move_earlier": "次のターンにおいてユーザーを早く動かすようにします。",
+  "cobble_contests.move_function_description.scramble": "次のターンにおいてポケモンが動く順番を入れ替えます。",
+  "cobble_contests.move_function_description.move_later": "次のターンにおいてユーザーを遅く動かすようにします。"
+
+
+
 
 
 }
