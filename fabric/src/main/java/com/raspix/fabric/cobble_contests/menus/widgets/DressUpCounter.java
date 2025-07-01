@@ -16,10 +16,13 @@ public class DressUpCounter extends AbstractWidget {
     int leftPos;
     int topPos;
 
+    private int max_counter = 60;
+
     public DressUpCounter(int i, int j, int k, int l, Component component) {
         super(i, j, k, l, component);
         this.leftPos = i;
         this.topPos = j;
+        this.max_counter = 60;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class DressUpCounter extends AbstractWidget {
     }
 
     public void updateTime(int seconds){
-        int time = 60 - seconds;
+        int time = Math.max(max_counter - seconds, 0);
         this.tenstDigit = time / 10;
         this.onesDigit = time % 10;
     }
@@ -49,8 +52,9 @@ public class DressUpCounter extends AbstractWidget {
         this.onesDigit = time % 10;
     }
 
-    public void changePos(int newX, int newY){
+    public void changePos(int newX, int newY, int newMax){
         this.leftPos = newX;
         this.topPos = newY;
+        this.max_counter = newMax;
     }
 }

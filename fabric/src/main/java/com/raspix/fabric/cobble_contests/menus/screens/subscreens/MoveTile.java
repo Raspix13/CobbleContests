@@ -31,6 +31,9 @@ public class MoveTile {
     public static final float MOVE_VERTICAL_SPACING = 5F;
     public static final float MOVE_HORIZONTAL_SPACING = 13F;
 
+    public final int xOffset;
+    public final int yOffset;
+
     private final ResourceLocation moveTexture = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_move.png");
     private final ResourceLocation moveOverlayTexture = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_move_overlay.png");
     private final ResourceLocation contestTypeIcons = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_type_icons.png");
@@ -38,8 +41,10 @@ public class MoveTile {
 
     private final ResourceLocation pokeFont = ResourceLocation.parse("uniform");
 
-    private final float x;
-    private final float y;
+    private float x;
+    private float y;
+
+    protected final Minecraft minecraft;
 
     public static final HashMap<ContestType, Integer[]> typeHues = new HashMap<>(){{
         put(ContestType.Beauty, new Integer[]{0x5bc1f5, 1});//0x5bc1f5
@@ -60,8 +65,12 @@ public class MoveTile {
     private int jam;
 
     public MoveTile(float x, float y) {
-        this.x = x;
-        this.y = y;
+        //this.x = x;
+        //this.y = y;
+        this.xOffset = (int) x;
+        this.yOffset = (int) y;
+        this.minecraft = Minecraft.getInstance();
+        correctSize();
         setupButton(ContestType.Beauty, "Placeholder", "Placeholder desc", 2, 3);
     }
 
@@ -90,6 +99,8 @@ public class MoveTile {
     }
 
     public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
+
+        correctSize();
 
         this.blit(context, moveTexture, (int) this.x, (int) this.y, 0, isSelectable() && isHovered(mouseX, mouseY) ? MOVE_HEIGHT : 0, MOVE_WIDTH, MOVE_HEIGHT, 92, 48, ((hue & 0xFF0000) >> 16)/255f, ((hue & 0xFF00) >> 8)/255f, (hue & 0xFF)/255f, 1f);
         context.blit(moveOverlayTexture, (int) this.x, (int) this.y, 0, 0, MOVE_WIDTH, MOVE_HEIGHT, 92, 24);
@@ -131,6 +142,7 @@ public class MoveTile {
             //context.blit(moveTexture, mouseX, mouseY, 50, 50, 116, 49, 948, 600);
             context.pose().pushPose();
             context.pose().scale(1, 1, 1F);
+            context.pose().translate(0, 0, 1);
             blitk(
                     context.pose(),
                     moveTexture,
@@ -149,7 +161,7 @@ public class MoveTile {
                     true,
                     1f
             );
-            context.pose().popPose();
+
             Component component = Component.translatable(description).setStyle(Component.translatable("").copy().getStyle().withFont(pokeFont));
 
 
@@ -181,6 +193,8 @@ public class MoveTile {
                     1f,
                     true
             );
+
+            context.pose().popPose();
 
         }
 
@@ -233,6 +247,24 @@ public class MoveTile {
     public void playDownSound(SoundManager soundManager) {
         soundManager.play(SimpleSoundInstance.forUI(CobblemonSounds.GUI_CLICK, 1.0F));
     }
+
+    private void correctSize() {
+        //int textBoxHeight = expanded ? TEXT_BOX_HEIGHT * 2 : TEXT_BOX_HEIGHT;
+        //setRectangle(TEXT_BOX_WIDTH, textBoxHeight, getAppropriateY() + 6, getAppropriateY() + 6);
+        this.y = getAppropriateY();
+        this.x = getAppropriateX();
+    }
+
+    private int getAppropriateX() {
+        //return minecraft.getWindow().getGuiScaledWidth() - (MOVE_WIDTH + 12) + xOffset;
+        return minecraft.getWindow().getGuiScaledWidth() - minecraft.getWindow().getGuiScaledWidth() + 22 + xOffset;
+    }
+
+    private int getAppropriateY() {
+        return minecraft.getWindow().getGuiScaledHeight() - 55 - yOffset;
+    }
+
+
 }
 
 

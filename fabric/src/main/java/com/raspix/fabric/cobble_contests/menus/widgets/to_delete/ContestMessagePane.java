@@ -1,14 +1,10 @@
-package com.raspix.fabric.cobble_contests.menus.widgets;
+package com.raspix.fabric.cobble_contests.menus.widgets.to_delete;
 
-import com.cobblemon.mod.common.client.gui.battle.widgets.BattleMessagePane;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractScrollWidget;
 import net.minecraft.client.gui.components.FittingMultiLineTextWidget;
-import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
 import net.minecraft.resources.ResourceLocation;
 
 import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;

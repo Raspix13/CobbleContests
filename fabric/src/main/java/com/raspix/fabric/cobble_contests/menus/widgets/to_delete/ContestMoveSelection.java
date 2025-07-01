@@ -1,4 +1,4 @@
-package com.raspix.fabric.cobble_contests.menus.screens.subscreens;
+package com.raspix.fabric.cobble_contests.menus.widgets.to_delete;
 
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.menus.widgets.buttons.FixedImageButton;
