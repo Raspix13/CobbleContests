@@ -52,9 +52,8 @@
   "tooltip.cobble_contests.ball_swapper.tooltip.instructions2": "Use again to change the ball of a pokemon.",
   "cobble_contests.ball_swapper.same_ball": "This is the same as the current ball",
 
+  "cobble_contests.poffin_pot_instructions": "Add poffin dough to pot, fuel and 1-4 berries. Using duplicate berries will result in a foul poffin. Result stats based on berries used",
   "tooltip.cobble_contests.poffin_item.tooltip.poffin_stats": "Spicy: %1$s Dry: %2$s Sweet: %3$s Bitter: %4$s Sour: %5$s Smoothness: %6$s",
-
-  "cobble_contests.move_info.placeholder": "You should not be seeing this unless I missed a move or something.",
 
   "cobble_contests.contest_type.cool": "Cool",
   "cobble_contests.contest_type.beauty": "Beauty",
@@ -69,34 +68,40 @@
   "cobble_contests.contest_level.3": "Ultra",
   "cobble_contests.contest_level.4": "Master",
 
-  "cobble_contests.poffin_pot_instructions": "Add poffin dough to pot, fuel and 1-4 berries. Using duplicate berries will result in a foul poffin. Result stats based on berries used",
+  "cobble_contests.contest_text.fac": "Find A Contest",
   "cobble_contests.contest_text.start": "Start",
   "cobble_contests.contest_text.host": "Host",
   "cobble_contests.contest_text.join": "Join",
+  "cobble_contests.contest_text.host_lobby": "Host Lobby",
   "cobble_contests.contest_text.select_type": "Select Type",
   "cobble_contests.contest_text.pokemon_select": "Choose Pokemon",
   "cobble_contests.contest_text.select_no_pokemon": "Don't Enter Pokemon",
 
   "cobble_contests.contest_showoff.intro": "%1$s entered %2$s the %3$s",
   "cobble_contests.contest_showoff.contestant_and_poke": "%1$s & %2$s",
-  "cobble_contests.contest_showoff.start_round": "Contestants have chosen, now starting round %1$s",
   "cobble_contests.contest_showoff.move_used": "%1$s used %2$s",
+  "cobble_contests.contest_text.contest_running": "The Contest has Started",
+  "cobble_contests.contest_showoff.start_round": "Contestants have chosen, now starting round %1$s",
+  "cobble_contests.contest_showcase.reused_move": "The audience is less interested in that move a second time.",
+  "cobble_contests.contest_showcase.good_appeal_type": "That move really appealed to the audience.",
+  "cobble_contests.contest_showcase.bad_appeal_type": "That move didn't really appeal to the audience.",
 
-  "cobble_contests.contest_result.not_implemented": "This feature is not yet implemented, sorry",
+  "cobble_contests.contest_result.not_implemented": "This feature is not yet implemented, sorry. Or I missed removing this",
   "cobble_contests.contest_result.won_ranked": "%1$s Won the %2$s %3$s Contest",
   "cobble_contests.contest_result.lost_ranked": "%1$s Lost the %2$s %3$s Contest",
   "cobble_contests.contest_result.maxed_ranked": "%1$s has already beaten all %2$s Contests",
 
-  "cobble_contests.contest_text.fac": "Find A Contest",
-  "cobble_contests.contest_text.host_lobby": "Host Lobby",
-  "cobble_contests.contest_text.contest_running": "The Contest has Started",
 
 
 
 
 
+
+
+  "cobble_contests.move_function_description.default": "This move's stats has not been added yet.",
   "cobble_contests.move_function_description.quite_appealing": "Quite an appealing move.",
   "cobble_contests.move_function_description.reusable_appeal": "An appealing move that can be used repeatedly without boring the audience.",
+  "cobble_contests.move_info.placeholder": "You should not be seeing this unless I missed a move or something.",
 
   "cobble_contests.move_function_description.first_boost": "Works great if the user goes first this turn.",
   "cobble_contests.move_function_description.late_boost": "Works better the later it is used in a turn.",

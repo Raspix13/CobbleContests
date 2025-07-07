@@ -78,9 +78,12 @@ public class SBReqJoinLob implements CustomPacketPayload {
     public void recieve(MinecraftServer server, Player player) {
         System.out.println("Recieving ReqJoinLob");
 
-        Contest goalContest = ContestManager.INSTANCE.getPlayersContest(getHostId());
 
-        goalContest.addContestants(server ,(ServerPlayer) player, getId(), getPokeId());
+        ContestManager.INSTANCE.addContestantToLobby(server, (ServerPlayer) player, getHostId(), getId(), getPokeId());
+
+        //Contest goalContest = ContestManager.INSTANCE.getPlayersContest(getHostId());
+
+        //goalContest.addContestants(server ,(ServerPlayer) player, getId(), getPokeId());
 
         //ServerPlayNetworking.send((ServerPlayer) player, new CBHostListToConBoothScreen(id, tag));
     }

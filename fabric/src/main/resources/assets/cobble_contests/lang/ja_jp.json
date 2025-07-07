@@ -52,9 +52,8 @@
   "tooltip.cobble_contests.ball_swapper.tooltip.instructions2": "再度使用してポケモンのボールを変更します。",
   "cobble_contests.ball_swapper.same_ball": "これは現在のボールと同じです",
 
+  "cobble_contests.poffin_pot_instructions": "ポフィン生地を鍋に入れ、燃料とベリー1～4個を加えます。ベリーを重複して使用すると、ポフィンは不味くなります。結果の統計は使用したベリーに基づきます。",
   "tooltip.cobble_contests.poffin_item.tooltip.poffin_stats": "辛さ: %1$s、辛口: %2$s、甘口: %3$s、苦味: %4$s、酸味: %5$s、滑らかさ: %6$s",
-
-  "cobble_contests.move_info.placeholder": "申し訳ありませんが、移動効果はまだ実装されていません。",
 
   "cobble_contests.contest_type.cool": "いいね",
   "cobble_contests.contest_type.beauty": "美しさ",
@@ -69,34 +68,40 @@
   "cobble_contests.contest_level.3": "ウルトラ",
   "cobble_contests.contest_level.4": "マスター",
 
-  "cobble_contests.poffin_pot_instructions": "ポフィン生地を鍋に入れ、燃料とベリー1～4個を加えます。ベリーを重複して使用すると、ポフィンは不味くなります。結果の統計は使用したベリーに基づきます。",
+  "cobble_contests.contest_text.fac": "コンテストを見つける",
   "cobble_contests.contest_text.start": "始める",
   "cobble_contests.contest_text.host": "ホスト",
   "cobble_contests.contest_text.join": "Join",
+  "cobble_contests.contest_text.host_lobby": "ホストロビー",
   "cobble_contests.contest_text.select_type": "タイプの選択",
   "cobble_contests.contest_text.pokemon_select": "ポケモンを選ぶ",
   "cobble_contests.contest_text.select_no_pokemon": "ポケモンを入力しないでください",
 
   "cobble_contests.contest_showoff.intro": "%1$s が %3$s に %2$s 入力しました",
   "cobble_contests.contest_showoff.contestant_and_poke": "%1$s & %2$s",
-  "cobble_contests.contest_showoff.start_round": "参加者が選択しました、今ラウンド %1$s を開始します",
   "cobble_contests.contest_showoff.move_used": "%1$s が %2$s を使用しました",
+  "cobble_contests.contest_text.contest_running": "コンテストが始まりました",
+  "cobble_contests.contest_showoff.start_round": "参加者が選択しました、今ラウンド %1$s を開始します",
+  "cobble_contests.contest_showcase.reused_move": "The audience is less interested in that move a second time.",
+  "cobble_contests.contest_showcase.good_appeal_type": "That move really appealed to the audience.",
+  "cobble_contests.contest_showcase.bad_appeal_type": "That move didn't really appeal to the audience.",
 
   "cobble_contests.contest_result.not_implemented": "この機能はまだ実装されていません。",
   "cobble_contests.contest_result.won_ranked": "%1$sが%2$s %3$sコンテストで優勝しました",
   "cobble_contests.contest_result.lost_ranked": "%1$s は %2$s %3$s コンテストで負けました",
   "cobble_contests.contest_result.maxed_ranked": "%1$sはすでに%2$sコンテストすべてで優勝しています",
 
-  "cobble_contests.contest_text.fac": "コンテストを見つける",
-  "cobble_contests.contest_text.host_lobby": "ホストロビー",
-  "cobble_contests.contest_text.contest_running": "コンテストが始まりました",
 
 
 
 
 
+
+
+  "cobble_contests.move_function_description.default": "この技の統計はまだ追加されていません",
   "cobble_contests.move_function_description.quite_appealing": "かなり魅力的な動きです。",
   "cobble_contests.move_function_description.reusable_appeal": "観客を飽きさせることなく繰り返し使用できる魅力的な動きです。",
+  "cobble_contests.move_info.placeholder": "申し訳ありませんが、移動効果はまだ実装されていません。",
 
   "cobble_contests.move_function_description.first_boost": "ユーザーがこのターン最初に行動すると効果的です。",
   "cobble_contests.move_function_description.late_boost": "ターンの後半に使われるほど効果的です。",

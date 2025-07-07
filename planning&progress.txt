@@ -2,9 +2,11 @@ Planning:
 
 
 Demo TODO:
-- Fix crash that happens when no pokemon is selected by host
 - Change initial win/lose message to "get ready and use contest card"
 - Moves should choose a move if contestant does not choose one
+- Ranked/Single player win conditions
+- Multiplayer win conditions
+- Lobby and host pages should show participants
 
 
 Final TODO:
@@ -14,79 +16,38 @@ Final TODO:
     - Pokemon already out during contests should play cry animation (Contest @SendOutPokemon)
 - Check to make sure configs don't crash servers (technically for demo but finalized with feedback)
 - Contest Moves status effects
+- Ability to kick participants and leave contest while in lobby, also for host to be able to end contest?
+- Be able to change the max number of contestants in configs
 
 
 Working on Actively:
 - Multiplayer hosting and lobbies
-    - Get booth to network when opening to check for contest participation
     - Contest does not start the first time it is hit
-    - Get lobby page to update when someone joins
+    - Get lobby page to update when someone joins or contest starts
 
 
 Current Bugs & Issues for Later:
-- Crashes when player does not choose a move
-- Crashes when host (and maybe spectator) tries to not use pokemon
+- Crashes:
+    - Crashes when player does not choose a move
+    - Crashes when host (and maybe spectator) tries to not use pokemon/ selects no pokemon
+    - Crashes or errors when player in contest leaves (Contest manager update)
+- Other:
+    - Contestbooth lobby participant screens should be updated when contest starts
+    - Contest moves opposite types do not work
+    - would like it if last move used was indicated
+
 
 
 
 Progress:
 
 Things I have done:
-5/28
-- Got the contest dialogue pane working, added a few things to it
-- Some japanese translations
-- Remove card being able to open up contests when no contest is going on
 
-5/31
-- Worked on multiplayer capabilities with hosting & lobbies
-
-6/3
-- More work on multiplayer booth gui, can now have 2 players in a contest but only host can see contest ui
-- Made sure contests made by host expire after a time
-
-6/4
-- Got contest card contest view to work for non-hosts
-- fixed server speed for contests not being correct
-
-6/17
-- Implemented makeshift move data
-- Added names & description movedata for all cute & beauty moves (appeal and jam not yet done)
-- fixed concurrent list editing crash
-
-6/18
-- Added names & description movedata for all smart, cool & tough moves (appeal and jam not yet done)
-- Worked on contest showoff button gui
-
-6/19
-- Made list of move functions + descriptions (translatable)
-- Worked more on contest showoff button gui
-- Fixed showoff message pane not using cobblemon texture
-
-6/21
-- Updated move list to reference function (Some still need _1 _2 _3 corrections)
-- Made sure contest card and buttons reference functiondata
-
-6/22
-- Added move info tooltip to contest move in battle
-
-6/24
-- Message queue should now clear at end of contest
-- Should no longer be able to click move when invisible
-- Worked on networking for move usage and ui
-
-6/27
-- Fixed message clear crash on server
-- Spacing out showdown move usage in gui
-- Worked on basic move usage
-
-6/29
-- Changed counter to allow changing max value
-- Fixed move button position issue
-- Start of contestant side tabs
-
-6/30
-- Worked more on contestant side tab gui
-- Pokemon portrait now shows up
+7/7
+- Fixed time still passing when single player is paused
+- Fixed missing MoveData for moves that have not been added yet
+- Contest booth should now check if the user is in a contest and if host to show correct screen
+- Set max number of contestants for contest (should be able to change this later)
 
 7/1
 - Fixed pokemon portrait in showdown not showing when collapsed
@@ -94,4 +55,61 @@ Things I have done:
 - Showoff Contestant tabs now show player and pokemon names
 - Added missing japanese translations
 - Added color to contest messages
+- Created scheduler for contest
+- Worked on particles
 
+6/30
+- Worked more on contestant side tab gui
+- Pokemon portrait now shows up
+
+6/29
+- Changed counter to allow changing max value
+- Fixed move button position issue
+- Start of contestant side tabs
+
+6/27
+- Fixed message clear crash on server
+- Spacing out showdown move usage in gui
+- Worked on basic move usage
+
+6/24
+- Message queue should now clear at end of contest
+- Should no longer be able to click move when invisible
+- Worked on networking for move usage and ui
+
+6/22
+- Added move info tooltip to contest move in battle
+
+6/21
+- Updated move list to reference function (Some still need _1 _2 _3 corrections)
+- Made sure contest card and buttons reference functiondata
+
+6/19
+- Made list of move functions + descriptions (translatable)
+- Worked more on contest showoff button gui
+- Fixed showoff message pane not using cobblemon texture
+
+6/18
+- Added names & description movedata for all smart, cool & tough moves (appeal and jam not yet done)
+- Worked on contest showoff button gui
+
+6/17
+- Implemented makeshift move data
+- Added names & description movedata for all cute & beauty moves (appeal and jam not yet done)
+- fixed concurrent list editing crash
+
+6/4
+- Got contest card contest view to work for non-hosts
+- fixed server speed for contests not being correct
+
+6/3
+- More work on multiplayer booth gui, can now have 2 players in a contest but only host can see contest ui
+- Made sure contests made by host expire after a time
+
+5/31
+- Worked on multiplayer capabilities with hosting & lobbies
+
+5/28
+- Got the contest dialogue pane working, added a few things to it
+- Some japanese translations
+- Remove card being able to open up contests when no contest is going on

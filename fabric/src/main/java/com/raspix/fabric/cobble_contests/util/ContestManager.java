@@ -22,9 +22,9 @@ import java.util.*;
 public class ContestManager {
 
     public static ContestManager INSTANCE = new ContestManager();
-    private static List<Contest> contests;
-    private static List<Contest> activeContests;
-    private static Map<UUID, Contest> activeContestents;
+    private static List<Contest> contests; // A list of all contests
+    private static List<Contest> activeContests; // A list of all contests that are actively being run
+    private static Map<UUID, Contest> activeContestents; // A list of all hosts, contestants, and spectators
     private float tempTimer;
     //private static List<UUID> activeContestents;
     private long lastTime;
@@ -49,17 +49,16 @@ public class ContestManager {
     }
 
     public Contest getPlayersContest(UUID potential){
-        //System.out.println("Getting Contest");
-        //System.out.println("Num contestants: " + activeContestents.size());
         if(activeContestents.containsKey(potential)){
-            //System.out.println("found contest");
             return activeContestents.get(potential);
         }
-        //System.out.println("did not find contest");
         return null;
     }
 
 
+    /**
+     * When the host creates a new lobby
+     */
     public boolean AddContest(UUID hostId, int contestType, int contestTier, ItemStack reward, boolean hostParticipates, UUID pokeIdx){
         if(IsAlreadyInContest(hostId)){
             System.out.println("Already in contest");
@@ -72,8 +71,13 @@ public class ContestManager {
         return true;
     }
 
+
+    /**
+     * When the host begins the contest for the lobby
+     * @param startingContest
+     * @return
+     */
     public boolean startContest(Contest startingContest){
-        //PlayerList playerList = server.getPlayerList();
 
         if(contests.contains(startingContest)){
             Map<UUID, Contest.Contestant> contestants = startingContest.getContestants();
@@ -87,6 +91,31 @@ public class ContestManager {
         }else{
             return false;
         }
+    }
+
+    public boolean addContestantToLobby(MinecraftServer server, ServerPlayer player, UUID hostId, UUID uuid, UUID pokeIdx){
+        if(IsAlreadyInContest(uuid)){
+            return false;
+        }
+        Contest goalContest = getPlayersContest(hostId);
+        boolean wasPlayerAdded = false;
+        if(goalContest != null){
+            wasPlayerAdded = goalContest.addContestants(server , player, uuid, pokeIdx);
+            if(wasPlayerAdded){
+                activeContestents.put(uuid, goalContest);
+            }
+        }
+
+        return wasPlayerAdded;
+
+
+    }
+
+    public boolean addSpectatorToLobby(MinecraftServer server, ServerPlayer player, UUID uuid, UUID pokeIdx){
+        //Contest goalContest = ContestManager.INSTANCE.getPlayersContest(getHostId());
+
+        //goalContest.addContestants(server ,(ServerPlayer) player, getId(), getPokeId());
+        return false;
     }
 
 
@@ -117,7 +146,7 @@ public class ContestManager {
     public void update(MinecraftServer server){
         //tempTimer += Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
         //System.out.println(tempTimer);
-        float timeChange = (System.currentTimeMillis()-lastTime)/1000.0f;//server.getCurrentSmoothedTickTime()/1000f;//Minecraft.getInstance().getTimer().getRealtimeDeltaTicks();
+        float timeChange = 1f;//(System.currentTimeMillis()-lastTime)/1000.0f;//server.getCurrentSmoothedTickTime()/1000f;//Minecraft.getInstance().getTimer().getRealtimeDeltaTicks();
         lastTime = System.currentTimeMillis();
         //System.out.println("Time Change: " + timeChange);
         if(!activeContests.isEmpty()){

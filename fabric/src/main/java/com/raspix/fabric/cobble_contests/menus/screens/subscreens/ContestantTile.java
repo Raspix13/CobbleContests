@@ -180,7 +180,6 @@ public class ContestantTile {
 
 
         Species species = pokemon.getSpecies();
-        System.out.println("Species found as " + species.getName());
         drawPosablePortrait(species.getResourceIdentifier(), matrixStack, 13F, species.getForm(pokemon.getState().getCurrentAspects()).getBaseScale(), false, pokemon.getState(), PokemonModelRepository.INSTANCE, delta,
                 0F,
                 0F,

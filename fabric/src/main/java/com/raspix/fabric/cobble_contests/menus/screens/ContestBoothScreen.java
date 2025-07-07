@@ -8,8 +8,10 @@ import com.raspix.fabric.cobble_contests.menus.ContestBoothMenu;
 import com.raspix.fabric.cobble_contests.menus.widgets.buttons.FixedImageButton;
 import com.raspix.fabric.cobble_contests.menus.widgets.HostedContestPanel;
 import com.raspix.fabric.cobble_contests.menus.widgets.buttons.PokemonContestBoothSlotButton;
+import com.raspix.fabric.cobble_contests.network.SB.SBCheckContestParticipation;
 import com.raspix.fabric.cobble_contests.network.SB.SBConBoothScrReqHostList;
 import com.raspix.fabric.cobble_contests.network.SB.SBReqJoinLob;
+import com.raspix.fabric.cobble_contests.network.SB.SBUpdateContestInfo;
 import com.raspix.fabric.cobble_contests.util.Contest;
 import com.raspix.fabric.cobble_contests.util.data.ContestType;
 import io.netty.buffer.Unpooled;
@@ -114,27 +116,30 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
 
         createContestPanes();
 
-        Contest contest = contestInfoMenu.getJoinedContest(playerID);
-        if(contest != null){
-            if(contest.getRound() == Contest.ContestPhase.IDLE){
+        ClientPlayNetworking.send(new SBCheckContestParticipation(playerID));
 
-                if(contestInfoMenu.isHostingContest(playerID)){
+
+    }
+
+    public void setScreenForContestState(boolean isInContest, boolean isHost, Contest.ContestPhase contestRound){
+        //Contest contest = contestInfoMenu.getJoinedContest(playerID);
+        System.out.println("Is in contest: " + isInContest + " Is Host: " + isHost + " Round: " + contestRound.toString());
+        if(isInContest){
+            if(contestRound == Contest.ContestPhase.IDLE){
+
+                if(isHost){
                     contestRunningType = 1;
                 }else{
                     contestRunningType = 2;
                 }
                 setPageIndex(LOBBY_PAGE);
             }else{
-                //System.out.println("Round was not idle");
                 setPageIndex(IN_RUNNING_CONTEST);
             }
 
         }else{
-            //System.out.println("Contest Was null");
             setPageIndex(STARTING_PAGE);
         }
-        //System.out.println("Type is " + contestRunningType);
-
     }
 
     public void requestPageInfo(){

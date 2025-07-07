@@ -6,6 +6,8 @@ import com.raspix.fabric.cobble_contests.util.Contest;
 import com.raspix.fabric.cobble_contests.util.data.ContestType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormatting;
+import net.minecraft.server.MinecraftServer;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ public class ContestMoves {
 
     public Map<String, MoveDataOld> contestMoves;
 
+    public MoveData defaultMoveData = new MoveData("default", ContestType.None, "q");
 
     public Map<String, MoveData> allMoves = new HashMap<>() {{
 
@@ -669,44 +672,45 @@ public class ContestMoves {
     }};
 
     public Map<String, FunctionData> ALL_FUNCTION_DATA = new HashMap<>() {{
-        put("quite_appealing", new FunctionData("quite_appealing", 4, 0,"Quite an appealing move.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("reusable_appeal", new FunctionData("reusable_appeal", 3, 0, "An appealing move that can be used repeatedly without boring the audience.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("first_boost", new FunctionData("first_boost", 2, 0, "Works great if the user goes first this turn.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("late_boost", new FunctionData("late_boost", 1, 0, "Works better the later it is used in a turn.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("last_boost", new FunctionData("last_boost", 2, 0, "Works great if the user goes last this turn.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("placement_boost", new FunctionData("placement_boost", 1, 0, "Effectiveness varies depending on when it is used.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("pumped_boost", new FunctionData("pumped_boost", 1, 0, "Works well if the user is pumped up.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("dup_type_boost", new FunctionData("dup_type_boost", 2, 0, "Works well if it is the same type as the move used by the last Pokémon.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("excitement_boost", new FunctionData("excitement_boost", 1, 0, "Works better the more the crowd is excited.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("any_excite", new FunctionData("any_excite", 2, 0, "Excites the audience in any kind of contest.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("block_excite", new FunctionData("block_excite", 3, 0, "Temporarily stops the crowd from growing excited.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("first_excitement", new FunctionData("first_excitement", 3, 0, "Excites the audience a lot if used first.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("last_excitement", new FunctionData("last_excitement", 3, 0, "Excites the audience a lot if used last.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("startle_appeals", new FunctionData("startle_appeals", 2, 1, "Badly startles all Pokémon that successfully showed their appeal.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("startle_prev", new FunctionData("startle_prev", 2, 3, "Startles the last Pokémon to act before the user.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("badly_startle_prev", new FunctionData("badly_startle_prev", 2, 2, "Badly startles the last Pokémon to act before the user.", (data, contest, contestant) -> { NothingExtra(contest, contestant); })); // TODO figure out the values of this one
-        put("startle_priors_1", new FunctionData("startle_priors_1", 1, 3, "Startles all of the Pokémon to act before the user.", (data, contest, contestant) -> { NothingExtra(contest, contestant); })); // TODO figure out the values of this one
-        put("startle_priors_2", new FunctionData("startle_priors_2", 2, 2, "Startles all of the Pokémon to act before the user.", (data, contest, contestant) -> { NothingExtra(contest, contestant); })); // TODO figure out the values of this one
-        put("startle_priors_3", new FunctionData("startle_priors_3", 2, 3, "Startles all of the Pokémon to act before the user.", (data, contest, contestant) -> { NothingExtra(contest, contestant); })); // TODO figure out the values of this one
-        put("badly_startle_priors", new FunctionData("badly_startle_priors", 2, 3, "Badly startles all of the Pokémon to act before the user.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("badly_startle_dup_type", new FunctionData("badly_startle_dup_type", 2, 1, "Badly startles Pokémon that used a move of the same type.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("startle_all", new FunctionData("startle_all", 4, 4, "Startles all other Pokémon. User cannot act in the next turn.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("startle_high_expectations", new FunctionData("startle_high_expectations", 4, 0, "Badly startles Pokémon that the audience has high expectations of.", (data, contest, contestant) -> { NothingExtra(contest, contestant); })); // TODO figure out the values of this one
-        put("startle_block", new FunctionData("startle_block", 2, 0, "Prevents the user from being startled one time this turn.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("turn_startle_block", new FunctionData("turn_startle_block", 4, 0, "Prevents the user from being startled until the turn ends.", (data, contest, contestant) -> { NothingExtra(contest, contestant); })); // TODO figure out the values of this one
-        put("pump_up_self", new FunctionData("pump_up_self", 1, 0, "Gets the Pokémon pumped up. Helps prevent nervousness, too.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("appeal_risk_startle", new FunctionData("appeal_risk_startle", 6, 0, "A very appealing move, but after using this move, the user is more easily startled.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("appeal_lose_moves", new FunctionData("appeal_lose_moves", 7, 0, "A move of huge appeal, but using it prevents the user from taking further contest moves.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("discourage_audience", new FunctionData("discourage_audience", 3, 0, "Makes audience expect little of other contestants.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("expectant_audience", new FunctionData("expectant_audience", 4, 0, "Makes the audience quickly grow bored when an appeal move has little effect.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("drain_priors", new FunctionData("drain_priors", 3, 0, "Brings down the energy of any Pokémon that have already used a move this turn.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("intimidate_posts", new FunctionData("intimidate_posts", 2, 0, "Makes the remaining Pokémon nervous.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("copy_prev", new FunctionData("copy_prev", 3, 0, "Affected by how well the previous Pokémon's move went.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("average_priors", new FunctionData("average_priors", 1, 0, "Shows off the Pokémon's appeal about as well as all the moves before it this turn.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("appeal_prev", new FunctionData("appeal_prev", 1, 0, "Shows off the Pokémon's appeal about as well as the move used just before it.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("move_earlier", new FunctionData("move_earlier", 3, 0, "Causes the user to move earlier on the next turn.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("scramble", new FunctionData("scramble", 3, 0, "Scrambles the order in which Pokémon will move on the next turn.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
-        put("move_later", new FunctionData("move_later", 3, 0, "Causes the user to move later on the next turn.", (data, contest, contestant) -> { NothingExtra(contest, contestant); }));
+        put("default", new FunctionData("default", 2, 0,"This move has not been added.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("quite_appealing", new FunctionData("quite_appealing", 4, 0,"Quite an appealing move.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("reusable_appeal", new FunctionData("reusable_appeal", 3, 0, "An appealing move that can be used repeatedly without boring the audience.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("first_boost", new FunctionData("first_boost", 2, 0, "Works great if the user goes first this turn.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("late_boost", new FunctionData("late_boost", 1, 0, "Works better the later it is used in a turn.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("last_boost", new FunctionData("last_boost", 2, 0, "Works great if the user goes last this turn.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("placement_boost", new FunctionData("placement_boost", 1, 0, "Effectiveness varies depending on when it is used.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("pumped_boost", new FunctionData("pumped_boost", 1, 0, "Works well if the user is pumped up.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("dup_type_boost", new FunctionData("dup_type_boost", 2, 0, "Works well if it is the same type as the move used by the last Pokémon.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("excitement_boost", new FunctionData("excitement_boost", 1, 0, "Works better the more the crowd is excited.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("any_excite", new FunctionData("any_excite", 2, 0, "Excites the audience in any kind of contest.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("block_excite", new FunctionData("block_excite", 3, 0, "Temporarily stops the crowd from growing excited.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("first_excitement", new FunctionData("first_excitement", 3, 0, "Excites the audience a lot if used first.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("last_excitement", new FunctionData("last_excitement", 3, 0, "Excites the audience a lot if used last.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("startle_appeals", new FunctionData("startle_appeals", 2, 1, "Badly startles all Pokémon that successfully showed their appeal.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("startle_prev", new FunctionData("startle_prev", 2, 3, "Startles the last Pokémon to act before the user.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("badly_startle_prev", new FunctionData("badly_startle_prev", 2, 2, "Badly startles the last Pokémon to act before the user.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); })); // TODO figure out the values of this one
+        put("startle_priors_1", new FunctionData("startle_priors_1", 1, 3, "Startles all of the Pokémon to act before the user.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); })); // TODO figure out the values of this one
+        put("startle_priors_2", new FunctionData("startle_priors_2", 2, 2, "Startles all of the Pokémon to act before the user.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); })); // TODO figure out the values of this one
+        put("startle_priors_3", new FunctionData("startle_priors_3", 2, 3, "Startles all of the Pokémon to act before the user.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); })); // TODO figure out the values of this one
+        put("badly_startle_priors", new FunctionData("badly_startle_priors", 2, 3, "Badly startles all of the Pokémon to act before the user.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("badly_startle_dup_type", new FunctionData("badly_startle_dup_type", 2, 1, "Badly startles Pokémon that used a move of the same type.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("startle_all", new FunctionData("startle_all", 4, 4, "Startles all other Pokémon. User cannot act in the next turn.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("startle_high_expectations", new FunctionData("startle_high_expectations", 4, 0, "Badly startles Pokémon that the audience has high expectations of.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); })); // TODO figure out the values of this one
+        put("startle_block", new FunctionData("startle_block", 2, 0, "Prevents the user from being startled one time this turn.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("turn_startle_block", new FunctionData("turn_startle_block", 4, 0, "Prevents the user from being startled until the turn ends.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); })); // TODO figure out the values of this one
+        put("pump_up_self", new FunctionData("pump_up_self", 1, 0, "Gets the Pokémon pumped up. Helps prevent nervousness, too.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("appeal_risk_startle", new FunctionData("appeal_risk_startle", 6, 0, "A very appealing move, but after using this move, the user is more easily startled.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("appeal_lose_moves", new FunctionData("appeal_lose_moves", 7, 0, "A move of huge appeal, but using it prevents the user from taking further contest moves.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("discourage_audience", new FunctionData("discourage_audience", 3, 0, "Makes audience expect little of other contestants.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("expectant_audience", new FunctionData("expectant_audience", 4, 0, "Makes the audience quickly grow bored when an appeal move has little effect.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("drain_priors", new FunctionData("drain_priors", 3, 0, "Brings down the energy of any Pokémon that have already used a move this turn.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("intimidate_posts", new FunctionData("intimidate_posts", 2, 0, "Makes the remaining Pokémon nervous.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("copy_prev", new FunctionData("copy_prev", 3, 0, "Affected by how well the previous Pokémon's move went.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("average_priors", new FunctionData("average_priors", 1, 0, "Shows off the Pokémon's appeal about as well as all the moves before it this turn.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("appeal_prev", new FunctionData("appeal_prev", 1, 0, "Shows off the Pokémon's appeal about as well as the move used just before it.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("move_earlier", new FunctionData("move_earlier", 3, 0, "Causes the user to move earlier on the next turn.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("scramble", new FunctionData("scramble", 3, 0, "Scrambles the order in which Pokémon will move on the next turn.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
+        put("move_later", new FunctionData("move_later", 3, 0, "Causes the user to move later on the next turn.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
 
     }};
 
@@ -774,8 +778,8 @@ public class ContestMoves {
             return description;
         }
 
-        public void onUse(Contest contest, Contest.Contestant contestant) {
-            this.onUse.onUse(this, contest, contestant);
+        public void onUse(MinecraftServer server, Contest contest, Contest.Contestant contestant) {
+            this.onUse.onUse(this, server, contest, contestant);
         }
 
     }
@@ -858,13 +862,17 @@ public class ContestMoves {
 
 
     public MoveData getMoveData(String moveName){
-        return allMoves.get(moveName);
+        MoveData data = allMoves.get(moveName);
+        if(data == null){
+            data = defaultMoveData;
+        }
+        return data;
     }
 
 
     //@Environment(EnvType.SERVER)
     public interface OnUse {
-        void onUse(FunctionData functionData, Contest contest, Contest.Contestant contestant);
+        void onUse(FunctionData functionData, MinecraftServer server, Contest contest, Contest.Contestant contestant);
     }
 
     private static final HashMap<ContestType, List<ContestType>> oppositeType = new HashMap<>(){{
@@ -877,8 +885,9 @@ public class ContestMoves {
     }};
 
 
-    public void NothingExtra(Contest contest, Contest.Contestant contestant){
+    public void NothingExtra(MinecraftServer server, Contest contest, Contest.Contestant contestant){
         String move = contestant.getCurrentMove();
+        String lastMove = contestant.getLastMove();
 
         ContestMoves.MoveData moveData = ContestMoves.instance.getMoveData(move);
         ContestMoves.FunctionData functionData = ContestMoves.instance.ALL_FUNCTION_DATA.get(moveData.getFunctionType());
@@ -888,11 +897,27 @@ public class ContestMoves {
         int typeMod = 0;
         if(type.equals(moveData.getType())){
             typeMod = 1;
-        }else if(type.equals(oppositeType.get(type).getFirst()) || type.equals(oppositeType.get(type).get(1))){
+        }else if(type.equals(oppositeType.get(type).get(0)) || type.equals(oppositeType.get(type).get(1))){ // TODO not working
             typeMod = -1;
         }
 
-        contestant.setTurnHearts(functionData.getAppeal() + typeMod);
+        int repMove = 0;
+        if(move.equals(lastMove)){
+            repMove = -1;
+        }
+
+
+        contestant.setTurnHearts(functionData.getAppeal() + typeMod + repMove);
+
+        if(repMove == -1){
+            contest.scheduleAction(() -> {contest.addContestantMessage(server, ChatFormatting.RED, "cobble_contests.contest_showcase.reused_move");}, 1000);
+        }
+        
+        if(typeMod == -1){
+            contest.scheduleAction(() -> contest.addContestantMessage(server, ChatFormatting.RED, "cobble_contests.contest_showcase.bad_appeal_type"), 1500);
+        }else if(typeMod == 1){
+            contest.scheduleAction(() -> contest.addContestantMessage(server, ChatFormatting.AQUA, "cobble_contests.contest_showcase.good_appeal_type"), 1500);
+        }
 
     }
 
