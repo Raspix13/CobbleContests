@@ -4,14 +4,10 @@ import com.cobblemon.mod.common.api.storage.party.PlayerPartyStore;
 //import com.raspix.fabric.cobble_contests.menus.PlayerContestInfoMenu;
 //import com.raspix.fabric.cobble_contests.blocks.entity.PoffinPotBlockEntity;
 //import com.raspix.fabric.cobble_contests.menus.PlayerContestInfoMenu;
-import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
-import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormEntityParticlePacket;
-import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.menus.ContestMenu;
 import com.raspix.fabric.cobble_contests.menus.PlayerConditionCardMenu;
 import com.raspix.fabric.cobble_contests.util.ContestManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -21,10 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-
-import java.util.Arrays;
-
-import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 
 public class ContestWallet extends Item {
     public ContestWallet(Properties arg) {
@@ -37,10 +29,10 @@ public class ContestWallet extends Item {
         if(!pLevel.isClientSide()){
             //NetworkHooks.openScreen((ServerPlayer) pPlayer, getMenuProvider(pPlayer));
             if(ContestManager.INSTANCE.IsAlreadyInContest(pPlayer.getUUID()) && !pPlayer.isShiftKeyDown()){
-                pPlayer.openMenu(getMenuProvider2(pPlayer));
+                pPlayer.openMenu(getMenuProviderContest(pPlayer));
             }else{
                 //if(!pPlayer.isShiftKeyDown()){
-                pPlayer.openMenu(getMenuProvider(pPlayer));
+                pPlayer.openMenu(getMenuProviderWallet(pPlayer));
                 //}else {
                     //pPlayer.openMenu(getMenuProvider2(pPlayer));
                 //}
@@ -61,12 +53,12 @@ public class ContestWallet extends Item {
 
 
 
-    public MenuProvider getMenuProvider(Player player1) {
+    public MenuProvider getMenuProviderWallet(Player player1) {
         PlayerPartyStore playerPartyStore = null;
         return new SimpleMenuProvider((containerId, playerInventory, player) -> new PlayerConditionCardMenu(containerId, playerInventory), this.getDisplayName()); //
     }
 
-    public MenuProvider getMenuProvider2(Player player1) {
+    public MenuProvider getMenuProviderContest(Player player1) {
         PlayerPartyStore playerPartyStore = null;
         return new SimpleMenuProvider((containerId, playerInventory, player) -> new ContestMenu(containerId, playerInventory), this.getDisplayName()); //
     }

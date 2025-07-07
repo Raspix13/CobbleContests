@@ -43,8 +43,6 @@ public class NetworkablePokemonData {
     }
 
     public Species getSpecies() {
-        System.out.println("TESTING SPECIES: " + asIdentifierDefaultingNamespace(properties.getSpecies()));
-        //return PokemonSpecies.INSTANCE.getByIdentifier(asIdentifierDefaultingNamespace(properties.getSpecies()));
         return PokemonSpecies.INSTANCE.getByName(properties.getSpecies());
     }
 

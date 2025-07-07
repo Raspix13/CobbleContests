@@ -47,6 +47,7 @@ public class Contest {
     private UUID host;
     private int contestType; // Cool, Beauty, Cute, Clever, Tough
     private int contestTier; // "Normal", "Super", "Hyper", "Ultra", "Master" Only used for ranked matches
+    private ScheduledActionManager scheduledActionManager;
     private ItemStack reward;
     private Map<UUID, Contestant> contestants = new HashMap<>();
     private ArrayList<UUID> contestantsOrdered;
@@ -67,6 +68,8 @@ public class Contest {
     private static int SHOWCASE_PER_CONTESTANT = 5; // The time for each contestant to showcase their moves
 
     private static int NUM_SHOWCASE_ROUNDS = 2;
+
+    private static int MAX_CONTESTANTS = 4;
 
     private static int[][] INTRO_HEARTS = new int[][]{ // Max 8 hearts
             {0, 11, 21, 31, 41, 51, 61, 71, 81}, // Normal
@@ -97,7 +100,7 @@ public class Contest {
      *      -time for all out
      */
 
-    public Contest(UUID hostId, int contestType, int contestTier, ItemStack reward){
+    /**public Contest(UUID hostId, int contestType, int contestTier, ItemStack reward){
         this.host = hostId;
         this.contestType = contestType;
         this.contestTier = contestTier;
@@ -105,7 +108,7 @@ public class Contest {
         this.contestants = new HashMap<>();
         this.round = ContestPhase.WAITING;
         this.roundReady = false;
-    }
+    }*/
 
     public Contest(UUID hostId, int contestType, int contestTier, ItemStack reward, boolean hostParticipate, UUID pokeIdx){
         this.host = hostId;
@@ -115,6 +118,7 @@ public class Contest {
         this.contestants = new HashMap<>();
         this.round = ContestPhase.IDLE;
         this.contestantIdx = 0;
+        this.scheduledActionManager = new ScheduledActionManager();
         addContestants(hostId, pokeIdx);
         //StartContest();
     }
@@ -198,6 +202,10 @@ public class Contest {
 
         public String getCurrentMove(){
             return currentMove;
+        }
+
+        public String getLastMove(){
+            return lastMove;
         }
 
         public boolean isMoveChosen(){
@@ -385,7 +393,7 @@ public class Contest {
         ContestMoves.MoveData moveData = ContestMoves.instance.getMoveData(contestant.currentMove);
         ContestMoves.FunctionData functionData = ContestMoves.instance.ALL_FUNCTION_DATA.get(moveData.getFunctionType());
 
-        functionData.onUse(this, contestant);
+        functionData.onUse(server,this, contestant);
 
         sendEveryoneContestants(server);
 
@@ -457,8 +465,11 @@ public class Contest {
     public void sendPlayerContestants(MinecraftServer server, ServerPlayer serverPlayer){
         CompoundTag tag = generateContestantDataTag(server);
 
-        if(serverPlayer != null){
-            ServerPlayNetworking.send(serverPlayer, new CBSendContestantStatus(serverPlayer.getUUID(), tag.copy()));
+        if(!round.equals(ContestPhase.IDLE)) {
+
+            if (serverPlayer != null) {
+                ServerPlayNetworking.send(serverPlayer, new CBSendContestantStatus(serverPlayer.getUUID(), tag.copy()));
+            }
         }
 
     }
@@ -512,6 +523,7 @@ public class Contest {
     public void update(float timeChange, MinecraftServer server) {
 
 
+        scheduledActionManager.update();
 
 
         if(round == ContestPhase.WAITING && timer == 0f){
@@ -520,7 +532,7 @@ public class Contest {
         //System.out.println("Contest Time: " + timer);
 
         if(!(round == ContestPhase.ENDING)){
-            timer += timeChange * 20;//Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
+            timer += timeChange;// * TICKS_PER_SECOND;//Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
         }
 
 
@@ -649,9 +661,14 @@ public class Contest {
 
     }
 
-    private void reorderContestants(){
+    public void scheduleAction(Runnable action, long timeTil){
+        scheduledActionManager.scheduleAction(action, timeTil);
+    }
+
+    public void reorderContestants(){
 
     }
+
 
     private void sendOutPokemon(MinecraftServer server, int contestantIndex){
         PlayerList playerList = server.getPlayerList();
@@ -680,7 +697,7 @@ public class Contest {
 
             PokemonEntity pokeEnt = poke.getEntity();
             //ServerPlayNetworking.send(play, new CBSendPlayersParticles(play.getId(), "rainbow", pokeEnt.position().toVector3f()));
-            new SpawnSnowstormParticlePacket(cobblemonResource("rainbow"), pokeEnt.position())
+            new SpawnSnowstormParticlePacket(cobblemonResource("snow_swirl"), pokeEnt.position())
                     .sendToPlayersAround(pokeEnt.getX(), pokeEnt.getY(), pokeEnt.getZ(), 64.0, pokeEnt.level().dimension(), serverPlayer -> {
                         return false;
                     });
@@ -750,10 +767,15 @@ public class Contest {
         contestants.put(uuid, new Contestant(uuid, pokeIdx));
     }
 
-    public void addContestants(MinecraftServer server, ServerPlayer player, UUID uuid, UUID pokeIdx){
+    public boolean addContestants(MinecraftServer server, ServerPlayer player, UUID uuid, UUID pokeIdx){
+        if(contestants.size() >= MAX_CONTESTANTS){
+            System.out.println("too many contestants already");
+            return false;
+        }
         contestants.put(uuid, new Contestant(uuid, pokeIdx));
         ServerPlayNetworking.send((ServerPlayer) player, new CBLobRetReq(uuid));
         updateAllContestantLobbies(server);
+        return true;
     }
 
     public void removeContestants(MinecraftServer server, ServerPlayer player, UUID uuid){

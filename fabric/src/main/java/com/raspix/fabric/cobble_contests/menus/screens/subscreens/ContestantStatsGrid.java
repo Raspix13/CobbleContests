@@ -63,7 +63,7 @@ public class ContestantStatsGrid extends ParentWidget {
     private void initializeTiles(int numTiles){
         //tiles = new ArrayList<>();
         for (int i = 0; i < numTiles; i++){
-            int finalHeight = (int) (i * (MOVE_HEIGHT + MOVE_VERTICAL_SPACING) + MOVE_HEIGHT);
+            int finalHeight = (int) ((i * (MOVE_HEIGHT + MOVE_VERTICAL_SPACING)));
             tiles.add(new ContestantTile(0, finalHeight));
             tiles.get(i).setupButton("Owner_name", "Pokemon_name", null);
         }
