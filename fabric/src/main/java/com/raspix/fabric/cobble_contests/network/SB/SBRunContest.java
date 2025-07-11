@@ -1,7 +1,12 @@
 package com.raspix.fabric.cobble_contests.network.SB;
 
+import com.cobblemon.mod.common.Cobblemon;
+import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
 import com.raspix.fabric.cobble_contests.network.MessagesInit;
+import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
+import com.raspix.fabric.cobble_contests.util.ContestManager;
+import com.raspix.fabric.cobble_contests.util.data.ContestLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -109,12 +114,23 @@ public class SBRunContest implements CustomPacketPayload {
         BlockPos pos = getPos();
         int contestType = getContestType();
         int contestLevel = getContestLevel();
+
+        if(contestLevel == ContestLevel.None.getIntValue()){
+            Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty((ServerPlayer) player).get(index);
+            CompoundTag ribbonTag = poke.getPersistentData().getCompound("Ribbons");
+            contestLevel = getNextContestLevel(ribbonTag, contestType);
+        }
+
         //BlockEntity be = level.getBlockEntity(pos);
         BlockEntity be  = level.getChunkAt(pos).getBlockEntity(pos, LevelChunk.EntityCreationType.IMMEDIATE); //not sure why getBlockEntity does not work
         //Block blockie = level.getBlockState(pos).getBlock();
         if(be instanceof ContestBlockEntity cbe){
             System.out.println("Should be right entity");
-            cbe.runStatAssesment(id, index, contestType, contestLevel, (ServerPlayer) player);
+            ContestManager.INSTANCE.AddContest(id, contestType, contestLevel, null, true, index);
+            if(contestLevel != ContestLevel.Multiplayer.getIntValue()){
+                ContestManager.INSTANCE.startContest(ContestManager.INSTANCE.getPlayersContest(id));
+            }
+            //cbe.runStatAssesment(id, index, contestType, contestLevel, (ServerPlayer) player);
         }else {
             System.out.println("Nope, wrong entity");
             /**System.out.println(player);
@@ -135,6 +151,11 @@ public class SBRunContest implements CustomPacketPayload {
             BlockEntity be2 = level.getChunkAt(pos).getBlockEntity(pos, LevelChunk.EntityCreationType.IMMEDIATE);
             System.out.println("Be2 is: " + be2);*/
         }
+    }
+
+    private int getNextContestLevel(CompoundTag ribbonTag, int contestType) {
+        Ribbons ribbons = Ribbons.getFromTag(ribbonTag);
+        return ribbons.getNextContestLevel(contestType);
     }
 
 

@@ -72,6 +72,7 @@ public class SBCheckContestParticipation implements CustomPacketPayload {
         phase.toTag(tag, "phase");
 
 
+
         if (player != null && player instanceof ServerPlayer serverPlayer) {
             ServerPlayNetworking.send(serverPlayer, new CBReplyContestParticipation(id, tag));
         }
