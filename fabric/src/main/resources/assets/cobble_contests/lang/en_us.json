@@ -77,6 +77,7 @@
   "cobble_contests.contest_text.pokemon_select": "Choose Pokemon",
   "cobble_contests.contest_text.select_no_pokemon": "Don't Enter Pokemon",
 
+  "cobble_contests.contest_showoff.start": "The %1$s %2$s Contest is starting! Contestants should get into position",
   "cobble_contests.contest_showoff.intro": "%1$s entered %2$s the %3$s",
   "cobble_contests.contest_showoff.contestant_and_poke": "%1$s & %2$s",
   "cobble_contests.contest_showoff.move_used": "%1$s used %2$s",
@@ -85,6 +86,7 @@
   "cobble_contests.contest_showcase.reused_move": "The audience is less interested in that move a second time.",
   "cobble_contests.contest_showcase.good_appeal_type": "That move really appealed to the audience.",
   "cobble_contests.contest_showcase.bad_appeal_type": "That move didn't really appeal to the audience.",
+  "cobble_contests.contest_showoff.num_hearts": "%1$s earned %2$s hearts!",
 
   "cobble_contests.contest_result.not_implemented": "This feature is not yet implemented, sorry. Or I missed removing this",
   "cobble_contests.contest_result.won_ranked": "%1$s Won the %2$s %3$s Contest",

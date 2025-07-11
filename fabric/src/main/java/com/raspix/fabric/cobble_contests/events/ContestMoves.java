@@ -894,13 +894,16 @@ public class ContestMoves {
 
         ContestType type = contest.getContestType();
 
+        ContestType moveType = moveData.getType();
+
         int typeMod = 0;
-        if(type.equals(moveData.getType())){
+        if(type.equals(moveType)){
             typeMod = 1;
-        }else if(type.equals(oppositeType.get(type).get(0)) || type.equals(oppositeType.get(type).get(1))){ // TODO not working
+        }else if(moveType.equals(oppositeType.get(type).getFirst()) || moveType.equals(oppositeType.get(type).get(1))){
             typeMod = -1;
         }
 
+        //System.out.println("This contest type is " + type.name() + " with opposites of " + oppositeType.get(type).getFirst().name() + " and " + oppositeType.get(type).get(1).name() + " and the move type was " + moveType.name());
         int repMove = 0;
         if(move.equals(lastMove)){
             repMove = -1;

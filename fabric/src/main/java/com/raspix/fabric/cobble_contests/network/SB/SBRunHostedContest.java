@@ -46,13 +46,6 @@ public class SBRunHostedContest implements CustomPacketPayload{
         this(buf.readUUID());
     }
 
-    public void encode(FriendlyByteBuf buf){
-        buf.writeUUID(this.id);
-    }
-
-    public static SBRunContest decode(FriendlyByteBuf buf) {
-        return new SBRunContest(buf.readUUID(), buf.readUUID(), buf.readBlockPos(), buf.readInt(), buf.readInt());
-    }
 
 
     public void recieve(MinecraftServer server, Player player) {

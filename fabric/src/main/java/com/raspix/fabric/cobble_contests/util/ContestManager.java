@@ -23,6 +23,7 @@ public class ContestManager {
 
     public static ContestManager INSTANCE = new ContestManager();
     private static List<Contest> contests; // A list of all contests
+    private static List<Contest> publicContests;
     private static List<Contest> activeContests; // A list of all contests that are actively being run
     private static Map<UUID, Contest> activeContestents; // A list of all hosts, contestants, and spectators
     private float tempTimer;

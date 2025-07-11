@@ -3,10 +3,11 @@ Planning:
 
 Demo TODO:
 - Change initial win/lose message to "get ready and use contest card"
-- Moves should choose a move if contestant does not choose one
 - Ranked/Single player win conditions
 - Multiplayer win conditions
 - Lobby and host pages should show participants
+- would like it if last move used was indicated
+- Fix up booth ui
 
 
 Final TODO:
@@ -28,13 +29,11 @@ Working on Actively:
 
 Current Bugs & Issues for Later:
 - Crashes:
-    - Crashes when player does not choose a move
     - Crashes when host (and maybe spectator) tries to not use pokemon/ selects no pokemon
     - Crashes or errors when player in contest leaves (Contest manager update)
 - Other:
     - Contestbooth lobby participant screens should be updated when contest starts
-    - Contest moves opposite types do not work
-    - would like it if last move used was indicated
+
 
 
 
@@ -48,6 +47,11 @@ Things I have done:
 - Fixed missing MoveData for moves that have not been added yet
 - Contest booth should now check if the user is in a contest and if host to show correct screen
 - Set max number of contestants for contest (should be able to change this later)
+- A random move will now be chosen if the player does not choose in time
+- Fixed Contest move opposite types not working
+- Removed old stat assesment to use new one
+- Should now be able to run ranked contests again (will need to rework it later)
+- Contests now correctly accumulate hearts from turns
 
 7/1
 - Fixed pokemon portrait in showdown not showing when collapsed

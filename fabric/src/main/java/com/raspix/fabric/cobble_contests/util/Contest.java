@@ -1,6 +1,8 @@
 package com.raspix.fabric.cobble_contests.util;
 
 import com.cobblemon.mod.common.Cobblemon;
+import com.cobblemon.mod.common.api.moves.Move;
+import com.cobblemon.mod.common.api.moves.MoveSet;
 import com.cobblemon.mod.common.api.reactive.SimpleObservable;
 import com.cobblemon.mod.common.client.battle.ClientBattleMessageQueue;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
@@ -14,6 +16,7 @@ import com.raspix.fabric.cobble_contests.network.CB.CBUpdateContestInfo;
 import com.raspix.fabric.cobble_contests.network.NetworkablePokemonData;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
+import com.raspix.fabric.cobble_contests.util.data.ContestLevel;
 import com.raspix.fabric.cobble_contests.util.data.ContestType;
 import kotlin.Unit;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -28,6 +31,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import com.cobblemon.mod.common.api.pokemon.PokemonPropertyExtractor;
@@ -83,14 +87,14 @@ public class Contest {
     boolean roundReady; // are all moves chosen
     boolean runningRound;
 
-    private static final HashMap<ContestType, List<ContestType>> oppositeType = new HashMap<>(){{
+    /**private static final HashMap<ContestType, List<ContestType>> oppositeType = new HashMap<>(){{
         put(ContestType.Beauty, Arrays.asList(ContestType.Tough, ContestType.Smart));
         put(ContestType.Cool, Arrays.asList(ContestType.Cute, ContestType.Smart));
         put(ContestType.Smart, Arrays.asList(ContestType.Beauty, ContestType.Cool));
         put(ContestType.Cute, Arrays.asList(ContestType.Cool, ContestType.Tough));
         put(ContestType.Tough, Arrays.asList(ContestType.Cute, ContestType.Beauty));
         put(ContestType.None, Arrays.asList(ContestType.None, ContestType.None));
-    }};
+    }};*/
 
     /** 10 sec to explain,
      * Intro
@@ -116,6 +120,7 @@ public class Contest {
         this.contestTier = contestTier;
         this.reward = reward;
         this.contestants = new HashMap<>();
+        this.contestantsOrdered = new ArrayList<>();
         this.round = ContestPhase.IDLE;
         this.contestantIdx = 0;
         this.scheduledActionManager = new ScheduledActionManager();
@@ -189,12 +194,41 @@ public class Contest {
 
         public void addHearts(int hearts){
             this.hearts += hearts;
+            System.out.println("has " + hearts + " hearts");
         }
 
 
         public boolean setMove(String newMove){
             if(currentMove.isEmpty()){
                 this.currentMove = newMove;
+                return true;
+            }
+            return false;
+        }
+
+        public boolean setRandomMove(MinecraftServer server){
+            PlayerList playerList = server.getPlayerList();
+
+            if(currentMove.isEmpty()){
+
+                ServerPlayer play = playerList.getPlayer(player);
+                Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(play).get(pokemon);
+                MoveSet moveSet = poke.getMoveSet();
+                List<Move> moves = moveSet.getMoves();
+                List<Move> nonNullMoves = new ArrayList<>();
+                for (Move move : moves) {
+                    if (move != null) {
+                        nonNullMoves.add(move);
+                    }
+                }
+                if (!nonNullMoves.isEmpty()) {
+                    Random random = new Random();
+                    int randomIndex = random.nextInt(nonNullMoves.size());
+                    this.currentMove = nonNullMoves.get(randomIndex).getName();
+                } else {
+                    this.currentMove = "default";
+                }
+                //this.currentMove = newMove;
                 return true;
             }
             return false;
@@ -215,6 +249,7 @@ public class Contest {
         public void formatForNextTurn(){
             this.lastMove = currentMove;
             this.currentMove = "";
+            addHearts(Math.max(turnHearts-turnJam, 0));
             this.turnHearts = 0;
             this.turnJam = 0;
         }
@@ -282,20 +317,23 @@ public class Contest {
 
 
 
-        private void useMove(String usingMove){
+        /**private void useMove(String usingMove){
             ContestMoves.MoveData moveData = ContestMoves.instance.getMoveData(usingMove);
             ContestMoves.FunctionData functionData = ContestMoves.instance.ALL_FUNCTION_DATA.get(moveData.getFunctionType());
 
+            ContestType moveType = moveData.getType();
+
             int typeMod = 0;
-            if(this.type.equals(moveData.getType())){
+            if(this.type.equals(moveType)){
                 typeMod = 1;
-            }else if(this.type.equals(oppositeType.get(this.type).getFirst()) || this.type.equals(oppositeType.get(this.type).get(1))){
+            }else if(moveType.equals(oppositeType.get(this.type).getFirst()) || moveType.equals(oppositeType.get(this.type).get(1))){
                 typeMod = -1;
             }
+            System.out.println("This contest type is " + this.type.name() + " with opposites of " + oppositeType.get(this.type).getFirst().name() + " and " + oppositeType.get(this.type).get(1).name() + " and the move type was " + moveType.name());
 
             this.turnHearts = functionData.getAppeal() + typeMod;
 
-        }
+        }*/
 
         private void applyTurn(){
             this.cumulativeHearts += turnHearts;
@@ -527,7 +565,7 @@ public class Contest {
 
 
         if(round == ContestPhase.WAITING && timer == 0f){
-            addContestantMessage(server, null, "The Contest is starting! Contestants should get into position\n");
+            addContestantMessage(server, null, "cobble_contests.contest_showoff.start", ContestLevel.getFromInt(contestTier).name(), ContestType.getFromInt(contestType).name());
         }
         //System.out.println("Contest Time: " + timer);
 
@@ -636,6 +674,10 @@ public class Contest {
 
             }else if(roundReady || timer >= SHOWCASE_ROUND_TIME * TICKS_PER_SECOND){ // End of move choice
 
+                if(!roundReady){
+                    selectMovesForMissingContestants(server);
+                }
+
                 addContestantMessage(server, null,"cobble_contests.contest_showoff.start_round", showcaseRound);
 
                 System.out.println("Move Choice Done");
@@ -654,11 +696,28 @@ public class Contest {
                 round = ContestPhase.RESULTS;
                 timer = 0;
                 updateContestants(server);
+                if(contestTier != ContestLevel.Multiplayer.getIntValue()){
+                    for(UUID id: contestants.keySet()){
+                        evaluateRankedWinConditions(server, id);
+                    }
+
+                }else {
+
+                }
+
             }
 
         }
 
 
+    }
+
+    public void selectMovesForMissingContestants(MinecraftServer server){
+        for(Contestant contestant: contestants.values()){
+            if(!contestant.isMoveChosen()){
+                contestant.setRandomMove(server);
+            }
+        }
     }
 
     public void scheduleAction(Runnable action, long timeTil){
@@ -863,9 +922,98 @@ public class Contest {
         }
     }
 
+
+
+    /**
+     * For ranked competition checking
+     */
+    public boolean evaluateRankedWinConditions(MinecraftServer server, UUID uuid){
+
+
+        Contestant contestant = contestants.get(uuid);
+        int totalHearts = contestant.getHearts();
+
+        boolean result = false;
+        if (contestTier < 5 &&
+            totalHearts >= thresholds[contestTier]){
+            result = true;
+        }
+
+        ServerPlayer player = server.getPlayerList().getPlayer(uuid);
+
+
+        Pokemon pokemon = Cobblemon.INSTANCE.getStorage().getParty(player).get(contestant.pokemon);
+
+        addContestantMessage(server, ChatFormatting.GOLD, "cobble_contests.contest_showoff.num_hearts", pokemon.getDisplayName(), totalHearts);
+
+        Component componentOutput;
+
+        if (result) {
+            componentOutput = Component.translatable("cobble_contests.contest_result.won_ranked", pokemon.getDisplayName(), ContestLevel.getFromInt(contestTier).name(), getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
+        } else {
+            componentOutput = Component.translatable("cobble_contests.contest_result.lost_ranked", pokemon.getDisplayName(), ContestLevel.getFromInt(contestTier).name(), getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
+        }
+
+        if(result){
+            awardRibbon(player, pokemon);
+        }
+
+        sendClientChatMessage(server, uuid, componentOutput);
+
+        return result;
+
+    }
+
+    /**
+     * For multiplayer competition checking
+     */
+    public void evaluateRankedWinConditions(MinecraftServer server){
+
+
+    }
+
+    public void awardRibbon(ServerPlayer player, Pokemon pokemon){
+        Ribbons ribbons = Ribbons.getFromTag(pokemon.getPersistentData().getCompound("Ribbons"));
+        switch (contestType) {
+            case 0:
+                ribbons.setRankedCool(contestTier, true);
+                break;
+            case 1:
+                ribbons.setRankedBeauty(contestTier, true);
+                break;
+            case 2:
+                ribbons.setRankedCute(contestTier, true);
+                break;
+            case 3:
+                ribbons.setRankedSmart(contestTier, true);
+                break;
+            case 4:
+                ribbons.setRankedTough(contestTier, true);
+                break;
+            default:
+                break;
+        }
+        Map<String, CompoundTag> myData = new HashMap<String, CompoundTag>() {};
+        myData.put("Ribbons", ribbons.saveToNBT());
+        saveRibbons(pokemon, myData);
+    }
+
+    private void sendClientChatMessage(MinecraftServer server, UUID uuid, Component componentOutput){
+        ServerPlayer player = server.getPlayerList().getPlayer(uuid);
+        if (!player.level().isClientSide()) {
+            player.displayClientMessage(componentOutput, false);
+        }
+    }
+
+    private void sendClientChatMessage(ServerPlayer player, Component componentOutput){
+        if (!player.level().isClientSide()) {
+            player.displayClientMessage(componentOutput, false);
+        }
+    }
+
     private int getNumHearts(int points){
         for(int i = 1; i < 9; i ++){
-            if(points < INTRO_HEARTS[contestTier][i]){
+            if(points < INTRO_HEARTS[contestTier < 0? 4:contestTier][i]){
                 return i - 1;
             }
         }

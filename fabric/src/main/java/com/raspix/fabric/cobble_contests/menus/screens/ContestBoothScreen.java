@@ -13,6 +13,7 @@ import com.raspix.fabric.cobble_contests.network.SB.SBConBoothScrReqHostList;
 import com.raspix.fabric.cobble_contests.network.SB.SBReqJoinLob;
 import com.raspix.fabric.cobble_contests.network.SB.SBUpdateContestInfo;
 import com.raspix.fabric.cobble_contests.util.Contest;
+import com.raspix.fabric.cobble_contests.util.data.ContestLevel;
 import com.raspix.fabric.cobble_contests.util.data.ContestType;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -355,6 +356,15 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
                     (Number) (this.leftPos + 143),
                     (Number) (this.topPos + 44),
                     1.5f, 1.5f, 1f, 0x00918b99, true, false);
+            /**drawScaledText(guiGraphics, Component.literal("Pokemon: " + clientParty.findByUUID(pokemonIndex).getDisplayName().getString()).getVisualOrderText(),
+                    (Number) (this.leftPos + 40),
+                    (Number) (this.topPos + 50),
+                    1f, 1f, 1f, 0x00918b99, false, false);*/
+            drawScaledText(guiGraphics, Component.literal("Contest Type: " + ContestBlockEntity.getContestTypeString1(colorIndex)).getVisualOrderText(),
+                    (Number) (this.leftPos + 40),
+                    (Number) (this.topPos + 70),
+                    1f, 1f, 1f, 0x00918b99, false, false);
+
         }
 
         if(pageIndex == FIND_A_CON_PAGE){
@@ -475,7 +485,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     private void startContest(){
         System.out.println("should be starting contest");
         menu.startRankedContest(colorIndex, pokemonIndex, playerInv.player.getUUID());
-        menu.startStatAssesment(playerInv.player, playerInv.player.getUUID(), pokemonIndex, colorIndex);
+        menu.startStatAssesment(playerInv.player, playerInv.player.getUUID(), pokemonIndex, colorIndex, ContestLevel.None);
         setPageIndex(IN_RUNNING_CONTEST);
         // should have packet
     }

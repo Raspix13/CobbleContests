@@ -11,6 +11,7 @@ import com.raspix.fabric.cobble_contests.network.SB.SBRunContest;
 import com.raspix.fabric.cobble_contests.network.SB.SBRunHostedContest;
 import com.raspix.fabric.cobble_contests.util.Contest;
 import com.raspix.fabric.cobble_contests.util.ContestManager;
+import com.raspix.fabric.cobble_contests.util.data.ContestLevel;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -129,7 +130,7 @@ public class ContestBoothMenu extends AbstractContainerMenu {
         buf.writeUUID(pokemonIdx);
         buf.writeBlockPos(blockEntity.getBlockPos());
         buf.writeInt(contestType);
-        buf.writeInt(0);
+        buf.writeInt(-1);
         ClientPlayNetworking.send(new SBRunContest(buf));
     }
 
@@ -163,14 +164,14 @@ public class ContestBoothMenu extends AbstractContainerMenu {
         return this.blockEntity.getContestResults();
     }
 
-    public void startStatAssesment(Player player, UUID playerID, UUID pokemonIdx, int contestType){
+    public void startStatAssesment(Player player, UUID playerID, UUID pokemonIdx, int contestType, ContestLevel level){
         System.out.println("should be starting stat assesment");
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeUUID(playerID);
         buf.writeUUID(pokemonIdx);
         buf.writeBlockPos(blockEntity.getBlockPos());
         buf.writeInt(contestType);
-        buf.writeInt(0);
+        buf.writeInt(level.getIntValue());
         ClientPlayNetworking.send(new SBRunContest(buf));
     }
 
