@@ -6,12 +6,11 @@ pluginManagement {
         maven("https://maven.architectury.dev/")
         maven("https://maven.minecraftforge.net/")
         gradlePluginPortal()
-        //gradlePluginPortal()
     }
 }
 
 listOf(
     "common",
-    //"neoforge",
+    "neoforge",
     "fabric"
 ).forEach { include(it)}
