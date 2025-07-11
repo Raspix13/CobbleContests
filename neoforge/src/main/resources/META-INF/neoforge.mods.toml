@@ -1,31 +1,33 @@
-modLoader = "kotlinforforge"
-loaderVersion = "[5.3,)"
+modLoader = "javafml"
+loaderVersion = "[1,)"
 #issueTrackerURL = "A valid URL to your issue tracker where people can open bug tickets"
 license = "MIT License"
 
 [[mods]]
-modId = "${mod_id}"
+modId = "cobble_contests"
 version = "${version}"
-displayName = "${mod_name}"
-authors="Raspix"
-description='''${mod_description}'''
+displayName = "Cobble Contests"
+authors = "Raspix"
+description = '''
+Tries to add Pokemon Contests to Cobblemon
+'''
 #logoFile = ""
 
-[[dependencies.${mod_id}]]
+[[dependencies.cobble_contests]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.21.1]"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.${mod_id}]]
+[[dependencies.cobble_contests]]
 modId = "neoforge"
 mandatory = true
 versionRange = "[21.1.66,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.${mod_id}]]
+[[dependencies.cobble_contests]]
 modId = "cobblemon"
 mandatory = true
 versionRange = "[1.6,)"

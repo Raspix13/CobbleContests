@@ -1,4 +1,7 @@
-Cobble Contests 1.0.2 (Fabric + Neoforge)
+Cobble Contests 1.0.5 (Fabric + Neoforge)
+- Fixed touga and hopo crashing poffin pot
+
+Cobble Contests 1.0.4 (Fabric + Neoforge)
 - Added config file for poffin friendship changes and if ball swapper should use up the ball
 - Fixed issue with neoforge servers crashing when contest booth was used
 - Fixed issue with fabric contest booth buttons not working
@@ -13,7 +16,6 @@ Cobble Contests 1.0.1 (Forge + Fabric)
 -Fixed card display for toughness ribbons to no longer be based on smarts
 -Poffin Pot should no longer give the local brewery achievement
 -Fixed other small bugs
-
 
 Cobble Contests 1.0.0 (Forge only)
 -Adds poffins, the poffin pot, contest card, and contest booth
