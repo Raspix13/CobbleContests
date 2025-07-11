@@ -42,6 +42,10 @@ Progress:
 
 Things I have done:
 
+7/11
+- Fixed neoforge in old branch and this one
+- Fixed berry issue in old branch that I forgot to post
+
 7/7
 - Fixed time still passing when single player is paused
 - Fixed missing MoveData for moves that have not been added yet

@@ -1,4 +1,3 @@
-
 Cobble Contests 1.1.0 (Fabric)
 - Added config file
 - Added bad Japanese translation
@@ -6,6 +5,10 @@ Cobble Contests 1.1.0 (Fabric)
 - Added contest showcase
 - Added multiplayer and hosting contests
 
+Cobble Contests 1.0.4 (Fabric + Neoforge)
+- Added config file for poffin friendship changes and if ball swapper should use up the ball
+- Fixed issue with neoforge servers crashing when contest booth was used
+- Fixed issue with fabric contest booth buttons not working
 
 Cobble Contests 1.0.2 (Fabric + Neoforge)
 Updated for Cobblemon 1.6
