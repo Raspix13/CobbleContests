@@ -168,7 +168,7 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider, Ext
         }
     }
 
-    public void runStatAssesment(UUID id, UUID pokeIdx, int contestType, int contestLevel1, ServerPlayer player){
+    /**public void runStatAssesment(UUID id, UUID pokeIdx, int contestType, int contestLevel1, ServerPlayer player){
         //String contestOutput = "";
         Component componentOutput;
         //Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(id).get(pokeIdx);
@@ -198,7 +198,7 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider, Ext
 
 
         //Objects.requireNonNull().sendSystemMessage(Component.literal(contestOutput));
-    }
+    }*/
 
     public void startRankedContest(UUID hostid, int pokeIdx, int contestType, int contestTier, ServerPlayer player){
 

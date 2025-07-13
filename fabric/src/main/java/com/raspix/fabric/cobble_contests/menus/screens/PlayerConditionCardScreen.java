@@ -383,8 +383,9 @@ public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerCon
                 default:
                     break;
             }
-            appeal = ContestMoves.instance.ALL_FUNCTION_DATA.get(data.getFunctionType()).getAppeal();
-            jam = ContestMoves.instance.ALL_FUNCTION_DATA.get(data.getFunctionType()).getJam();
+            ContestMoves.FunctionData functionData = ContestMoves.instance.getFunctionDataFromName(data.getFunctionType());
+            appeal = functionData.getAppeal();
+            jam = functionData.getJam();
             //appeal = data.getAppeal();
             description = "cobble_contests.move_function_description." + data.getFunctionType();//ContestMoves.instance.ALL_FUNCTION_DATA.get(data.getFunctionType()).getDescription(); //data.getDescription();
         }

@@ -539,7 +539,6 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         switch (phase){
             case WAITING:
                 messageLog.visible = true;
-                counter.visible = false;
                 //particleEffectButton.visible = false;
                 toggleButtonList(false, dressUpButtons);
                 break;
@@ -547,20 +546,17 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
                 this.imageWidth = 304;
                 this.imageHeight = 202;
                 messageLog.visible = false;
-                counter.visible = true;
                 toggleButtonList(true, dressUpButtons);
                 //particleEffectButton.visible = true;
                 break;
             case INTRODUCTION:
                 messageLog.visible = true;
-                counter.visible = false;
                 toggleButtonList(false, dressUpButtons);
                 //particleEffectButton.visible = false;
                 break;
              case TALENT:
                  messageLog.visible = true; // turn back on later
                  counter.changePos(this.leftPos - 10, this.topPos + 30, 30);
-                 counter.visible = true;
                  toggleButtonList(false, dressUpButtons);
                  //particleEffectButton.visible = false;
                 break;
@@ -568,17 +564,16 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
                 this.imageWidth = 291;
                 this.imageHeight = 194;
                 messageLog.visible = false;
-                counter.visible = false;
                 toggleButtonList(false, dressUpButtons);
                 //particleEffectButton.visible = false;
                 break;
             default:
                 messageLog.visible = true;
-                counter.visible = false;
                 toggleButtonList(false, dressUpButtons);
                 //particleEffectButton.visible = false;
                 break;
         }
+        this.counter.visible = (phase == Contest.ContestPhase.DRESSUP) || (phase == Contest.ContestPhase.TALENT && !isMoveChosen);
         this.moveGrid.visible = phase == Contest.ContestPhase.TALENT && !isMoveChosen;
         this.contestantGrid.visible = phase == Contest.ContestPhase.TALENT;
         this.contestantGrid.setExpanded(phase == Contest.ContestPhase.TALENT && isMoveChosen);

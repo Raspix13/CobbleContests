@@ -1,15 +1,7 @@
 package com.raspix.fabric.cobble_contests.util;
 
-import com.cobblemon.mod.common.Cobblemon;
-import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.fabric.cobble_contests.network.CB.CBClearMessageQueue;
-import com.raspix.fabric.cobble_contests.network.CB.CBUpdateContestInfo;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -60,12 +52,12 @@ public class ContestManager {
     /**
      * When the host creates a new lobby
      */
-    public boolean AddContest(UUID hostId, int contestType, int contestTier, ItemStack reward, boolean hostParticipates, UUID pokeIdx){
+    public boolean AddContest(MinecraftServer server, UUID hostId, int contestType, int contestTier, ItemStack reward, boolean hostParticipates, UUID pokeIdx){
         if(IsAlreadyInContest(hostId)){
             System.out.println("Already in contest");
             return false;
         }
-        Contest newCon = new Contest(hostId, contestType, contestTier, reward, hostParticipates, pokeIdx);
+        Contest newCon = new Contest(server, hostId, contestType, contestTier, reward, hostParticipates, pokeIdx);
         contests.add(newCon);
         activeContestents.put(hostId, newCon);
 
@@ -144,15 +136,36 @@ public class ContestManager {
         }
     }
 
+    public boolean TimeoutContest(Contest endingContest, MinecraftServer server){
+        PlayerList playerList = server.getPlayerList();
+
+        if(contests.contains(endingContest)){
+            activeContests.remove(endingContest);
+            contests.remove(endingContest);
+            Map<UUID, Contest.Contestant> contestants = endingContest.getContestants();
+            for (UUID contestant : contestants.keySet()){
+                // tell players results
+                ServerPlayer play = playerList.getPlayer(contestant);
+                notifyPlayerContestTimeout(contestant, endingContest, play);
+                activeContestents.remove(contestant);
+                ServerPlayNetworking.send((ServerPlayer) play, new CBClearMessageQueue(contestant));
+            }
+            activeContestents.remove(endingContest.getHost());
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public void update(MinecraftServer server){
         //tempTimer += Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false);
         //System.out.println(tempTimer);
         float timeChange = 1f;//(System.currentTimeMillis()-lastTime)/1000.0f;//server.getCurrentSmoothedTickTime()/1000f;//Minecraft.getInstance().getTimer().getRealtimeDeltaTicks();
         lastTime = System.currentTimeMillis();
         //System.out.println("Time Change: " + timeChange);
-        if(!activeContests.isEmpty()){
+        if(!contests.isEmpty()){
             PlayerList playerList = server.getPlayerList();
-            List<Contest> activeContests2 = new ArrayList<>(activeContests);
+            List<Contest> activeContests2 = new ArrayList<>(contests);
             for(Contest contest: activeContests2){
                 contest.update(timeChange, server);
             }
@@ -180,6 +193,14 @@ public class ContestManager {
         ServerPlayer sPlayer = player;//poke.getOwnerPlayer();
         if (!sPlayer.level().isClientSide()) {
             sPlayer.displayClientMessage(componentOutput, false);
+        }
+
+    }
+
+    public void notifyPlayerContestTimeout(UUID id, Contest endingContest, ServerPlayer player){
+        ServerPlayer sPlayer = player;
+        if (!sPlayer.level().isClientSide()) {
+            sPlayer.displayClientMessage(Component.translatable("cobble_contests.contest_text.timeout"), false);
         }
 
     }

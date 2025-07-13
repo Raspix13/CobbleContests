@@ -80,7 +80,6 @@ public class ContestantStatsGrid extends ParentWidget {
 
         List<NetworkablePokemonData> contestantDataList = new ArrayList<>();
 
-        // TODO: Figure out why remaking the tiles makes them disappear when size of window changes
         if(tiles.size() != num){
             initializeTiles(num);
         }

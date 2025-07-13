@@ -31,7 +31,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import com.cobblemon.mod.common.api.pokemon.PokemonPropertyExtractor;
@@ -114,7 +113,7 @@ public class Contest {
         this.roundReady = false;
     }*/
 
-    public Contest(UUID hostId, int contestType, int contestTier, ItemStack reward, boolean hostParticipate, UUID pokeIdx){
+    public Contest(MinecraftServer server, UUID hostId, int contestType, int contestTier, ItemStack reward, boolean hostParticipate, UUID pokeIdx){
         this.host = hostId;
         this.contestType = contestType;
         this.contestTier = contestTier;
@@ -124,7 +123,7 @@ public class Contest {
         this.round = ContestPhase.IDLE;
         this.contestantIdx = 0;
         this.scheduledActionManager = new ScheduledActionManager();
-        addContestants(hostId, pokeIdx);
+        addHostAsContestant(server, hostId, pokeIdx);
         //StartContest();
     }
 
@@ -350,15 +349,6 @@ public class Contest {
         private List<UUID> contestantsOrderer;
         private int applause; // 0-5, goes up when type move is used
 
-
-
-
-
-
-
-
-
-
     }
 
     public enum ContestPhase{
@@ -429,7 +419,7 @@ public class Contest {
     public void runContestantMove(MinecraftServer server, Contestant contestant){
         //contestant.useMove(ContestType.getFromInt(contestType));
         ContestMoves.MoveData moveData = ContestMoves.instance.getMoveData(contestant.currentMove);
-        ContestMoves.FunctionData functionData = ContestMoves.instance.ALL_FUNCTION_DATA.get(moveData.getFunctionType());
+        ContestMoves.FunctionData functionData = ContestMoves.instance.getFunctionDataFromName(moveData.getFunctionType());
 
         functionData.onUse(server,this, contestant);
 
@@ -449,7 +439,7 @@ public class Contest {
     }
 
 
-    private CompoundTag generateContestantDataTag(MinecraftServer server){
+    public CompoundTag generateContestantDataTag(MinecraftServer server){
         CompoundTag tag = new CompoundTag();
 
         PlayerList playerList = server.getPlayerList();
@@ -479,7 +469,7 @@ public class Contest {
             tag.put("contestant" + i, data.getAsTag());
         }
 
-        return tag;
+        return tag.copy();
     }
 
     private void sendEveryoneContestants(MinecraftServer server){// TODO: send out packet here?
@@ -579,7 +569,7 @@ public class Contest {
             // Should notify anyone who was in the lobby
             round = ContestPhase.ENDING;
             updateContestants(server);
-            EndContest(server);
+            TimeoutContest(server);
 
         }else if(round == ContestPhase.WAITING && timer >= WAITING_TIME * TICKS_PER_SECOND){
             System.out.println("Moved to Dressup phase");
@@ -822,17 +812,22 @@ public class Contest {
 
 
 
-    public void addContestants(UUID uuid, UUID pokeIdx){
+    public void addHostAsContestant(MinecraftServer server, UUID uuid, UUID pokeIdx){
         contestants.put(uuid, new Contestant(uuid, pokeIdx));
+        contestantsOrdered.add(uuid);
+        updateAllContestantLobbies(server);
     }
 
     public boolean addContestants(MinecraftServer server, ServerPlayer player, UUID uuid, UUID pokeIdx){
         if(contestants.size() >= MAX_CONTESTANTS){
+            // TODO let player know there are too many
             System.out.println("too many contestants already");
             return false;
         }
         contestants.put(uuid, new Contestant(uuid, pokeIdx));
-        ServerPlayNetworking.send((ServerPlayer) player, new CBLobRetReq(uuid));
+        contestantsOrdered.add(uuid);
+        CompoundTag tag = generateContestantDataTag(server);
+        ServerPlayNetworking.send((ServerPlayer) player, new CBLobRetReq(uuid, tag));
         updateAllContestantLobbies(server);
         return true;
     }
@@ -846,10 +841,12 @@ public class Contest {
 
     public void updateAllContestantLobbies(MinecraftServer server){
         PlayerList playerList = server.getPlayerList();
+
+        CompoundTag tag = generateContestantDataTag(server);
         for(UUID contestantID: contestants.keySet()){
             if( playerList.getPlayer(contestantID) != null){
                 ServerPlayer player = playerList.getPlayer(contestantID);
-                // TODO: tell all lobbies to reload
+                ServerPlayNetworking.send((ServerPlayer) player, new CBSendContestantStatus(contestantID, tag));
             }
 
         }
@@ -900,6 +897,11 @@ public class Contest {
 
         ContestManager.INSTANCE.EndContest(this, server);
         return false;
+    }
+
+    public void TimeoutContest(MinecraftServer server){
+
+        ContestManager.INSTANCE.TimeoutContest(this, server);
     }
 
     public void evaluateIntroductionPoints(MinecraftServer server){
@@ -1128,5 +1130,9 @@ public class Contest {
     public ContestType getContestType(){
         // TODO: make it return right type
         return ContestType.getFromInt(contestType);//ContestType.Beauty; // contestType;
+    }
+
+    public int getNumContestants(){
+        return contestants.size();
     }
 }

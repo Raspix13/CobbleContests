@@ -671,7 +671,7 @@ public class ContestMoves {
 
     }};
 
-    public Map<String, FunctionData> ALL_FUNCTION_DATA = new HashMap<>() {{
+    private final Map<String, FunctionData> ALL_FUNCTION_DATA = new HashMap<>() {{
         put("default", new FunctionData("default", 2, 0,"This move has not been added.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
         put("quite_appealing", new FunctionData("quite_appealing", 4, 0,"Quite an appealing move.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
         put("reusable_appeal", new FunctionData("reusable_appeal", 3, 0, "An appealing move that can be used repeatedly without boring the audience.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
@@ -713,6 +713,17 @@ public class ContestMoves {
         put("move_later", new FunctionData("move_later", 3, 0, "Causes the user to move later on the next turn.", (data, server, contest, contestant) -> { NothingExtra(server, contest, contestant); }));
 
     }};
+
+
+    public FunctionData getFunctionDataFromName(String name){
+        FunctionData data;
+        if(ALL_FUNCTION_DATA.containsKey(name)){
+            data = ALL_FUNCTION_DATA.get(name);
+        }else {
+            data = ALL_FUNCTION_DATA.get("default");
+        }
+        return data;
+    }
 
     public ContestMoves() {
         //loadFromJson();
@@ -890,7 +901,7 @@ public class ContestMoves {
         String lastMove = contestant.getLastMove();
 
         ContestMoves.MoveData moveData = ContestMoves.instance.getMoveData(move);
-        ContestMoves.FunctionData functionData = ContestMoves.instance.ALL_FUNCTION_DATA.get(moveData.getFunctionType());
+        ContestMoves.FunctionData functionData = getFunctionDataFromName(moveData.getFunctionType());
 
         ContestType type = contest.getContestType();
 

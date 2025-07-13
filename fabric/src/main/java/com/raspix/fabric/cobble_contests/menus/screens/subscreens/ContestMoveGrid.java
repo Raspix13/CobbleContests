@@ -90,8 +90,9 @@ public class ContestMoveGrid extends ParentWidget {
                 String name = move.getName();
                 ContestMoves.MoveData data = ContestMoves.instance.getMoveData(name);
                 String desc = "cobble_contests.move_function_description." + data.getFunctionType(); //ContestMoves.instance.ALL_FUNCTION_DATA.get(data.getFunctionType()).getDescription();
-                int app = ContestMoves.instance.ALL_FUNCTION_DATA.get(data.getFunctionType()).getAppeal();
-                int jam = ContestMoves.instance.ALL_FUNCTION_DATA.get(data.getFunctionType()).getJam();
+                ContestMoves.FunctionData functionData = ContestMoves.instance.getFunctionDataFromName(data.getFunctionType());
+                int app = functionData.getAppeal();
+                int jam = functionData.getJam();
                 tiles.get(i).setupButton(data.getType(), name, desc, app, jam);
             }else {
                 tiles.get(i).setupButton(ContestType.None, "", "", 0, 0);

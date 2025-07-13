@@ -2,6 +2,7 @@ package com.raspix.fabric.cobble_contests.network.SB;
 
 import com.raspix.fabric.cobble_contests.menus.screens.ContestScreen;
 import com.raspix.fabric.cobble_contests.network.CB.CBReplyContestParticipation;
+import com.raspix.fabric.cobble_contests.network.CB.CBSendContestantStatus;
 import com.raspix.fabric.cobble_contests.network.CB.CBUpdateContestInfo;
 import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import com.raspix.fabric.cobble_contests.util.Contest;
@@ -56,6 +57,7 @@ public class SBCheckContestParticipation implements CustomPacketPayload {
         //System.out.println("Recieving contest Update 1");
         //FriendlyByteBuf bufi = new FriendlyByteBuf(Unpooled.buffer());
         CompoundTag tag = new CompoundTag();
+        CompoundTag tagContestants = new CompoundTag();
 
         boolean isInContest = ContestManager.INSTANCE.IsAlreadyInContest(id);
         boolean isPlayerHost = false;
@@ -65,6 +67,7 @@ public class SBCheckContestParticipation implements CustomPacketPayload {
             Contest con = ContestManager.INSTANCE.getPlayersContest(id);
             phase = con.getRound();
             isPlayerHost = con.isPlayerHost(id);
+            tagContestants = con.generateContestantDataTag(server);
         }
 
         tag.putBoolean("in_contest", isInContest);
@@ -75,6 +78,10 @@ public class SBCheckContestParticipation implements CustomPacketPayload {
 
         if (player != null && player instanceof ServerPlayer serverPlayer) {
             ServerPlayNetworking.send(serverPlayer, new CBReplyContestParticipation(id, tag));
+            if(isInContest){
+
+                ServerPlayNetworking.send(serverPlayer, new CBSendContestantStatus(id, tagContestants.copy()));
+            }
         }
 
 

@@ -1,5 +1,6 @@
 package com.raspix.fabric.cobble_contests.network.CB;
 
+import com.raspix.fabric.cobble_contests.menus.screens.ContestBoothScreen;
 import com.raspix.fabric.cobble_contests.menus.screens.ContestScreen;
 import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import net.minecraft.client.Minecraft;
@@ -50,11 +51,9 @@ public class CBSendContestantStatus implements CustomPacketPayload {
     public void recieve(Minecraft minecraft){
         System.out.println("Recieving CBSendContestants");
         if(Minecraft.getInstance().screen instanceof ContestScreen screen){
-            //CompoundTag tag = buf.readNbt();
-
-
             screen.setShowdownContestantsData(tag);
-
+        }else if (Minecraft.getInstance().screen instanceof ContestBoothScreen bScreen){
+            bScreen.updateLobbyContestants(tag);
         }
     }
 
