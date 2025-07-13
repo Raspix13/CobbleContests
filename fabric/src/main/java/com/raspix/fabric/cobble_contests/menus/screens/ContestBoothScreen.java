@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.client.storage.ClientParty;
 import com.raspix.common.cobble_contests.CobbleContests;
 import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
 import com.raspix.fabric.cobble_contests.menus.ContestBoothMenu;
+import com.raspix.fabric.cobble_contests.menus.widgets.LobbyContestantsScroll;
 import com.raspix.fabric.cobble_contests.menus.widgets.buttons.FixedImageButton;
 import com.raspix.fabric.cobble_contests.menus.widgets.HostedContestPanel;
 import com.raspix.fabric.cobble_contests.menus.widgets.buttons.PokemonContestBoothSlotButton;
@@ -24,9 +25,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -64,10 +67,10 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
 
     private Button debugReloadButton;
 
-    //private HostedContestPanel tempHostLobbyButton;
-
-    private List<HostedContestPanel> hostContestPanels;
     private List<UUID> hostConPanelsIDs;
+    private List<HostedContestPanel> hostContestPanels;
+    private LobbyContestantsScroll contestantsScroll;
+
 
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_booth.png");
     private Inventory playerInv;
@@ -87,6 +90,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         //PacketHandler.sendToServer(new SBInfoScreenParty(playerInv.player.getUUID()));
     }
 
+
     @Override
     protected void init() {
         super.init();
@@ -104,6 +108,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         this.confirmationButton = this.addRenderableWidget(new FixedImageButton(this.leftPos + 80, this.topPos + 40, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
             setContestLevel();
         }));
+        this.contestantsScroll = this.addRenderableWidget(new LobbyContestantsScroll(this.leftPos + 75, this.topPos + 60, 150, 80, Component.literal("")));
 
 
         /**this.debugReloadButton = this.addRenderableWidget(new FixedImageButton(this.leftPos + 40, this.topPos + 120, 18, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
@@ -118,38 +123,12 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         createContestPanes();
 
         ClientPlayNetworking.send(new SBCheckContestParticipation(playerID));
+        setPageIndex(STARTING_PAGE);
 
 
     }
 
-    public void setScreenForContestState(boolean isInContest, boolean isHost, Contest.ContestPhase contestRound){
-        //Contest contest = contestInfoMenu.getJoinedContest(playerID);
-        System.out.println("Is in contest: " + isInContest + " Is Host: " + isHost + " Round: " + contestRound.toString());
-        if(isInContest){
-            if(contestRound == Contest.ContestPhase.IDLE){
 
-                if(isHost){
-                    contestRunningType = 1;
-                }else{
-                    contestRunningType = 2;
-                }
-                setPageIndex(LOBBY_PAGE);
-            }else{
-                setPageIndex(IN_RUNNING_CONTEST);
-            }
-
-        }else{
-            setPageIndex(STARTING_PAGE);
-        }
-    }
-
-    public void requestPageInfo(){
-
-    }
-
-    public void setPageInfo(){
-
-    }
 
 
     // region Widget Creations and inits
@@ -159,7 +138,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
 
         for(int i = 0 ; i < 5; i++){
             int finalI = i;
-            hostContestPanels.add(this.addRenderableWidget(new HostedContestPanel(this.leftPos + 30, this.topPos + 40 * (i + 1), 18, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+            hostContestPanels.add(this.addRenderableWidget(new HostedContestPanel(this.leftPos + 76, this.topPos + 35 + (25 * (i + 1)), 128, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
                 contestRunningType = 2;
                 hostPanelIdx = finalI;
                 setPageIndex(POKEMON_SELECTION_PAGE);
@@ -168,28 +147,26 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         }
     }
 
-
     private void createLobbyButtons(){
         this.hostConPanelsIDs = new ArrayList<>();
-        this.startHostedContestButton = this.addRenderableWidget(new FixedImageButton(this.leftPos + 80, this.topPos + 100, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+
+        this.startHostedContestButton = this.addRenderableWidget(new FixedImageButton(this.leftPos + 76, this.topPos + 170, 128, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
             startHostedContest();
         }));
 
     }
 
-
-
     private void createHomeButtons(){
         homeButtons = new ArrayList<>();
-        this.homeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 110, this.topPos + 40, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+        this.homeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 76, this.topPos + 40, 128, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
             this.contestRunningType = 0; // Single player / Ranked
             setPageIndex(CONTEST_TYPE_SELECTION);
         })));
-        this.homeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 110, this.topPos + 80, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+        this.homeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 76, this.topPos + 80, 128, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
             this.contestRunningType = 1; // Host
             setPageIndex(CONTEST_TYPE_SELECTION);
         })));
-        this.homeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 110, this.topPos + 120, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+        this.homeButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 76, this.topPos + 120, 128, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
             this.contestRunningType = 2; // Join
             setPageIndex(FIND_A_CON_PAGE);
         })));
@@ -198,7 +175,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
 
     private void createWaitingButtons(){
         waitButtons = new ArrayList<>();
-        this.waitButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 110, this.topPos + 140, 64, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
+        this.waitButtons.add(this.addRenderableWidget(new FixedImageButton(this.leftPos + 76, this.topPos + 140, 128, 18, 289, 43, 18, TEXTURE, 1000, 750, btn -> {
 
             if(contestRunningType == 0) {
                 startContest();
@@ -251,157 +228,6 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     // endregion
 
 
-
-    @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int xMousePos, int yMousePos) {
-        if(pageIndex == CONTEST_TYPE_SELECTION){
-            guiGraphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 1000, 750);
-        }else if(pageIndex == POKEMON_SELECTION_PAGE){
-            guiGraphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 225, this.imageWidth, this.imageHeight, 1000, 750);
-        }else{
-            guiGraphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 450, this.imageWidth, this.imageHeight, 1000, 750);
-        }
-    }
-
-    @Override
-    public void render(GuiGraphics guiGraphics, int xMousePos, int yMousePos, float partialTick) { //
-        super.render(guiGraphics, xMousePos, yMousePos, partialTick);
-        if(pageIndex == CONTEST_WAITING_PAGE){
-            /**drawScaledText(guiGraphics, Component.translatable(getContestResult()).getVisualOrderText(),
-                    (Number) (this.leftPos + 50),
-                    (Number) (this.topPos + 50),
-                    0.5f, 0.5f, 1f, 0x00000000, true, false);*/
-            if(contestRunningType == 0){
-                drawScaledText(guiGraphics, Component.literal("Start Contest").getVisualOrderText(),
-                        (Number) (this.leftPos + 144),
-                        (Number) (this.topPos + 145),
-                        1f, 1f, 1f, 0x00918b99, true, false);
-            }else{
-                drawScaledText(guiGraphics, Component.literal("Start Hosting").getVisualOrderText(),
-                        (Number) (this.leftPos + 144),
-                        (Number) (this.topPos + 145),
-                        1f, 1f, 1f, 0x00918b99, true, false);
-            }
-
-            drawScaledText(guiGraphics, Component.literal("Pokemon: " + clientParty.findByUUID(pokemonIndex).getDisplayName().getString()).getVisualOrderText(),
-                    (Number) (this.leftPos + 40),
-                    (Number) (this.topPos + 50),
-                    1f, 1f, 1f, 0x00918b99, false, false);
-            drawScaledText(guiGraphics, Component.literal("Contest Type: " + ContestBlockEntity.getContestTypeString1(colorIndex)).getVisualOrderText(),
-                    (Number) (this.leftPos + 40),
-                    (Number) (this.topPos + 70),
-                    1f, 1f, 1f, 0x00918b99, false, false);
-        }
-        if(pageIndex == STARTING_PAGE){
-            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.start").getVisualOrderText(),
-                    (Number) (this.leftPos + 143),
-                    (Number) (this.topPos + 44),
-                    1.5f, 1.5f, 1f, 0x00918b99, true, false);
-            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.host").getVisualOrderText(),
-                    (Number) (this.leftPos + 143),
-                    (Number) (this.topPos + 44 + 40),
-                    1.5f, 1.5f, 1f, 0x00918b99, true, false);
-            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.join").getVisualOrderText(),
-                    (Number) (this.leftPos + 143),
-                    (Number) (this.topPos + 44 + 80),
-                    1.5f, 1.5f, 1f, 0x00918b99, true, false);
-        }
-        if(pageIndex == CONTEST_TYPE_SELECTION){
-            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.select_type").getVisualOrderText(),
-                    (Number) (this.leftPos + 145),
-                    (Number) (this.topPos + 104),
-                    1f, 1f, 1f, 0x00918b99, true, false);
-            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_type.cool").getVisualOrderText(),
-                    (Number) (this.leftPos + 143),
-                    (Number) (this.topPos + 78),
-                    1f, 1f, 1f, 0x00918b99, true, false);
-            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_type.beauty").getVisualOrderText(),
-                    (Number) (this.leftPos + 220),
-                    (Number) (this.topPos + 106),
-                    1f, 1f, 1f, 0x00918b99, true, false);
-            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_type.cute").getVisualOrderText(),
-                    (Number) (this.leftPos + 184),
-                    (Number) (this.topPos + 184),
-                    1f, 1f, 1f, 0x00918b99, true, false);
-            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_type.smart").getVisualOrderText(),
-                    (Number) (this.leftPos + 104),
-                    (Number) (this.topPos + 184),
-                    1f, 1f, 1f, 0x00918b99, true, false);
-            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_type.tough").getVisualOrderText(),
-                    (Number) (this.leftPos + 68),
-                    (Number) (this.topPos + 106),
-                    1f, 1f, 1f, 0x00918b99, true, false);
-        }
-        if(pageIndex == POKEMON_SELECTION_PAGE){
-            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.pokemon_select").getVisualOrderText(),
-                    (Number) (this.leftPos + 140),
-                    (Number) (this.topPos + 10),
-                    1f, 1f, 1f, 0x00000000, true, false);
-            if(contestRunningType == 1 || contestRunningType == 2){
-                drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.select_no_pokemon").getVisualOrderText(),
-                        (Number) (this.leftPos + 140),
-                        (Number) (this.topPos + 200),
-                        1f, 1f, 1f, 0x00000000, true, false);
-            }
-        }
-
-        if(pageIndex == LOBBY_PAGE){
-            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.host_lobby").getVisualOrderText(),
-                    (Number) (this.leftPos + 143),
-                    (Number) (this.topPos + 44),
-                    1.5f, 1.5f, 1f, 0x00918b99, true, false);
-        }
-        if(pageIndex == IN_RUNNING_CONTEST){
-            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.contest_running").getVisualOrderText(),
-                    (Number) (this.leftPos + 143),
-                    (Number) (this.topPos + 44),
-                    1.5f, 1.5f, 1f, 0x00918b99, true, false);
-            /**drawScaledText(guiGraphics, Component.literal("Pokemon: " + clientParty.findByUUID(pokemonIndex).getDisplayName().getString()).getVisualOrderText(),
-                    (Number) (this.leftPos + 40),
-                    (Number) (this.topPos + 50),
-                    1f, 1f, 1f, 0x00918b99, false, false);*/
-            drawScaledText(guiGraphics, Component.literal("Contest Type: " + ContestBlockEntity.getContestTypeString1(colorIndex)).getVisualOrderText(),
-                    (Number) (this.leftPos + 40),
-                    (Number) (this.topPos + 70),
-                    1f, 1f, 1f, 0x00918b99, false, false);
-
-        }
-
-        if(pageIndex == FIND_A_CON_PAGE){
-            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.fac").getVisualOrderText(),
-                    (Number) (this.leftPos + 143),
-                    (Number) (this.topPos + 44),
-                    1.5f, 1.5f, 1f, 0x00918b99, true, false);
-
-        }
-
-    }
-
-    @Override
-    protected void renderLabels(GuiGraphics arg, int i, int j) {
-    }
-
-
-    private void selectContestPokemon(int pokeIndex) {
-        this.pokemonIndex = clientParty.get(pokeIndex).getUuid();
-        if(contestRunningType == 2){
-            tryJoinLobby(hostPanelIdx);
-        }else{
-            setPageIndex(CONTEST_WAITING_PAGE);//CONTEST_LEVEL_SELECTION_PAGE);
-        }
-    }
-
-    private void selectNoContestPokemon() {
-        setPageIndex(CONTEST_WAITING_PAGE);//CONTEST_LEVEL_SELECTION_PAGE);
-    }
-
-    private void joinContestWithPokemon(UUID index){
-        pokemonIndex = index;
-        setPageIndex(CONTEST_WAITING_PAGE);
-
-        //should have packet here
-    }
-
     private void setPageIndex(int index){
         pageIndex = index;
         for (Button homeButton : homeButtons) {
@@ -416,7 +242,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         for (Button partyButton : partyButtons) {
             partyButton.visible = index == POKEMON_SELECTION_PAGE;
         }
-        noPokemonButton.visible = index == POKEMON_SELECTION_PAGE && contestRunningType == 1;
+        noPokemonButton.visible = false; //index == POKEMON_SELECTION_PAGE && contestRunningType == 1;
 
         startHostedContestButton.visible = index == LOBBY_PAGE && contestRunningType == 1;
         //System.out.println("Test: " + (index == LOBBY_PAGE) +  " and " + (contestRunningType == 1) + " With crt = " + contestRunningType);
@@ -425,41 +251,44 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         //debugReloadButton.visible = index == CONTEST_LEVEL_SELECTION_PAGE;
         //tempHostLobbyButton.visible = index == FIND_A_CON_PAGE;
         toggleHostContestPanels(index == FIND_A_CON_PAGE);
+        contestantsScroll.visible = index == LOBBY_PAGE;
     }
 
-    public void setPageToLobby(){
+    public void setPageToLobby(CompoundTag tag){
         contestRunningType = 2;
         setPageIndex(LOBBY_PAGE);
+        updateLobbyContestants(tag);
     }
 
-    private void toggleHostContestPanels(boolean state){
-        for(HostedContestPanel panel: hostContestPanels){
-            panel.visible = state;
-        }
-        if(state){
-            sendGetHostPanels();
-        }
-    }
+    // region Networking, Updaters, and Setters
 
-    private void setContestType(int type){
-        colorIndex = type;
-        setPageIndex(POKEMON_SELECTION_PAGE);
-        /**if(menu.hostSelectType(playerID, type)){
-            setPageIndex(CONTEST_WAITING_PAGE);
-        }else {
-            setPageIndex(STARTING_PAGE);
-        }*/
-        //should have packet type
-    }
+    public void setScreenForContestState(boolean isInContest, boolean isHost, Contest.ContestPhase contestRound){
+        //Contest contest = contestInfoMenu.getJoinedContest(playerID);
+        //System.out.println("Is in contest: " + isInContest + " Is Host: " + isHost + " Round: " + contestRound.toString());
+        if(isInContest){
+            if(contestRound == Contest.ContestPhase.IDLE){
 
-    private void setContestLevel(){
-        //this.contestLevel = this;
-        if(menu.hostSelectType(playerID, colorIndex)){
-            setPageIndex(CONTEST_WAITING_PAGE);
-        }else {
+                if(isHost){
+                    contestRunningType = 1;
+                }else{
+                    contestRunningType = 2;
+                }
+                setPageIndex(LOBBY_PAGE);
+            }else{
+                setPageIndex(IN_RUNNING_CONTEST);
+            }
+
+        }else{
             setPageIndex(STARTING_PAGE);
         }
-        //should have packet type
+    }
+
+    public void requestPageInfo(){
+
+    }
+
+    public void setPageInfo(){
+
     }
 
     private void startHosting(){
@@ -476,10 +305,6 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         //menu.startStatAssesment(playerInv.player, playerInv.player.getUUID(), pokemonIndex, colorIndex);
         setPageIndex(IN_RUNNING_CONTEST);
         // should have packet
-    }
-
-    private void joinContest(){
-
     }
 
     private void startContest(){
@@ -511,45 +336,213 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
         ClientPlayNetworking.send(new SBConBoothScrReqHostList(buf));
     }
 
-    private List<String> tempNames = Arrays.asList("Host1", "Host2", "Host3");
-
-    // Should be called by a packet
-    /**public void redoPlayerPanes(List<Contest> contests){
-        for(int i = 0; i < hostContestPanels.size(); i++){
-            HostedContestPanel pan = hostContestPanels.get(i);
-            String name = "missing";
-            if(tempNames.size() > i){
-                name = tempNames.get(i);
-            }
-            pan.setUpVisuals(name);
-        }
-    }*/
-
     // Should be called by a packet
     public void redoPlayerPanes(CompoundTag tag){
         ListTag listTag = (ListTag) tag.get("contest_list");
-        System.out.println("The packet has called redoPlayerPanes");
+        //System.out.println("The packet has called redoPlayerPanes");
         this.hostConPanelsIDs.clear();
         for(int i = 0; i < hostContestPanels.size(); i++){
             HostedContestPanel pan = hostContestPanels.get(i);
             String name = "missing";
-            if(i < listTag.size()){
+            ContestType type = ContestType.None;
+            int numContestants = 0;
+            if(i < listTag.size()){ // if there is a contest to add
+                //hostContestPanels.get(i).visible = true;
                 CompoundTag singleContest = (CompoundTag) listTag.get(i);
                 hostConPanelsIDs.add(singleContest.getUUID("host_id"));
                 name = singleContest.getString("host_name");
-                System.out.println("Got Name: ");
-                System.out.println("Name Got is " + name);
+                type = ContestType.getFromInt(singleContest.getInt("contest_type"));
+                numContestants = singleContest.getInt("num_contestants");
             }else{
-
+                //hostContestPanels.get(i).visible = false;
             }
-
-
-
-            //if(tempNames.size() > i){
-                //name = tempNames.get(i);
-            //}
-            pan.setUpVisuals(name);
+            pan.setUpVisuals(name, type, numContestants);
         }
     }
+
+    // endregion
+
+
+    @Override
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int xMousePos, int yMousePos) {
+        if(pageIndex == CONTEST_TYPE_SELECTION){
+            guiGraphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 1000, 750);
+        }else if(pageIndex == POKEMON_SELECTION_PAGE){
+            guiGraphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 225, this.imageWidth, this.imageHeight, 1000, 750);
+        }else{
+            guiGraphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 450, this.imageWidth, this.imageHeight, 1000, 750);
+        }
+    }
+
+    @Override
+    public void render(GuiGraphics guiGraphics, int xMousePos, int yMousePos, float partialTick) { //
+        super.render(guiGraphics, xMousePos, yMousePos, partialTick);
+        if(pageIndex == CONTEST_WAITING_PAGE){
+            /**drawScaledText(guiGraphics, Component.translatable(getContestResult()).getVisualOrderText(),
+                    (Number) (this.leftPos + 50),
+                    (Number) (this.topPos + 50),
+                    0.5f, 0.5f, 1f, 0x00000000, true, false);*/
+            if(contestRunningType == 0){
+                drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.start_contest").getVisualOrderText(),
+                        (Number) (this.leftPos + 144),
+                        (Number) (this.topPos + 145),
+                        1f, 1f, 1f, 0x00918b99, true, false);
+            }else{
+                drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.start_hosting").getVisualOrderText(),
+                        (Number) (this.leftPos + 144),
+                        (Number) (this.topPos + 145),
+                        1f, 1f, 1f, 0x00918b99, true, false);
+            }
+
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.info.entering_pokemon", clientParty.findByUUID(pokemonIndex).getDisplayName().getString()).getVisualOrderText(),
+                    (Number) (this.leftPos + 40),
+                    (Number) (this.topPos + 50),
+                    1f, 1f, 1f, 0x00918b99, false, false);
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.info.contest_type", Component.translatable("cobble_contests.contest_type." + ContestBlockEntity.getContestTypeString1(colorIndex).toLowerCase())).getVisualOrderText(),
+                    (Number) (this.leftPos + 40),
+                    (Number) (this.topPos + 70),
+                    1f, 1f, 1f, 0x00918b99, false, false);
+        }
+        if(pageIndex == STARTING_PAGE){
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.start").getVisualOrderText(),
+                    (Number) (this.leftPos + 143),
+                    (Number) (this.topPos + 44),
+                    1.5f, 1.5f, 1f, 0x00918b99, true, false);
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.host").getVisualOrderText(),
+                    (Number) (this.leftPos + 143),
+                    (Number) (this.topPos + 44 + 40),
+                    1.5f, 1.5f, 1f, 0x00918b99, true, false);
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.join").getVisualOrderText(),
+                    (Number) (this.leftPos + 143),
+                    (Number) (this.topPos + 44 + 80),
+                    1.5f, 1.5f, 1f, 0x00918b99, true, false);
+        }
+        if(pageIndex == CONTEST_TYPE_SELECTION){
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.title.select_type").getVisualOrderText(),
+                    (Number) (this.leftPos + 145),
+                    (Number) (this.topPos + 104),
+                    1f, 1f, 1f, 0x00918b99, true, false);
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_type.cool").getVisualOrderText(),
+                    (Number) (this.leftPos + 143),
+                    (Number) (this.topPos + 78),
+                    1f, 1f, 1f, 0x00918b99, true, false);
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_type.beauty").getVisualOrderText(),
+                    (Number) (this.leftPos + 220),
+                    (Number) (this.topPos + 106),
+                    1f, 1f, 1f, 0x00918b99, true, false);
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_type.cute").getVisualOrderText(),
+                    (Number) (this.leftPos + 184),
+                    (Number) (this.topPos + 184),
+                    1f, 1f, 1f, 0x00918b99, true, false);
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_type.smart").getVisualOrderText(),
+                    (Number) (this.leftPos + 104),
+                    (Number) (this.topPos + 184),
+                    1f, 1f, 1f, 0x00918b99, true, false);
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_type.tough").getVisualOrderText(),
+                    (Number) (this.leftPos + 68),
+                    (Number) (this.topPos + 106),
+                    1f, 1f, 1f, 0x00918b99, true, false);
+        }
+        if(pageIndex == POKEMON_SELECTION_PAGE){
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.title.pokemon_select").getVisualOrderText(),
+                    (Number) (this.leftPos + 140),
+                    (Number) (this.topPos + 23),
+                    1f, 1f, 1f, 0x00000000, true, false);
+            /**if(contestRunningType == 1 || contestRunningType == 2){
+                drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.select_no_pokemon").getVisualOrderText(),
+                        (Number) (this.leftPos + 140),
+                        (Number) (this.topPos + 200),
+                        1f, 1f, 1f, 0x00000000, true, false);
+            }*/
+        }
+
+        if(pageIndex == LOBBY_PAGE){
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.host_lobby").getVisualOrderText(),
+                    (Number) (this.leftPos + 143),
+                    (Number) (this.topPos + 44),
+                    1.5f, 1.5f, 1f, 0x00918b99, true, false);
+            if(contestRunningType == 1){
+                drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.start_contest").getVisualOrderText(),
+                        (Number) (this.leftPos + 143),
+                        (Number) (this.topPos + 176),
+                        1f, 1f, 1f, 0x00918b99, true, false);
+            }else if(contestRunningType == 2){
+                drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.wait_for_start").getVisualOrderText(),
+                        (Number) (this.leftPos + 143),
+                        (Number) (this.topPos + 100),
+                        1f, 1f, 1f, 0x00918b99, true, false);
+            }
+        }
+        if(pageIndex == IN_RUNNING_CONTEST){
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.contest_running").getVisualOrderText(),
+                    (Number) (this.leftPos + 143),
+                    (Number) (this.topPos + 44),
+                    1.5f, 1.5f, 1f, 0x00918b99, true, false);
+            /**drawScaledText(guiGraphics, Component.literal("Pokemon: " + clientParty.findByUUID(pokemonIndex).getDisplayName().getString()).getVisualOrderText(),
+                    (Number) (this.leftPos + 40),
+                    (Number) (this.topPos + 50),
+                    1f, 1f, 1f, 0x00918b99, false, false);*/
+            drawScaledText(guiGraphics, Component.literal("Contest Type: " + ContestBlockEntity.getContestTypeString1(colorIndex)).getVisualOrderText(),
+                    (Number) (this.leftPos + 40),
+                    (Number) (this.topPos + 70),
+                    1f, 1f, 1f, 0x00918b99, false, false);
+
+        }
+
+        if(pageIndex == FIND_A_CON_PAGE){
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.title.fac").getVisualOrderText(),
+                    (Number) (this.leftPos + 143),
+                    (Number) (this.topPos + 44),
+                    1.5f, 1.5f, 1f, 0x00918b99, true, false);
+
+        }
+
+    }
+
+    @Override
+    protected void renderLabels(GuiGraphics arg, int i, int j) {
+    }
+
+
+    private void selectContestPokemon(int pokeIndex) {
+        this.pokemonIndex = clientParty.get(pokeIndex).getUuid();
+        if(contestRunningType == 2){
+            tryJoinLobby(hostPanelIdx);
+        }else{
+            setPageIndex(CONTEST_WAITING_PAGE);
+        }
+    }
+
+    private void selectNoContestPokemon() {
+        setPageIndex(CONTEST_WAITING_PAGE);
+    }
+
+    private void toggleHostContestPanels(boolean state){
+        for(HostedContestPanel panel: hostContestPanels){
+            panel.visible = state;
+        }
+        if(state){
+            sendGetHostPanels();
+        }
+    }
+
+    private void setContestType(int type){
+        colorIndex = type;
+        setPageIndex(POKEMON_SELECTION_PAGE);
+    }
+
+    private void setContestLevel(){
+        if(menu.hostSelectType(playerID, colorIndex)){
+            setPageIndex(CONTEST_WAITING_PAGE);
+        }else {
+            setPageIndex(STARTING_PAGE);
+        }
+    }
+
+    public void updateLobbyContestants(CompoundTag tag){
+        contestantsScroll.setContestantsDataFromTag(tag);
+    }
+
+
 
 }

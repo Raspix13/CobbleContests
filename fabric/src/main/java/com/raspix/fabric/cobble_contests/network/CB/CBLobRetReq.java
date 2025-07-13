@@ -14,27 +14,34 @@ import java.util.UUID;
 public class CBLobRetReq implements CustomPacketPayload {
 
     public final UUID id;
+    public CompoundTag tag;
 
     public static final CustomPacketPayload.Type<CBLobRetReq> PACKET_ID = new CustomPacketPayload.Type<>(MessagesInit.LOB_RET_REQ);
     public static final StreamCodec<FriendlyByteBuf, CBLobRetReq> PACKET_CODEC = new StreamCodec<FriendlyByteBuf, CBLobRetReq>() {
         @Override
         public @NotNull CBLobRetReq decode(FriendlyByteBuf buf) {
             CompoundTag compoundTag = new CompoundTag();
-            return new CBLobRetReq(FriendlyByteBuf.readUUID(buf));
+            return new CBLobRetReq(FriendlyByteBuf.readUUID(buf), FriendlyByteBuf.readNbt(buf));
         }
 
         @Override
         public void encode(FriendlyByteBuf buf, CBLobRetReq contestInfo) {
             FriendlyByteBuf.writeUUID(buf, contestInfo.getId());
+            FriendlyByteBuf.writeNbt(buf, contestInfo.getTag());
         }
     };
 
-    public CBLobRetReq(UUID id) {
+    public CBLobRetReq(UUID id, CompoundTag tag) {
         this.id = id;
+        this.tag = tag;
     }
 
     public UUID getId(){
         return id;
+    }
+
+    public CompoundTag getTag(){
+        return tag;
     }
 
 
@@ -42,7 +49,7 @@ public class CBLobRetReq implements CustomPacketPayload {
         System.out.println("Receiving LobRetReq");
         if(Minecraft.getInstance().screen instanceof ContestBoothScreen screen){
             //screen.redoPlayerPanes(tag);
-            screen.setPageToLobby();
+            screen.setPageToLobby(tag);
             //CompoundTag tag = buf.readNbt();
             //screen.setUpdatedInfo(tag.getUUID("index"), Contest.ContestPhase.fromTag(tag, "phase"), tag.getInt("seconds"));
         }

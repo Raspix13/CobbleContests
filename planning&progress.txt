@@ -1,7 +1,7 @@
 Planning:
 
 
-Demo TODO:
+Beta 1.1.0 TODO:
 - Change initial win/lose message to "get ready and use contest card"
 - Ranked/Single player win conditions
 - Multiplayer win conditions
@@ -9,19 +9,27 @@ Demo TODO:
 - would like it if last move used was indicated
 - Fix up booth ui
 
-
-Final TODO:
+Release 1.1.0 TODO:
 - Get neoforge caught up/ buildable
+- Add spectators / ability for host to not select pokemon
+    - check to make sure there are contestants
 - Contest Send-Out:
     - Get the pokemon thrown out farther away when summoned in contest (Contest @SendOutPokemon)
     - Pokemon already out during contests should play cry animation (Contest @SendOutPokemon)
-- Check to make sure configs don't crash servers (technically for demo but finalized with feedback)
+- Check to make sure configs don't crash servers (technically for beta but finalized with feedback)
 - Contest Moves status effects
 - Ability to kick participants and leave contest while in lobby, also for host to be able to end contest?
+- Back button in contest booth?
 - Be able to change the max number of contestants in configs
+- Change lobby screen or scroll to see more contest options
 
 
-Working on Actively:
+Future TODO:
+
+
+
+Active TODO:
+- Get all contest booth screens set up and working
 - Multiplayer hosting and lobbies
     - Contest does not start the first time it is hit
     - Get lobby page to update when someone joins or contest starts
@@ -31,20 +39,32 @@ Current Bugs & Issues for Later:
 - Crashes:
     - Crashes when host (and maybe spectator) tries to not use pokemon/ selects no pokemon
     - Crashes or errors when player in contest leaves (Contest manager update)
+    - Selecting a lobby that does not have a player will crash
 - Other:
     - Contestbooth lobby participant screens should be updated when contest starts
+    - Lobbies no longer timeout (prob update in con manager)
 
 
 
 
 
 Progress:
-
 Things I have done:
+
+7/12
+- Fixed error for non-implemented moves being used in contest
+- Added Icon for None contest type
+- Removed option to select no pokemon (will re-add after beta)
+- Added more translatables
+- Worked on join a hosted contest buttons
+- Fixed lobby timeout message
+- Added scroll view & panels to display contestants who are part of a lobby
+- Lobbies should now update when a new player joins
 
 7/11
 - Fixed neoforge in old branch and this one
 - Fixed berry issue in old branch that I forgot to post
+- Worked on counter display
 
 7/7
 - Fixed time still passing when single player is paused

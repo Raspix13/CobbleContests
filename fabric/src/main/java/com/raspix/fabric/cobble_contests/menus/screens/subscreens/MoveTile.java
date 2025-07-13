@@ -47,8 +47,8 @@ public class MoveTile {
     protected final Minecraft minecraft;
 
     public static final HashMap<ContestType, Integer[]> typeHues = new HashMap<>(){{
-        put(ContestType.Beauty, new Integer[]{0x5bc1f5, 1});//0x5bc1f5
         put(ContestType.Cool, new Integer[]{0xE55C32, 0});
+        put(ContestType.Beauty, new Integer[]{0x5bc1f5, 1});//0x5bc1f5
         put(ContestType.Cute, new Integer[]{0xed6dc5, 2});
         put(ContestType.Smart, new Integer[]{0x66c831, 3});
         put(ContestType.Tough, new Integer[]{0xf0dd30, 4});
@@ -128,7 +128,7 @@ public class MoveTile {
                 36,
                 36 * offset,
                 0,
-                180, 36,
+                216, 36,
                 0,
                 1,
                 1,

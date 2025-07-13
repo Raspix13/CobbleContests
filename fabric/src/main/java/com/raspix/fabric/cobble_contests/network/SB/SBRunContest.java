@@ -126,7 +126,7 @@ public class SBRunContest implements CustomPacketPayload {
         //Block blockie = level.getBlockState(pos).getBlock();
         if(be instanceof ContestBlockEntity cbe){
             System.out.println("Should be right entity");
-            ContestManager.INSTANCE.AddContest(id, contestType, contestLevel, null, true, index);
+            ContestManager.INSTANCE.AddContest(server, id, contestType, contestLevel, null, true, index);
             if(contestLevel != ContestLevel.Multiplayer.getIntValue()){
                 ContestManager.INSTANCE.startContest(ContestManager.INSTANCE.getPlayersContest(id));
             }

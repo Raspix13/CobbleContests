@@ -90,6 +90,7 @@ public class SBConBoothScrReqHostList implements CustomPacketPayload {
                 tag.putString("host_name", "Player Not Found");
             }
             tag.putInt("contest_type", contest.getContestType().getIntValue());
+            tag.putInt("num_contestants", contest.getNumContestants());
 
             listTag.add(tag);
 
