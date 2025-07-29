@@ -308,7 +308,7 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
     }
 
     private void startContest(){
-        System.out.println("should be starting contest");
+        System.out.println("should be starting ranked contest");
         menu.startRankedContest(colorIndex, pokemonIndex, playerInv.player.getUUID());
         menu.startStatAssesment(playerInv.player, playerInv.player.getUUID(), pokemonIndex, colorIndex, ContestLevel.None);
         setPageIndex(IN_RUNNING_CONTEST);
@@ -402,6 +402,10 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
                     (Number) (this.leftPos + 40),
                     (Number) (this.topPos + 70),
                     1f, 1f, 1f, 0x00918b99, false, false);
+            drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.info.instructions").getVisualOrderText(),
+                    (Number) (this.leftPos + 40),
+                    (Number) (this.topPos + 90),
+                    1f, 1f, 1f, 0x00918b99, false, false);
         }
         if(pageIndex == STARTING_PAGE){
             drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.start").getVisualOrderText(),
@@ -466,11 +470,19 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
                         (Number) (this.leftPos + 143),
                         (Number) (this.topPos + 176),
                         1f, 1f, 1f, 0x00918b99, true, false);
+                drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.info.instructions").getVisualOrderText(),
+                        (Number) (this.leftPos + 40),
+                        (Number) (this.topPos + 150),
+                        1f, 1f, 1f, 0x00918b99, false, false);
             }else if(contestRunningType == 2){
                 drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.wait_for_start").getVisualOrderText(),
                         (Number) (this.leftPos + 143),
-                        (Number) (this.topPos + 100),
+                        (Number) (this.topPos + 176),
                         1f, 1f, 1f, 0x00918b99, true, false);
+                drawScaledText(guiGraphics, Component.translatable("cobble_contests.contest_text.info.instructions").getVisualOrderText(),
+                        (Number) (this.leftPos + 40),
+                        (Number) (this.topPos + 150),
+                        1f, 1f, 1f, 0x00918b99, false, false);
             }
         }
         if(pageIndex == IN_RUNNING_CONTEST){

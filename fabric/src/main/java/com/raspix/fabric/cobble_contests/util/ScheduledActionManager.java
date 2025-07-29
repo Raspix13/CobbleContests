@@ -4,21 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ScheduledActionManager {
+
+    private float timeCounter;
     private List<ScheduledContestAction> scheduledActions = new ArrayList<>();
 
-    public void scheduleAction(Runnable action, long delay) {
-        long scheduledTime = System.currentTimeMillis() + delay;
+    public ScheduledActionManager(){
+        this.timeCounter = 0f;
+    }
+
+    public void scheduleAction(Runnable action, float delay) {
+        float scheduledTime = timeCounter + delay;
         ScheduledContestAction scheduledAction = new ScheduledContestAction(action, scheduledTime);
         scheduledActions.add(scheduledAction);
     }
 
-    public void update() {
-        long currentTime = System.currentTimeMillis();
+    public void update(float timeChange) {
+        float currentTime = timeCounter + timeChange;
         for (ScheduledContestAction scheduledAction : new ArrayList<>(scheduledActions)) {
             if (currentTime >= scheduledAction.getScheduledTime()) {
                 scheduledAction.executeAction();
                 scheduledActions.remove(scheduledAction);
             }
         }
+        timeCounter += timeChange;
     }
 }

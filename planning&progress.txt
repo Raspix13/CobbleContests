@@ -2,12 +2,11 @@ Planning:
 
 
 Beta 1.1.0 TODO:
-- Change initial win/lose message to "get ready and use contest card"
-- Ranked/Single player win conditions
 - Multiplayer win conditions
-- Lobby and host pages should show participants
-- would like it if last move used was indicated
-- Fix up booth ui
+- Multiplayer Ui
+- Maybe status effects?
+- disable unused host buttons
+
 
 Release 1.1.0 TODO:
 - Get neoforge caught up/ buildable
@@ -25,13 +24,12 @@ Release 1.1.0 TODO:
 
 
 Future TODO:
-
-
+- would like it if last move used was indicated
+- Fix up booth ui
 
 Active TODO:
 - Get all contest booth screens set up and working
 - Multiplayer hosting and lobbies
-    - Contest does not start the first time it is hit
     - Get lobby page to update when someone joins or contest starts
 
 
@@ -42,8 +40,8 @@ Current Bugs & Issues for Later:
     - Selecting a lobby that does not have a player will crash
 - Other:
     - Contestbooth lobby participant screens should be updated when contest starts
-    - Lobbies no longer timeout (prob update in con manager)
     - If player does not choose move the panel will not open
+    - Timeout should remove anyone from lobby
 
 
 
@@ -54,6 +52,10 @@ Things I have done:
 
 7/29
 - Added icon for more info on moves
+- Organized Contest code a bit
+- Adjusted timing for showcase to give each move time
+- Fixed ranked contests not starting on first try
+- Added info to tell players how to interact with contest
 
 7/20-7/21
 - Adjusted how moves are called to allow final move time to play

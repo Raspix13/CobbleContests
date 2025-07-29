@@ -52,16 +52,16 @@ public class ContestManager {
     /**
      * When the host creates a new lobby
      */
-    public boolean AddContest(MinecraftServer server, UUID hostId, int contestType, int contestTier, ItemStack reward, boolean hostParticipates, UUID pokeIdx){
+    public Contest AddContest(MinecraftServer server, UUID hostId, int contestType, int contestTier, ItemStack reward, boolean hostParticipates, UUID pokeIdx){
         if(IsAlreadyInContest(hostId)){
             System.out.println("Already in contest");
-            return false;
+            return null;
         }
         Contest newCon = new Contest(server, hostId, contestType, contestTier, reward, hostParticipates, pokeIdx);
         contests.add(newCon);
         activeContestents.put(hostId, newCon);
 
-        return true;
+        return newCon;
     }
 
 
