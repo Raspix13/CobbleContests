@@ -53,6 +53,7 @@ public class ItemInit {
 
     public static final Item CONTEST_CARD = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "contest_card"), new ContestWallet(new Item.Properties().stacksTo(1)));
     public static final Item BALL_SWAPPER = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID,"ball_swapper"), new BallSwapper(new Item.Properties().stacksTo(1)));
+    public static final Item SEAL_TESTER = Registry.register(BuiltInRegistries.ITEM, ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID,"seal_tester"), new SealTester(new Item.Properties().stacksTo(1)));
 
     @SuppressWarnings(value = "unused")
     public static final CreativeModeTab POKENAV_GROUP = Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "cobble_contests_tab"),
@@ -63,6 +64,7 @@ public class ItemInit {
                         entries.accept(CONTEST_BOOTH);
                         entries.accept(CONTEST_CARD);
                         entries.accept(BALL_SWAPPER);
+                        entries.accept(SEAL_TESTER);
                         entries.accept(POFFIN_POT);
                         entries.accept(POFFIN_DOUGH_BASE);
                         entries.accept(FOUL_POFFIN);

@@ -43,6 +43,7 @@ Current Bugs & Issues for Later:
 - Other:
     - Contestbooth lobby participant screens should be updated when contest starts
     - Lobbies no longer timeout (prob update in con manager)
+    - If player does not choose move the panel will not open
 
 
 
@@ -50,6 +51,20 @@ Current Bugs & Issues for Later:
 
 Progress:
 Things I have done:
+
+7/29
+- Added icon for more info on moves
+
+7/20-7/21
+- Adjusted how moves are called to allow final move time to play
+- Added cry animation to pokemon already out on introduction
+- Worked on getting attack animations to play when moves are used (based on damage type)
+- More particle stuff
+- Added item to test particle effects
+
+7/19
+- Worked on multiplayer results output
+- Started particle effect list
 
 7/12
 - Fixed error for non-implemented moves being used in contest

@@ -1,9 +1,12 @@
 Cobble Contests 1.1.0 (Fabric)
 - Added config file
 - Added bad Japanese translation
-- Fixed crash when using touga or hopo berries in poffin pot
 - Added contest showcase
 - Added multiplayer and hosting contests
+
+Cobble Contests 1.0.5 (Fabric + Neoforge)
+- Look at other branches for this
+- Fixed crash when using touga or hopo berries in poffin pot
 
 Cobble Contests 1.0.4 (Fabric + Neoforge)
 - Added config file for poffin friendship changes and if ball swapper should use up the ball

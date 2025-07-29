@@ -6,6 +6,7 @@ import com.cobblemon.mod.common.api.moves.MoveSet;
 import com.cobblemon.mod.common.api.reactive.SimpleObservable;
 import com.cobblemon.mod.common.client.battle.ClientBattleMessageQueue;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
+import com.cobblemon.mod.common.net.messages.client.animation.PlayPosableAnimationPacket;
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormParticlePacket;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.fabric.cobble_contests.events.ContestMoves;
@@ -18,6 +19,7 @@ import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
 import com.raspix.fabric.cobble_contests.util.data.ContestLevel;
 import com.raspix.fabric.cobble_contests.util.data.ContestType;
+import com.raspix.fabric.cobble_contests.util.data.ParticleEffectList;
 import kotlin.Unit;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.ChatFormatting;
@@ -32,13 +34,14 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import com.cobblemon.mod.common.api.pokemon.PokemonPropertyExtractor;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 import static com.cobblemon.mod.common.util.LocalizationUtilsKt.lang;
-import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 
 /**
  * This is some really bad code, so sorry to anyone looking at it
@@ -85,6 +88,14 @@ public class Contest {
     int showcaseRound = 0; // Which round of showcase moves it is
     boolean roundReady; // are all moves chosen
     boolean runningRound;
+
+    /** Status effect idea
+     * Burn: +Tough -Cute -Beauty
+     * Freeze: +Smart -Beauty -Cool
+     * Paralysis: +Cool -Cute -Smart
+     * Poison: +Beauty -Tough -Smart
+     * Sleep: +Cute -Cool -Tough
+     */
 
     /**private static final HashMap<ContestType, List<ContestType>> oppositeType = new HashMap<>(){{
         put(ContestType.Beauty, Arrays.asList(ContestType.Tough, ContestType.Smart));
@@ -416,12 +427,26 @@ public class Contest {
         }
     }
 
-    public void runContestantMove(MinecraftServer server, Contestant contestant){
+    public void runContestantMove(MinecraftServer server, Contestant contestant, Pokemon pokemon){
         //contestant.useMove(ContestType.getFromInt(contestType));
         ContestMoves.MoveData moveData = ContestMoves.instance.getMoveData(contestant.currentMove);
         ContestMoves.FunctionData functionData = ContestMoves.instance.getFunctionDataFromName(moveData.getFunctionType());
 
         functionData.onUse(server,this, contestant);
+
+        List<Move> moves = pokemon.getMoveSet().getMoves();
+        Move move = null;
+        for(int i = 0; i < 4; i++){ // There has to be a better way to get movedata from name
+            if(moves.size() > i && moves.get(i) != null){
+                if(moves.get(i).getName().equals(contestant.currentMove)){
+                    move = moves.get(i);
+                    break;
+                }
+            }
+        }
+        if(move != null){
+            doAnimation(pokemon, move.getDamageCategory().getName());
+        }
 
         sendEveryoneContestants(server);
 
@@ -593,10 +618,19 @@ public class Contest {
         }else if (round == ContestPhase.RESULTS && timer >= RESULTS_TIME * TICKS_PER_SECOND){
             System.out.println("Finished Contest");
             round = ContestPhase.ENDING;
+
             updateContestants(server);
             EndContest(server);
         }else if(round == ContestPhase.INTRODUCTION){
-            if(timer >= ((contestantIdx * SEND_OUT_TIMER + 2) * TICKS_PER_SECOND)){
+            if(contestantIdx >= contestants.size() && timer >= ((contestantIdx * SEND_OUT_TIMER + 2) * TICKS_PER_SECOND)){
+                this.contestantIdx += 1;
+                System.out.println("Finished Introduction");
+                timer = 0;
+                round = ContestPhase.TALENT;
+                this.showcaseRound = 0;
+                updateContestants(server);
+                sendEveryoneContestants(server);
+            } else if(timer >= ((contestantIdx * SEND_OUT_TIMER + 2) * TICKS_PER_SECOND)){
                 PlayerList playerList = server.getPlayerList();
                 Contestant contestant = contestants.get(contestantsOrdered.get(contestantIdx));
                 ServerPlayer player = playerList.getPlayer(contestant.player);
@@ -611,14 +645,14 @@ public class Contest {
 
                 sendOutPokemon(server, contestantIdx);
                 this.contestantIdx += 1;
-                if(contestantIdx >= contestants.size()){
+                /**if(contestantIdx >= contestants.size()){
                     System.out.println("Finished Introduction");
                     timer = 0;
                     round = ContestPhase.TALENT;
                     this.showcaseRound = 0;
                     updateContestants(server);
                     sendEveryoneContestants(server);
-                }
+                }*/
             }
         }else if(round == ContestPhase.TALENT){
             if(timerInt != getTimer()){
@@ -642,7 +676,7 @@ public class Contest {
                         assert poke != null;
                         addContestantMessage(server, null, "cobble_contests.contest_showoff.move_used", poke.getDisplayName().getString(), lang("move." + contestant.getCurrentMove()));
 
-                        runContestantMove(server, contestants.get(contestantsOrdered.get(contestantIdx)));
+                        runContestantMove(server, contestants.get(contestantsOrdered.get(contestantIdx)), poke);
                     }
                     contestantIdx += 1;
 
@@ -692,8 +726,9 @@ public class Contest {
                     }
 
                 }else {
-
+                    determineContestResults(server);
                 }
+                addContestantMessage(server, null, "And thats the end of the Showcase Round! Lets see those results");
 
             }
 
@@ -712,6 +747,51 @@ public class Contest {
 
     public void scheduleAction(Runnable action, long timeTil){
         scheduledActionManager.scheduleAction(action, timeTil);
+    }
+
+    public void determineContestResults(MinecraftServer server){
+        List<List<Contestant>> rankedContestants = new ArrayList<>();
+        for (Contestant contestant : contestants.values()){
+            if(rankedContestants.isEmpty()){
+                rankedContestants.add(new ArrayList<>(){{add(contestant);}});
+            }else{
+                for(int i = 0; i < rankedContestants.size(); i++){
+                    int numHearts = contestant.getHearts();
+                    if(numHearts == rankedContestants.get(i).get(0).getHearts()){
+                        rankedContestants.get(i).add(contestant);
+                        break;
+                    }else if(numHearts == rankedContestants.get(i).get(0).getHearts()){
+                        rankedContestants.add(i, new ArrayList<>(){{add(contestant);}});
+                        break;
+                    }
+                }
+            }
+        }
+
+        int rankIndex = contestants.size() + 1;
+        for(int i = 0; i < rankedContestants.size(); i++){
+            int j = rankedContestants.size() - 1 - i;
+            List<Contestant> rankedContestantList = rankedContestants.get(j);
+            int totalHearts = rankedContestantList.getFirst().getHearts();
+
+            rankIndex -= rankedContestantList.size();
+
+            int finalRankIndex = rankIndex;
+            scheduleAction(() -> {sendIncrementedContestantRanks(server, finalRankIndex, totalHearts, rankedContestantList.size(), rankedContestantList);}, 100L + (1000L * i));
+            //System.out.println("player ranked " + rankIndex + " with " + totalHearts + " hearts");
+
+        }
+    }
+
+    private void sendIncrementedContestantRanks(MinecraftServer server, int contestantsRank, int numHearts, int numContestants, List<Contestant> contestantsRanked){
+        PlayerList playerList = server.getPlayerList();
+        String result = playerList.getPlayer(contestantsRanked.get(0).player).getDisplayName().getString();
+        for(int i = 1; i < contestantsRanked.size(); i ++){
+            result += " and " + playerList.getPlayer(contestantsRanked.get(i).player).getDisplayName().getString();
+        }
+        result += " placed " + contestantsRank + " with " + numHearts + " hearts";
+        System.out.println(result);
+
     }
 
     public void reorderContestants(){
@@ -740,13 +820,15 @@ public class Contest {
                 }
             }else{
                 //play cry animation
+                poke.getEntity().cry();
+                //cry(poke);
             }
 
             //SnowstormParticleReader.INSTANCE.loadEffect()
 
             PokemonEntity pokeEnt = poke.getEntity();
             //ServerPlayNetworking.send(play, new CBSendPlayersParticles(play.getId(), "rainbow", pokeEnt.position().toVector3f()));
-            new SpawnSnowstormParticlePacket(cobblemonResource("snow_swirl"), pokeEnt.position())
+            new SpawnSnowstormParticlePacket(ParticleEffectList.HEART_SMOKEBURST, pokeEnt.position())
                     .sendToPlayersAround(pokeEnt.getX(), pokeEnt.getY(), pokeEnt.getZ(), 64.0, pokeEnt.level().dimension(), serverPlayer -> {
                         return false;
                     });
@@ -762,6 +844,30 @@ public class Contest {
         //}
 
         addContestantMessage(server, ChatFormatting.AQUA, "Wow, the audience seems to really like this pokemon");
+    }
+
+    /**
+     * Placeholder to eventually have pokemon play move animation
+     * @param pokemon
+     */
+    public void doAnimation(Pokemon pokemon) {
+        PokemonEntity pokemonEntity = pokemon.getEntity();
+        if (pokemonEntity.isSilent()) return;
+        PlayPosableAnimationPacket pkt = new PlayPosableAnimationPacket(pokemonEntity.getId(), Set.of("cry"), Collections.emptyList());
+        Vec3 pos = pokemonEntity.position();
+        pkt.sendToPlayersAround(pos.x, pos.y, pos.z, 64, pokemonEntity.level().dimension(), player -> false);
+    }
+
+    /**
+     * Placeholder to eventually have pokemon play move animation
+     * @param pokemon
+     */
+    public void doAnimation(Pokemon pokemon, String anim) {
+        PokemonEntity pokemonEntity = pokemon.getEntity();
+        if (pokemonEntity.isSilent()) return;
+        PlayPosableAnimationPacket pkt = new PlayPosableAnimationPacket(pokemonEntity.getId(), Set.of(anim), Collections.emptyList());
+        Vec3 pos = pokemonEntity.position();
+        pkt.sendToPlayersAround(pos.x, pos.y, pos.z, 64, pokemonEntity.level().dimension(), player -> false);
     }
 
     private void updateContestants(MinecraftServer server){
