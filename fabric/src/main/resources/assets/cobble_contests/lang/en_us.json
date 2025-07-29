@@ -51,6 +51,8 @@
   "tooltip.cobble_contests.ball_swapper.tooltip.instructions1": "To change ball, use with new ball in offhand.",
   "tooltip.cobble_contests.ball_swapper.tooltip.instructions2": "Use again to change the ball of a pokemon.",
   "cobble_contests.ball_swapper.same_ball": "This is the same as the current ball",
+  "tooltip.cobble_contests.seal_tester.tooltip.effect_type": "Currently set to %1$s.",
+  "tooltip.cobble_contests.seal_tester.tooltip.effect_used": "Using effect index %1$s.",
 
   "cobble_contests.poffin_pot_instructions": "Add poffin dough to pot, fuel and 1-4 berries. Using duplicate berries will result in a foul poffin. Result stats based on berries used",
   "tooltip.cobble_contests.poffin_item.tooltip.poffin_stats": "Spicy: %1$s Dry: %2$s Sweet: %3$s Bitter: %4$s Sour: %5$s Smoothness: %6$s",

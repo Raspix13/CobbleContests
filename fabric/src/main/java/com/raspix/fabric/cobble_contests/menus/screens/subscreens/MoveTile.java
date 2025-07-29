@@ -36,6 +36,7 @@ public class MoveTile {
 
     private final ResourceLocation moveTexture = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_move.png");
     private final ResourceLocation moveOverlayTexture = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_move_overlay.png");
+    private final ResourceLocation moreInfoIcon = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/more_info_icon.png");
     private final ResourceLocation contestTypeIcons = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_type_icons.png");
     private final ResourceLocation hearts = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/hearts.png");
 
@@ -104,6 +105,8 @@ public class MoveTile {
 
         this.blit(context, moveTexture, (int) this.x, (int) this.y, 0, isSelectable() && isHovered(mouseX, mouseY) ? MOVE_HEIGHT : 0, MOVE_WIDTH, MOVE_HEIGHT, 92, 48, ((hue & 0xFF0000) >> 16)/255f, ((hue & 0xFF00) >> 8)/255f, (hue & 0xFF)/255f, 1f);
         context.blit(moveOverlayTexture, (int) this.x, (int) this.y, 0, 0, MOVE_WIDTH, MOVE_HEIGHT, 92, 24);
+        this.blit(context, moreInfoIcon, (int) this.x + 80, (int) this.y, 0, 0, 10, 11, 10, 11, ((hue & 0xFF0000) >> 16)/255f, ((hue & 0xFF00) >> 8)/255f, (hue & 0xFF)/255f, 1f);
+        //context.blit(moreInfoIcon, (int) this.x + 80, (int) this.y, 0, 0, 10, 11, 92, 24);
 
 
         /**drawScaledText(context, lang("move." + name).getVisualOrderText(),
