@@ -5,6 +5,7 @@ import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.fabric.cobble_contests.blocks.entity.ContestBlockEntity;
 import com.raspix.fabric.cobble_contests.network.MessagesInit;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
+import com.raspix.fabric.cobble_contests.util.Contest;
 import com.raspix.fabric.cobble_contests.util.ContestManager;
 import com.raspix.fabric.cobble_contests.util.data.ContestLevel;
 import net.minecraft.core.BlockPos;
@@ -122,35 +123,18 @@ public class SBRunContest implements CustomPacketPayload {
         }
 
         //BlockEntity be = level.getBlockEntity(pos);
-        BlockEntity be  = level.getChunkAt(pos).getBlockEntity(pos, LevelChunk.EntityCreationType.IMMEDIATE); //not sure why getBlockEntity does not work
+        //BlockEntity be  = level.getChunkAt(pos).getBlockEntity(pos, LevelChunk.EntityCreationType.IMMEDIATE); //not sure why getBlockEntity does not work
         //Block blockie = level.getBlockState(pos).getBlock();
-        if(be instanceof ContestBlockEntity cbe){
-            System.out.println("Should be right entity");
-            ContestManager.INSTANCE.AddContest(server, id, contestType, contestLevel, null, true, index);
-            if(contestLevel != ContestLevel.Multiplayer.getIntValue()){
-                ContestManager.INSTANCE.startContest(ContestManager.INSTANCE.getPlayersContest(id));
-            }
-            //cbe.runStatAssesment(id, index, contestType, contestLevel, (ServerPlayer) player);
-        }else {
-            System.out.println("Nope, wrong entity");
-            /**System.out.println(player);
-            System.out.println(level);
-            System.out.println("ID: " + id + ", Index: " + index + ", Pos: " + pos);
-            System.out.println("Type of Block: " + blockie.getName());
-            System.out.println("Does have block entity?: " + level.getBlockState(pos).hasBlockEntity());
-            System.out.println("Block Entity Attempt #1: " + be);
-            System.out.println("The Block Entity at " + pos + " is reading as " + level.getBlockEntity(pos));
-            System.out.println("State: " + level.getBlockState(pos));
-            System.out.println("Menu Provider: " + level.getBlockState(pos).getMenuProvider(level, pos));
-            //System.out.println("Menu instance of CBE: " + (level.getBlockState(pos).getMenuProvider(level, pos) instanceof ContestBlockEntity));
-            if(be != null){
-                System.out.println("Type: " + be.getType());
-            }else {
-                System.out.println("Type would cause null pointer error");
-            }
-            BlockEntity be2 = level.getChunkAt(pos).getBlockEntity(pos, LevelChunk.EntityCreationType.IMMEDIATE);
-            System.out.println("Be2 is: " + be2);*/
+        //if(be instanceof ContestBlockEntity cbe){
+        //System.out.println("Should be right entity");
+        Contest newCon = ContestManager.INSTANCE.AddContest(server, id, contestType, contestLevel, null, true, index);
+        if(newCon != null && contestLevel != ContestLevel.Multiplayer.getIntValue()){
+            System.out.println("Not multiplayer");
+            //ContestManager.INSTANCE.startContest(ContestManager.INSTANCE.getPlayersContest(id));
+            newCon.startContest(id);
         }
+            //cbe.runStatAssesment(id, index, contestType, contestLevel, (ServerPlayer) player);
+        //}
     }
 
     private int getNextContestLevel(CompoundTag ribbonTag, int contestType) {

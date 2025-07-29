@@ -5,9 +5,9 @@ import java.util.List;
 
 public class ScheduledContestAction {
     private Runnable action;
-    private long scheduledTime;
+    private float scheduledTime;
 
-    public ScheduledContestAction(Runnable action, long scheduledTime) {
+    public ScheduledContestAction(Runnable action, float scheduledTime) {
         this.action = action;
         this.scheduledTime = scheduledTime;
     }
@@ -16,7 +16,7 @@ public class ScheduledContestAction {
         action.run();
     }
 
-    public long getScheduledTime() {
+    public float getScheduledTime() {
         return scheduledTime;
     }
 

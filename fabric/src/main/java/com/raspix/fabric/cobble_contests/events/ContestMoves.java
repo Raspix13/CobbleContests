@@ -924,13 +924,13 @@ public class ContestMoves {
         contestant.setTurnHearts(functionData.getAppeal() + typeMod + repMove);
 
         if(repMove == -1){
-            contest.scheduleAction(() -> {contest.addContestantMessage(server, ChatFormatting.RED, "cobble_contests.contest_showcase.reused_move");}, 1000);
+            contest.scheduleAction(() -> {contest.addContestantMessage(server, ChatFormatting.RED, "cobble_contests.contest_showcase.reused_move");}, 10);
         }
         
         if(typeMod == -1){
-            contest.scheduleAction(() -> contest.addContestantMessage(server, ChatFormatting.RED, "cobble_contests.contest_showcase.bad_appeal_type"), 1500);
+            contest.scheduleAction(() -> contest.addContestantMessage(server, ChatFormatting.RED, "cobble_contests.contest_showcase.bad_appeal_type"), 15);
         }else if(typeMod == 1){
-            contest.scheduleAction(() -> contest.addContestantMessage(server, ChatFormatting.AQUA, "cobble_contests.contest_showcase.good_appeal_type"), 1500);
+            contest.scheduleAction(() -> contest.addContestantMessage(server, ChatFormatting.AQUA, "cobble_contests.contest_showcase.good_appeal_type"), 15);
         }
 
     }

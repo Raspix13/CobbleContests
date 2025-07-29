@@ -84,6 +84,7 @@
   "cobble_contests.contest_text.title.fac": "Find A Contest",
   "cobble_contests.contest_text.info.entering_pokemon": "Entering Pokemon: %1$s",
   "cobble_contests.contest_text.info.contest_type": "Contest Type: %1$s",
+  "cobble_contests.contest_text.info.instructions": "Use contest card once contest starts. ",
 
 
   "cobble_contests.contest_text.timeout": "The contest lobby timed out",
