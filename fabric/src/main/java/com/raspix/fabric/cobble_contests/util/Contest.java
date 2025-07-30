@@ -9,6 +9,7 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.net.messages.client.animation.PlayPosableAnimationPacket;
 import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormParticlePacket;
 import com.cobblemon.mod.common.pokemon.Pokemon;
+import com.mojang.authlib.GameProfile;
 import com.raspix.fabric.cobble_contests.events.ContestMoves;
 import com.raspix.fabric.cobble_contests.network.CB.CBLobRetReq;
 import com.raspix.fabric.cobble_contests.network.CB.CBSendContestantMessage;
@@ -200,12 +201,12 @@ public class Contest {
         }
 
         public boolean setRandomMove(MinecraftServer server){
-            PlayerList playerList = server.getPlayerList();
+            //PlayerList playerList = server.getPlayerList();
 
             if(currentMove.isEmpty()){
 
-                ServerPlayer play = playerList.getPlayer(playerId);
-                Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(play).get(pokemon);
+                //ServerPlayer play = playerList.getPlayer(playerId);
+                Pokemon poke = getPokemonFromID(server, playerId, pokemon);//Cobblemon.INSTANCE.getStorage().getParty(play).get(pokemon);
                 MoveSet moveSet = poke.getMoveSet();
                 List<Move> moves = moveSet.getMoves();
                 List<Move> nonNullMoves = new ArrayList<>();
@@ -412,12 +413,13 @@ public class Contest {
                 PlayerList playerList = server.getPlayerList();
                 Contestant contestant = contestants.get(contestantsOrdered.get(contestantIdx));
 
-                ServerPlayer player = playerList.getPlayer(contestant.playerId);
-                Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(player).get(contestant.pokemon);
+                GameProfile profile = server.getProfileCache().get(contestant.playerId).get();
+                String playerName = profile.getName();
+                Pokemon poke = getPokemonFromID(server, contestant.playerId, contestant.pokemon);//Cobblemon.INSTANCE.getStorage().getParty(player).get(contestant.pokemon);
 
                 assert poke != null;
                 //addContestantMessage(player.getDisplayName().getString() + " entered " + poke.getDisplayName().getString() + " the " + poke.getSpecies().getName());
-                addContestantMessage(server, null, "cobble_contests.contest_showoff.intro", player.getDisplayName().getString(), poke.getDisplayName().getString(), poke.getSpecies().getName());
+                addContestantMessage(server, null, "cobble_contests.contest_showoff.intro", playerName, poke.getDisplayName().getString(), poke.getSpecies().getName());
                 //addContestantMessage(Component.translatable("cobble_contests.contest_showoff.intro", player.getDisplayName().getString(), poke.getDisplayName().getString(), poke.getSpecies().getName()));
 
                 sendOutPokemon(server, contestantIdx);
@@ -499,10 +501,10 @@ public class Contest {
 
                     int finalI = i;
                     Contestant contestant = contestants.get(contestantsOrdered.get(i));
-                    ServerPlayer player = playerList.getPlayer(contestant.playerId);
+                    //ServerPlayer player = playerList.getPlayer(contestant.playerId);
 
-                    assert player != null;
-                    Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(player).get(contestant.pokemon);
+                    //assert player != null;
+                    Pokemon poke = getPokemonFromID(server, contestant.playerId, contestant.pokemon);//Cobblemon.INSTANCE.getStorage().getParty(player).get(contestant.pokemon);
 
                     assert poke != null;
                     float timeDelay = (2 + (finalI * SHOWCASE_PER_CONTESTANT)) * TICKS_PER_SECOND;
@@ -542,6 +544,15 @@ public class Contest {
     public void SetContestRound(ContestPhase newPhase){
         round = newPhase;
         timer = 0;
+    }
+
+    public Pokemon getPokemonFromID(MinecraftServer server, UUID playerUUid, UUID pokeUUid){
+        Pokemon contestParticipant = Cobblemon.INSTANCE.getStorage().getParty(playerUUid, server.registryAccess()).get(pokeUUid);
+        if(contestParticipant == null){ // if was not in party
+            contestParticipant = Cobblemon.INSTANCE.getStorage().getPC(playerUUid, server.registryAccess()).get(pokeUUid);
+        }
+        return contestParticipant;
+
     }
 
     // endregion
@@ -600,15 +611,21 @@ public class Contest {
         for(int i = 0; i < contestantsOrdered.size(); i ++){
             UUID contestantID = contestantsOrdered.get(i);
             Contestant contestant = contestants.get(contestantID);
+            Pokemon poke = getPokemonFromID(server, contestantID, contestant.pokemon);//Cobblemon.INSTANCE.getStorage().getParty(serverPlayer).get(contestant.pokemon);
             ServerPlayer serverPlayer = playerList.getPlayer(contestantID);
-
-            Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(serverPlayer).get(contestant.pokemon);
+            String playerName = "";
+            if(serverPlayer != null){
+                playerName = serverPlayer.getDisplayName().getString();
+            }else{
+                GameProfile profile = server.getProfileCache().get(contestantID).get();
+                playerName = profile.getName();//"[Offline Player]";
+            }
 
             NetworkablePokemonData data = new NetworkablePokemonData(
                     poke.getUuid(),
                     contestantID,
                     poke.getDisplayName().getString(),
-                    serverPlayer.getDisplayName().getString(),
+                    playerName,
                     0, 0,
                     contestant.getTurnHearts(),
                     0,
@@ -776,7 +793,10 @@ public class Contest {
 
         //for(Contestant contestant: contestants.values()) {
         ServerPlayer play = playerList.getPlayer(contestant.playerId);
-        Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(play).get(contestant.pokemon);
+        if(play == null){
+            return;
+        }
+        Pokemon poke = getPokemonFromID(server, contestant.playerId, contestant.pokemon);//Cobblemon.INSTANCE.getStorage().getParty(play).get(contestant.pokemon);
         if(poke.getEntity() == null) {
             Vec3 position = null;//play.raycastSafeSendout(poke, 12.0, 5.0, ClipContext.Fluid.ANY);
             if (position != null) {
@@ -822,6 +842,9 @@ public class Contest {
      */
     public void doAnimation(Pokemon pokemon, String anim) {
         PokemonEntity pokemonEntity = pokemon.getEntity();
+        if(pokemonEntity == null){
+            return;
+        }
         if (pokemonEntity.isSilent()) return;
         PlayPosableAnimationPacket pkt = new PlayPosableAnimationPacket(pokemonEntity.getId(), Set.of(anim), Collections.emptyList());
         Vec3 pos = pokemonEntity.position();
@@ -831,20 +854,23 @@ public class Contest {
     public void evaluateIntroductionPoints(MinecraftServer server){
         PlayerList playerList = server.getPlayerList();
         for(Contestant contestant: contestants.values()){
-            ServerPlayer play = playerList.getPlayer(contestant.playerId);
-            if(play != null) {
-                Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(play).get(contestant.pokemon);
-                CVs cvs = CVs.getFromTag(poke.getPersistentData().getCompound("CVs"));
-                int totalPoints = 0;
-                for(int i = 0; i < 6; i ++){ // goes through all 5 conditions and sheen
-                    totalPoints += (int) (cvs.getConditionFromIdx(i) * (i == contestType? 1f : 0.5f));
-                }
+            Pokemon poke = getPokemonFromID(server, contestant.playerId, contestant.pokemon);
 
-                int hearts = getNumHearts( totalPoints);
-                contestant.addHearts(hearts);
-
-                System.out.println("Player " + play.getDisplayName() + " won " + hearts + "hearts");
+            //
+            // ZServerPlayer play = playerList.getPlayer(contestant.playerId);
+            //if(play != null) {
+                //Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(play).get(contestant.pokemon);
+            CVs cvs = CVs.getFromTag(poke.getPersistentData().getCompound("CVs"));
+            int totalPoints = 0;
+            for(int i = 0; i < 6; i ++){ // goes through all 5 conditions and sheen
+                totalPoints += (int) (cvs.getConditionFromIdx(i) * (i == contestType? 1f : 0.5f));
             }
+
+            int hearts = getNumHearts( totalPoints);
+            contestant.addHearts(hearts);
+
+                //System.out.println("Player " + play.getDisplayName() + " won " + hearts + "hearts");
+            //}
         }
     }
 
@@ -999,7 +1025,8 @@ public class Contest {
         }
 
         ServerPlayer player = server.getPlayerList().getPlayer(uuid);
-        Pokemon pokemon = Cobblemon.INSTANCE.getStorage().getParty(player).get(contestant.pokemon);
+        //Pokemon pokemon = Cobblemon.INSTANCE.getStorage().getParty(player).get(contestant.pokemon);
+        Pokemon pokemon = getPokemonFromID(server, uuid, contestant.pokemon);
         addContestantMessage(server, ChatFormatting.GOLD, "cobble_contests.contest_showoff.num_hearts", pokemon.getDisplayName(), totalHearts);
         Component componentOutput;
 

@@ -123,10 +123,13 @@ public class ContestManager {
             for (UUID contestant : contestants.keySet()){
                 // tell players results
                 ServerPlayer play = playerList.getPlayer(contestant);
-                notifyPlayerContestResults(contestant, endingContest, play);
-                activeContestents.remove(contestant);
-                ServerPlayNetworking.send((ServerPlayer) play, new CBClearMessageQueue(contestant));
-                //ContestManagerClient.INSTANCE.deleteContestantMessage(contestant);
+                if(play != null){
+                    notifyPlayerContestResults(contestant, endingContest, play);
+                    activeContestents.remove(contestant);
+                    ServerPlayNetworking.send((ServerPlayer) play, new CBClearMessageQueue(contestant));
+                    //ContestManagerClient.INSTANCE.deleteContestantMessage(contestant);
+                }
+
             }
             activeContestents.remove(endingContest.getHost());
             //contests.remove(endingContest);
