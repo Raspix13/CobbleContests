@@ -6,6 +6,9 @@ Beta 1.1.0 TODO:
 - Multiplayer Ui
 - Maybe status effects?
 - disable unused host buttons
+- need to mention round change after all moved in round go in contestPanel/ change it from starting all moves
+- might need to clear message queue if player is offline
+- do repete moves get neg
 
 
 Release 1.1.0 TODO:
@@ -42,6 +45,7 @@ Current Bugs & Issues for Later:
     - Contestbooth lobby participant screens should be updated when contest starts
     - If player does not choose move the panel will not open
     - Timeout should remove anyone from lobby
+    - Need to fix timer not remaining until all moves chosen
 
 
 
@@ -50,12 +54,13 @@ Current Bugs & Issues for Later:
 Progress:
 Things I have done:
 
-7/29
+7/29-7/30
 - Added icon for more info on moves
 - Organized Contest code a bit
 - Adjusted timing for showcase to give each move time
 - Fixed ranked contests not starting on first try
 - Added info to tell players how to interact with contest
+- Fixed not accounting for player to be offline in contest
 
 7/20-7/21
 - Adjusted how moves are called to allow final move time to play
