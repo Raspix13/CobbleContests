@@ -16,6 +16,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.UUID;
 
 public class SBUpdateContestInfo implements CustomPacketPayload {
@@ -69,6 +70,22 @@ public class SBUpdateContestInfo implements CustomPacketPayload {
             tag.putInt("seconds", con.getTimer());
             tag.putInt("showcase_round", con.getShowcaseRound());
             tag.putBoolean("can_choose_move", con.getCanChooseMove());
+            tag.putBoolean("all_moves_picked", con.getRunningRound());
+            tag.putInt("applause", con.getApplause());
+            if(phase.equals(Contest.ContestPhase.RESULTS)){
+                if(con.getContestantAtRank(0) != null){
+                    List<Contest.Contestant> contestantsInRank = con.getContestantAtRank(0);
+                    tag.putInt("num_first", contestantsInRank.size());
+                    CompoundTag firstTag = new CompoundTag();
+                    for(int i = 0; i < contestantsInRank.size(); i++){
+                        Contest.Contestant contestant = contestantsInRank.get(i);
+                        CompoundTag addedTag = con.getDataFromPokemon(server, contestant.getPlayerId(), contestant.getPokemon()).getAsTag().copy();
+                        firstTag.put("contestant", addedTag);
+                    }
+                    tag.put("first_rank", firstTag);
+
+                }
+            }
         }
 
 

@@ -29,12 +29,12 @@ public class ContestMoveGrid extends ParentWidget {
     public static final float MOVE_VERTICAL_SPACING = 5F;
     public static final float MOVE_HORIZONTAL_SPACING = 13F;
 
-    private List<MoveTile> buttons;
 
     private MoveTile move1;
     private MoveTile move2;
     private MoveTile move3;
     private MoveTile move4;
+    private List<Boolean> visibleMove;
 
     private UUID playerId;
 
@@ -44,13 +44,13 @@ public class ContestMoveGrid extends ParentWidget {
 
     public ContestMoveGrid(int i, int j, int k, int l, Component component, UUID playerID) {
         super(i, j, k, l, component);
-        this.buttons = new ArrayList<>();
         this.playerId = playerID;
 
-        move1 = new MoveTile(0, 0);
-        move2 = new MoveTile(MOVE_HORIZONTAL_SPACING + MOVE_WIDTH, 0);
-        move3 = new MoveTile(0, MOVE_HEIGHT + MOVE_VERTICAL_SPACING);
-        move4 = new MoveTile(MOVE_HORIZONTAL_SPACING + MOVE_WIDTH, MOVE_HEIGHT + MOVE_VERTICAL_SPACING);
+        move1 = new MoveTile(0, MOVE_HEIGHT + MOVE_VERTICAL_SPACING);
+        move2 = new MoveTile(MOVE_HORIZONTAL_SPACING + MOVE_WIDTH, MOVE_HEIGHT + MOVE_VERTICAL_SPACING);
+        move3 = new MoveTile(0, 0);
+        move4 = new MoveTile( MOVE_HORIZONTAL_SPACING + MOVE_WIDTH, 0);
+        visibleMove = new ArrayList<>(Arrays.asList(true, true, true, true));
 
 
         /**move1 = new MoveTile(this.getX(), this.getY());
@@ -91,11 +91,14 @@ public class ContestMoveGrid extends ParentWidget {
                 ContestMoves.MoveData data = ContestMoves.instance.getMoveData(name);
                 String desc = "cobble_contests.move_function_description." + data.getFunctionType(); //ContestMoves.instance.ALL_FUNCTION_DATA.get(data.getFunctionType()).getDescription();
                 ContestMoves.FunctionData functionData = ContestMoves.instance.getFunctionDataFromName(data.getFunctionType());
+                visibleMove.set(i, true);
                 int app = functionData.getAppeal();
                 int jam = functionData.getJam();
                 tiles.get(i).setupButton(data.getType(), name, desc, app, jam);
+
             }else {
                 tiles.get(i).setupButton(ContestType.None, "", "", 0, 0);
+                visibleMove.set(i, false);
             }
         }
 
@@ -107,10 +110,10 @@ public class ContestMoveGrid extends ParentWidget {
         /**for(int i = 0; i < buttons.size(); i++){
             buttons.get(i).render(guiGraphics, mouseX, mouseX, partialTicks);
         }*/
-        move4.render(guiGraphics, mouseX, mouseY, partialTicks);
-        move3.render(guiGraphics, mouseX, mouseY, partialTicks);
-        move2.render(guiGraphics, mouseX, mouseY, partialTicks);
-        move1.render(guiGraphics, mouseX, mouseY, partialTicks);
+        if(visibleMove.get(3)) move4.render(guiGraphics, mouseX, mouseY, partialTicks);
+        if(visibleMove.get(2)) move3.render(guiGraphics, mouseX, mouseY, partialTicks);
+        if(visibleMove.get(1)) move2.render(guiGraphics, mouseX, mouseY, partialTicks);
+        if(visibleMove.get(0)) move1.render(guiGraphics, mouseX, mouseY, partialTicks);
 
 
     }
@@ -131,16 +134,16 @@ public class ContestMoveGrid extends ParentWidget {
     public boolean mousePrimaryClicked(double mouseX, double mouseY) {
 
         if(this.visible){
-            if(move1.isHovered(mouseX, mouseY)){
+            if(move1.isHovered(mouseX, mouseY) && visibleMove.get(0)){
                 move1.onClick();
                 ClientPlayNetworking.send(new SBUseContestMove(playerId, move1.getName()));
-            }else if (move2.isHovered(mouseX, mouseY)){
+            }else if (move2.isHovered(mouseX, mouseY) && visibleMove.get(1)){
                 move2.onClick();
                 ClientPlayNetworking.send(new SBUseContestMove(playerId, move2.getName()));
-            }else if (move3.isHovered(mouseX, mouseY)){
+            }else if (move3.isHovered(mouseX, mouseY) && visibleMove.get(2)){
                 move3.onClick();
                 ClientPlayNetworking.send(new SBUseContestMove(playerId, move3.getName()));
-            }else if (move4.isHovered(mouseX, mouseY)){
+            }else if (move4.isHovered(mouseX, mouseY) && visibleMove.get(3)){
                 move4.onClick();
                 ClientPlayNetworking.send(new SBUseContestMove(playerId, move4.getName()));
             }
@@ -179,9 +182,4 @@ public class ContestMoveGrid extends ParentWidget {
         return false;
     }
 
-
-
-    public void pressMove(){
-        System.out.println("Hey");
-    }
 }

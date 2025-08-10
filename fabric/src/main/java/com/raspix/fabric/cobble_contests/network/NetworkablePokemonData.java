@@ -93,8 +93,9 @@ public class NetworkablePokemonData {
         return numChangeHearts;
     }
 
-
-
+    public Set<String> getAspects() {
+        return aspects;
+    }
 
     public NetworkablePokemonData(FriendlyByteBuf buf){
         this.pokeUuid = buf.readUUID();
@@ -161,7 +162,7 @@ public class NetworkablePokemonData {
         this.numHearts = tag.getInt("hearts");
         this.numChangeHearts = tag.getInt("hearts_change");
 
-        System.out.println("Has " + numHearts + " with a change of " + numChangeHearts);
+        //System.out.println("Has " + numHearts + " with a change of " + numChangeHearts);
 
         this.properties = PokemonProperties.Companion.parse(tag.getString("properties"), ",");
 
@@ -203,4 +204,5 @@ public class NetworkablePokemonData {
          return tag;
 
     }
+
 }

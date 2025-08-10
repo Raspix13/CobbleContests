@@ -67,23 +67,24 @@ public class Contest {
     private static int TICKS_PER_SECOND = 20; //time for each phase in seconds
     private static int LOBBY_TIMEOUT = 60; // The amount of time a hosted lobby can be idle before it times out and gets deleted
     private static int WAITING_TIME = 5; // The time the contestents have to get ready for the contest to start
-    private static int DRESSUP_TIME = 10; // The time a player has to choose stickers, should be 60 sec
-    private static int RESULTS_TIME = 10; // The time the player can see the results before they are released from the contest
+    private static int DRESSUP_TIME = 5; // The time a player has to choose stickers, should be 60 sec
+    private static int RESULTS_TIME = 15; // The time the player can see the results before they are released from the contest
     private static int SEND_OUT_TIMER = 3; // The time in between each pokemon getting sent out
     private static int SHOWCASE_ROUND_TIME = 30; // The max time to choose moves
     private static int SHOWCASE_PER_CONTESTANT = 5; // The time for each contestant to showcase their moves
 
     // Should be configurable later
     private static int MAX_CONTESTANTS = 4;
-    private static int NUM_SHOWCASE_ROUNDS = 2;
+    private static int NUM_SHOWCASE_ROUNDS = 3;
+    private static int MAX_APPLAUSE = 5;
 
-    private int[] thresholds = {5, 40, 100, 175, 245};
+    private int[] thresholds = {4, 8, 12, 14, 17 };// {5, 40, 100, 175, 245};
 
     private static int[][] INTRO_HEARTS = new int[][]{ // Max 8 hearts
             {0, 11, 21, 31, 41, 51, 61, 71, 81}, // Normal
             {0, 91, 111, 131, 151, 171, 191, 211, 231}, // Super
             {0, 171, 201, 231, 261, 291, 321, 351, 381}, // Hyper
-            {0, 321, 361, 401, 441, 481, 521, 561, 601}, // Ultra TODO
+            {0, 221, 261, 301, 341, 381, 421, 461, 501}, // Ultra TODO
             {0, 321, 361, 401, 441, 481, 521, 561, 601} // Master
     };
 
@@ -91,6 +92,9 @@ public class Contest {
     int showcaseRound = 0; // Which round of showcase moves it is
     boolean roundReady; // are all moves chosen
     boolean runningRound;
+    private int rankedIdx; // the index of which ranks have been revealed yet, going down
+    private List<List<Contestant>> finalRankedContestantList;
+    private int applause;
 
     /** Status effect idea
      * Burn: +Tough -Cute -Beauty
@@ -127,14 +131,27 @@ public class Contest {
     public class Contestant{
         private UUID playerId;
         private UUID pokemon; //not sure what to reference here
-        private int hearts;
+
         private ClientBattleMessageQueue contestMessages;
 
         String currentMove;
         String lastMove;
-        int cumulativeHearts; // total number of hearts earned in the showcase
+
+        private int cumulativeHearts; // total number of hearts earned in the showcase
+        private int hearts;
+        private int introHearts; // the hearts gained from the intro
         int turnHearts; // hearts gained this round of showcase
         int turnJam; // jam for this round of showcase
+
+        private class ShowcaseTurnData{
+            int turnHearts;
+            int turnJam;
+
+            public ShowcaseTurnData(){
+
+            }
+
+        }
 
 
         public Contestant(UUID playerId, UUID pokemon){
@@ -172,10 +189,6 @@ public class Contest {
         // Getters and Setters for hearts
         public int getHearts() {
             return hearts;
-        }
-
-        public void setHearts(int hearts) {
-            this.hearts = hearts;
         }
 
         public void setTurnHearts(int hearts) {
@@ -243,7 +256,9 @@ public class Contest {
         public void formatForNextTurn(){
             this.lastMove = currentMove;
             this.currentMove = "";
+            System.out.println("current hearts is " + hearts + " and adding " + (turnHearts - turnJam));
             addHearts(Math.max(turnHearts-turnJam, 0));
+            System.out.println("current hearts is now " + hearts );
             this.turnHearts = 0;
             this.turnJam = 0;
         }
@@ -283,6 +298,11 @@ public class Contest {
         private void applyTurn(){
             this.cumulativeHearts += turnHearts;
             formatForNextTurn();
+        }
+
+        private void applyApplauseBonus(){
+            // can use showcase round if that is needed
+            addHearts(6);
         }
 
     }
@@ -494,7 +514,7 @@ public class Contest {
                 roundReady = false;
                 timer = 0;
                 contestantIdx = 0;
-                updateContestants(server);
+                updateContestantsWithRound(server);
 
                 PlayerList playerList = server.getPlayerList();
                 for(int i = 0; i < contestantsOrdered.size(); i ++){
@@ -639,6 +659,34 @@ public class Contest {
         return tag.copy();
     }
 
+    public NetworkablePokemonData getDataFromPokemon(MinecraftServer server, UUID playerUUID, UUID pokeUuid){
+        Contestant contestant = contestants.get(playerUUID);
+        Pokemon poke = getPokemonFromID(server, playerUUID, pokeUuid);
+        PlayerList playerList = server.getPlayerList();
+        ServerPlayer serverPlayer = playerList.getPlayer(playerUUID);
+        String playerName = "";
+        if(serverPlayer != null){
+            playerName = serverPlayer.getDisplayName().getString();
+        }else{
+            GameProfile profile = server.getProfileCache().get(playerUUID).get();
+            playerName = profile.getName();//"[Offline Player]";
+        }
+
+        NetworkablePokemonData data = new NetworkablePokemonData(
+                poke.getUuid(),
+                playerUUID,
+                poke.getDisplayName().getString(),
+                playerName,
+                0, 0,
+                contestant.getTurnHearts(),
+                0,
+                poke.createPokemonProperties(PokemonPropertyExtractor.SPECIES, PokemonPropertyExtractor.GENDER, PokemonPropertyExtractor.SHINY, PokemonPropertyExtractor.FORM),
+                poke.getAspects());
+
+        return data;
+
+    }
+
     private void sendEveryoneContestants(MinecraftServer server){// TODO: send out packet here?
 
         PlayerList playerList = server.getPlayerList();
@@ -719,6 +767,126 @@ public class Contest {
         result += " placed " + contestantsRank + " with " + numHearts + " hearts";
         System.out.println(result);
 
+
+    }
+
+    /**
+     * For ranked contests if the player won or not
+     * @param server
+     * @param contestant
+     * @param result
+     * @param numHearts
+     */
+    private void sendConditionalContestantRankForms(MinecraftServer server, Contestant contestant, boolean result, int numHearts){
+        System.out.println("Sending results for rank " + result);
+        rankedIdx = 0;
+        GameProfile profile = server.getProfileCache().get(contestant.playerId).get();
+        String playerName = profile.getName();
+        String translatableString = result ? "cobble_contests.contest_result.placed_first" :
+                "cobble_contests.contest_result.failed_ranked";
+        addContestantMessage(server, null, translatableString, playerName, getPokemonFromID(server, contestant.playerId, contestant.pokemon).getDisplayName().getString(), numHearts);
+        updateContestantsWithRankedResults(server, contestant, result);
+
+    }
+
+    /**
+     * For Multiplayer contests
+     * @param server
+     * @param contestantsRank
+     * @param numHearts
+     * @param contestantsRanked
+     */
+    private void sendIncrementedContestantRankForms(MinecraftServer server, int contestantsRank, int numHearts, List<Contestant> contestantsRanked){
+        System.out.println("Sending results for rank index " + contestantsRank + " with " + contestantsRanked.size() + " of that rank");
+        Contestant contestant = contestantsRanked.get(0); // TODO should eventually get all of a rank
+        rankedIdx = contestantsRank;
+        GameProfile profile = server.getProfileCache().get(contestant.playerId).get();
+        String playerName = profile.getName();
+        String translatableString = contestantsRank == 0? "cobble_contests.contest_result.placed_first" :
+                (contestantsRank == 1? "cobble_contests.contest_result.placed_second":
+                        (contestantsRank == 2 ? "cobble_contests.contest_result.placed_third" : "cobble_contests.contest_result.your_placement"));
+        addContestantMessage(server, null, translatableString, playerName, getPokemonFromID(server, contestant.playerId, contestant.pokemon).getDisplayName().getString(), numHearts);
+        for(int i = 1; i < contestantsRanked.size(); i ++){ // If more than one won a placement
+            contestant = contestantsRanked.get(i);
+            profile = server.getProfileCache().get(contestant.playerId).get();
+            playerName = profile.getName();
+            addContestantMessage(server, null, translatableString, playerName, getPokemonFromID(server, contestant.playerId, contestant.pokemon).getDisplayName().getString() + " also ", numHearts);
+        }
+        updateContestantsWithResults(server);
+
+    }
+
+    private void sendPersonalRankMessage(MinecraftServer server){
+        // TODO for each contestant send a chat message with their info
+        System.out.println("Sending messages");
+        for(int i = 0; i < finalRankedContestantList.size(); i++){
+            int numInRank = finalRankedContestantList.get(i).size();
+            for(Contestant contestant: finalRankedContestantList.get(i)){
+                GameProfile profile = server.getProfileCache().get(contestant.playerId).get();
+                String playerName = profile.getName();
+                sendClientChatMessage(server, contestant.playerId, Component.translatable("cobble_contests.contest_result.your_placement" + (numInRank > 1? "_tied": ""), getPokemonFromID(server, contestant.playerId, contestant.pokemon).getDisplayName().getString(), i + 1, contestant.getHearts()));
+            }
+        }
+        updateContestantsWithResults(server);
+
+    }
+
+    private void updateContestantsWithRankedResults(MinecraftServer server, Contestant contestant, boolean didWin){
+        PlayerList playerList = server.getPlayerList();
+        for(Contestant conts: contestants.values()){
+            CompoundTag tag = new CompoundTag();
+            tag.putUUID("index", conts.pokemon);
+            round.toTag(tag, "phase");
+            tag.putInt("seconds", getTimer());
+
+
+            if(round.equals(Contest.ContestPhase.RESULTS)){
+                tag.putInt("is_ranked", 1);
+                tag.putBoolean("did_win", didWin);
+                CompoundTag addedTag = getDataFromPokemon(server, contestant.getPlayerId(), contestant.getPokemon()).getAsTag().copy();
+                tag.put("contestant", addedTag);
+            }
+
+            //tag.putInt("showcase_round", showcaseRound);
+            //tag.putBoolean("can_choose_move", getCanChooseMove());
+            ServerPlayer play = playerList.getPlayer(conts.playerId);
+            if(play != null){
+                ServerPlayNetworking.send(play, new CBUpdateContestInfo(conts.playerId, tag));
+            }
+        }
+    }
+
+    private void updateContestantsWithResults(MinecraftServer server){
+        PlayerList playerList = server.getPlayerList();
+        for(Contestant conts: contestants.values()){
+            CompoundTag tag = new CompoundTag();
+            tag.putUUID("index", conts.pokemon);
+            round.toTag(tag, "phase");
+            tag.putInt("seconds", getTimer());
+
+
+            if(round.equals(Contest.ContestPhase.RESULTS)){
+                if(getContestantAtRank(0) != null){
+                    List<Contest.Contestant> contestantsInRank = getContestantAtRank(0);
+                    tag.putInt("num_first", contestantsInRank.size());
+                    CompoundTag firstTag = new CompoundTag();
+                    for(int i = 0; i < contestantsInRank.size(); i++){
+                        Contest.Contestant contestant = contestantsInRank.get(i);
+                        CompoundTag addedTag = getDataFromPokemon(server, contestant.getPlayerId(), contestant.getPokemon()).getAsTag().copy();
+                        firstTag.put("contestant" + i, addedTag);
+                    }
+                    tag.put("first_rank", firstTag);
+
+                }
+            }
+
+            //tag.putInt("showcase_round", showcaseRound);
+            //tag.putBoolean("can_choose_move", getCanChooseMove());
+            ServerPlayer play = playerList.getPlayer(conts.playerId);
+            if(play != null){
+                ServerPlayNetworking.send(play, new CBUpdateContestInfo(conts.playerId, tag));
+            }
+        }
     }
 
     private void updateContestants(MinecraftServer server){
@@ -748,6 +916,8 @@ public class Contest {
 
             tag.putInt("showcase_round", showcaseRound);
             tag.putBoolean("can_choose_move", getCanChooseMove());
+            tag.putBoolean("all_moves_picked", getRunningRound());
+            tag.putInt("applause", getApplause());
             ServerPlayer play = playerList.getPlayer(conts.playerId);
             if(play != null){
                 ServerPlayNetworking.send(play, new CBUpdateContestInfo(conts.playerId, tag));
@@ -852,7 +1022,6 @@ public class Contest {
     }
 
     public void evaluateIntroductionPoints(MinecraftServer server){
-        PlayerList playerList = server.getPlayerList();
         for(Contestant contestant: contestants.values()){
             Pokemon poke = getPokemonFromID(server, contestant.playerId, contestant.pokemon);
 
@@ -876,7 +1045,7 @@ public class Contest {
 
     private int getNumHearts(int points){
         for(int i = 1; i < 9; i ++){
-            if(points < INTRO_HEARTS[contestTier < 0? 4:contestTier][i]){
+            if(points < INTRO_HEARTS[contestTier < 0? 4:(contestTier < 5? contestTier:4)][i]){
                 return i - 1;
             }
         }
@@ -981,9 +1150,10 @@ public class Contest {
         applyMoves(server);
         reorderContestants();
         if(showcaseRound >= NUM_SHOWCASE_ROUNDS){
-            addContestantMessage(server, null, "And thats the end of the Showcase Round! Lets see those results");
+            addContestantMessage(server, null, "cobble_contests.contest_showoff.showcase_end");
             scheduleAction(() -> {EndShowcase(server);}, 2 * TICKS_PER_SECOND);
         }else{
+            addContestantMessage(server, null, "cobble_contests.contest_showoff.round_switch");
             updateContestantsWithRound(server);
         }
     }
@@ -1005,6 +1175,22 @@ public class Contest {
 
     }
 
+    public void IncreaseApplause(MinecraftServer server, Contestant contestant){
+        applause += 1;
+        if(applause >= MAX_APPLAUSE){
+            ApplyApplausePoints(server, contestant);
+        }
+    }
+
+    public void DecreaseApplause(MinecraftServer server, Contestant contestant){
+        applause = Math.max(applause - 1, 0);
+    }
+
+    public void ApplyApplausePoints(MinecraftServer server, Contestant contestant){
+        contestant.applyApplauseBonus();
+        applause = 0;
+        addContestantMessage(server, ChatFormatting.AQUA,  "cobble_contests.contest_showcase.award_applause");
+    }
 
     // endregion
 
@@ -1018,10 +1204,12 @@ public class Contest {
         Contestant contestant = contestants.get(uuid);
         int totalHearts = contestant.getHearts();
 
-        boolean result = false;
+        boolean result;
         if (contestTier < 5 &&
                 totalHearts >= thresholds[contestTier]){
             result = true;
+        } else {
+            result = false;
         }
 
         ServerPlayer player = server.getPlayerList().getPlayer(uuid);
@@ -1041,6 +1229,11 @@ public class Contest {
         }
 
         sendClientChatMessage(server, uuid, componentOutput);
+
+        scheduleAction(() -> {
+            sendConditionalContestantRankForms(server, contestant, result, totalHearts);
+        }, (1 * TICKS_PER_SECOND));
+        //scheduleAction(() -> {sendPersonalRankMessage(server);}, 1 * TICKS_PER_SECOND);
         return result;
     }
 
@@ -1166,6 +1359,7 @@ public class Contest {
         return result;
     }
 
+
     public void determineContestResults(MinecraftServer server){
         List<List<Contestant>> rankedContestants = new ArrayList<>();
         for (Contestant contestant : contestants.values()){
@@ -1174,30 +1368,42 @@ public class Contest {
             }else{
                 for(int i = 0; i < rankedContestants.size(); i++){
                     int numHearts = contestant.getHearts();
-                    if(numHearts == rankedContestants.get(i).get(0).getHearts()){
+                    if(numHearts == rankedContestants.get(i).get(0).getHearts()){ // if tied
                         rankedContestants.get(i).add(contestant);
                         break;
-                    }else if(numHearts == rankedContestants.get(i).get(0).getHearts()){
+                    }else if(numHearts > rankedContestants.get(i).get(0).getHearts()){ // if beats
                         rankedContestants.add(i, new ArrayList<>(){{add(contestant);}});
                         break;
+                    }else if(i == rankedContestants.size() - 1){ // if lowest rank so far
+                        rankedContestants.add(new ArrayList<>(){{add(contestant);}});
                     }
                 }
             }
         }
 
-        int rankIndex = contestants.size() + 1;
-        for(int i = 0; i < rankedContestants.size(); i++){
-            int j = rankedContestants.size() - 1 - i;
+        finalRankedContestantList = rankedContestants;
+        int rankIndex = contestants.size();
+        long delay = 1;
+        System.out.println("Calculated results for " + contestants.size() + " contestants with " + rankedContestants.size() + " ranks");
+        for(int i = 0; i < Math.min(rankedContestants.size(), 3); i++){
+            int j = Math.min(rankedContestants.size(), 3) - 1 - i;
             List<Contestant> rankedContestantList = rankedContestants.get(j);
             int totalHearts = rankedContestantList.getFirst().getHearts();
 
-            rankIndex -= rankedContestantList.size();
+            //rankIndex -= rankedContestantList.size();
 
-            int finalRankIndex = rankIndex;
-            scheduleAction(() -> {sendIncrementedContestantRanks(server, finalRankIndex, totalHearts, rankedContestantList.size(), rankedContestantList);}, 100L + (1000L * i));
+            int finalRankIndex = j;//rankIndex;
+            //rankIndex = 4;
+            scheduleAction(() -> {
+                sendIncrementedContestantRankForms(server, finalRankIndex, totalHearts, rankedContestantList);
+                }, (1 + (1 * i) * TICKS_PER_SECOND));
+            delay += 1;
             //System.out.println("player ranked " + rankIndex + " with " + totalHearts + " hearts");
 
         }
+        scheduleAction(() -> {sendPersonalRankMessage(server);}, delay * TICKS_PER_SECOND);
+
+
     }
     // endregion
 
@@ -1253,6 +1459,25 @@ public class Contest {
 
     public int getNumContestants(){
         return contestants.size();
+    }
+
+    public List<Contestant> getContestantAtRank(int rank){
+        if(finalRankedContestantList.size() >= rank){
+            return finalRankedContestantList.get(rank);
+        }
+        return null;
+    }
+
+    public int getRankedIdx(){
+        return rankedIdx;
+    }
+
+    public int getApplause(){
+        return applause;
+    }
+
+    public boolean getRunningRound(){
+        return runningRound;
     }
 
     // endregion

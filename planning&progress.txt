@@ -3,12 +3,7 @@ Planning:
 
 Beta 1.1.0 TODO:
 - Multiplayer win conditions
-- Multiplayer Ui
-- Maybe status effects?
-- disable unused host buttons
-- need to mention round change after all moved in round go in contestPanel/ change it from starting all moves
-- might need to clear message queue if player is offline
-- do repete moves get neg
+- need to have booth screen update for contestants when contest starts
 
 
 Release 1.1.0 TODO:
@@ -18,12 +13,14 @@ Release 1.1.0 TODO:
 - Contest Send-Out:
     - Get the pokemon thrown out farther away when summoned in contest (Contest @SendOutPokemon)
     - Pokemon already out during contests should play cry animation (Contest @SendOutPokemon)
+- More Showcase Mechanics
+    - Contest Moves status effects
+    - Combo Moves
 - Check to make sure configs don't crash servers (technically for beta but finalized with feedback)
-- Contest Moves status effects
 - Ability to kick participants and leave contest while in lobby, also for host to be able to end contest?
 - Back button in contest booth?
 - Be able to change the max number of contestants in configs
-- Change lobby screen or scroll to see more contest options
+- Change lobby screen to scroll to see more contest options
 
 
 Future TODO:
@@ -46,13 +43,27 @@ Current Bugs & Issues for Later:
     - If player does not choose move the panel will not open
     - Timeout should remove anyone from lobby
     - Need to fix timer not remaining until all moves chosen
-
-
-
+    - Message log cant show words when transparent background
+    - might need to clear message queue if player is offline
 
 
 Progress:
 Things I have done:
+
+8/4-8/10
+- Worked on displaying results
+- first place pokemon shows up now, but no message yet
+- Fixed messages pane text disappearing in results (For some reason cant have transparent background with it)
+- Added more info on results sent to results screen
+- Added pokemon result for ranked
+- Fixed evaluation for ranked contests to be possible to get max
+- Fixed buttons showing for non-existent hosted contests
+- Fixed move display order in showdown
+- Fixed non-existent moves in showdown being visible
+- Added Applause mechanic
+- Fixed issue with contestant being duplicate member of same rank
+- Fixed timer disappearing when moved picked but still waiting on others
+- Added messages to panel to clarify when round of showcase ends
 
 7/29-7/30
 - Added icon for more info on moves

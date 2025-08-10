@@ -34,6 +34,7 @@ public class ContestMessagePane extends ObjectSelectionList<ContestMessagePane.C
     private float opacity = 1.0f;
     private boolean scrolling = false;
     private static boolean expanded = false;
+    private int hue = 0xbb94d4;//876b99;
 
     public ContestMessagePane(ClientBattleMessageQueue messageQueue) {
         super(Minecraft.getInstance(), FRAME_WIDTH, FRAME_HEIGHT, 1, LINE_HEIGHT);
@@ -66,10 +67,10 @@ public class ContestMessagePane extends ObjectSelectionList<ContestMessagePane.C
 
     @Override
     public void renderSelection(GuiGraphics guiGraphics, int top, int width, int height, int outerColor, int innerColor) {
-        blitk(guiGraphics.pose(), BATTLE_MESSAGE_HIGHLIGHT, getX() + 6, top - 2, 1, 10, opacity);
-        blitk(guiGraphics.pose(), BATTLE_MESSAGE_HIGHLIGHT, getX() + 6, top - 2, LINE_WIDTH, 1, opacity);
-        blitk(guiGraphics.pose(), BATTLE_MESSAGE_HIGHLIGHT, getX() + 6, top + 7, LINE_WIDTH, 1, opacity);
-        blitk(guiGraphics.pose(), BATTLE_MESSAGE_HIGHLIGHT, getX() + 6 + LINE_WIDTH - 1, top - 2, 1, 10, opacity);
+        //blitk(guiGraphics.pose(), BATTLE_MESSAGE_HIGHLIGHT, getX() + 6, top - 2, 1, 10, opacity);
+        //blitk(guiGraphics.pose(), BATTLE_MESSAGE_HIGHLIGHT, getX() + 6, top - 2, LINE_WIDTH, 1, opacity);
+        //blitk(guiGraphics.pose(), BATTLE_MESSAGE_HIGHLIGHT, getX() + 6, top + 7, LINE_WIDTH, 1, opacity);
+        //blitk(guiGraphics.pose(), BATTLE_MESSAGE_HIGHLIGHT, getX() + 6 + LINE_WIDTH - 1, top - 2, 1, 10, opacity);
     }
 
     @Override
@@ -94,6 +95,8 @@ public class ContestMessagePane extends ObjectSelectionList<ContestMessagePane.C
                 0, 0,
                 FRAME_WIDTH,
                 expanded ? FRAME_EXPANDED_HEIGHT : FRAME_HEIGHT,
+                1,
+                ((hue & 0xFF0000) >> 16)/255f, ((hue & 0xFF00) >> 8)/255f, (hue & 0xFF)/255f,
                 opacity);
         int textBoxHeight = expanded ? TEXT_BOX_HEIGHT * 2 : TEXT_BOX_HEIGHT;
         guiGraphics.enableScissor(this.getX() + 5, getAppropriateY() + 6, this.getX() + 5 + width, getAppropriateY() + 6 + textBoxHeight);

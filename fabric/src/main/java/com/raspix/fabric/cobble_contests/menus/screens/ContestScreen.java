@@ -12,8 +12,10 @@ import com.raspix.fabric.cobble_contests.menus.ContestMenu;
 import com.raspix.fabric.cobble_contests.menus.screens.subscreens.ContestMoveGrid;
 import com.raspix.fabric.cobble_contests.menus.screens.subscreens.ContestantStatsGrid;
 import com.raspix.fabric.cobble_contests.menus.widgets.DressUpCounter;
+import com.raspix.fabric.cobble_contests.menus.widgets.ResultsScreen;
 import com.raspix.fabric.cobble_contests.menus.widgets.buttons.FixedImageButton;
 import com.raspix.fabric.cobble_contests.menus.widgets.ParticleScreenRenderer;
+import com.raspix.fabric.cobble_contests.network.NetworkablePokemonData;
 import com.raspix.fabric.cobble_contests.network.SB.SBUpdateContestInfo;
 import com.raspix.fabric.cobble_contests.util.Contest;
 import com.raspix.fabric.cobble_contests.util.ContestManagerClient;
@@ -39,6 +41,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.cobblemon.mod.common.client.gui.PokemonGuiUtilsKt.drawProfilePokemon;
+import static com.cobblemon.mod.common.client.render.RenderHelperKt.drawScaledText;
 import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 
 public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
@@ -47,25 +50,24 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
     private Pokemon pokemon;
     private Contest.ContestPhase phase;
     private int showcaseRound;
+    private int numApplause;
+    private boolean isModelSet;
+    private boolean isMoveChosen;
+    private boolean isRoundRunning;
 
     private static final ResourceLocation BATTLE_MESSAGE_PANE_FRAME_RESOURCE = cobblemonResource("textures/gui/battle/battle_log.png");
     private static final ResourceLocation CONTEST_PANEL_TEXTURE = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/intro_editor_screen.png");
     private static final ResourceLocation CONTEST_STICKERS = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/seals.png");
     private static final ResourceLocation NUMBERS = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/numbers.png");
+    private final ResourceLocation HEARTS = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/applause_hearts.png");
 
     private static final ResourceLocation TEMP_PARTICLE = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/particle/heart.png");
-
-    private boolean isModelSet;
-    private boolean isMoveChosen;
+    private final ResourceLocation pokeFont = ResourceLocation.parse("uniform");
 
     private static final int FRAME_WIDTH = 169;
     private static final int FRAME_HEIGHT = 55;
 
-    private String placeholderText = "UWU this is a test of the something something service, this is just a test, blah " +
-            "blah blah. This needs more words to check for the thing hmm \n test next line. \n wooooooooo um words, " +
-            "still not long enough yet. hmmmmmmmmmm maybe need a copypasta";
-
-    private static final Camera CAMERA = new Camera();
+    //private static final Camera CAMERA = new Camera();
     private ModelWidget modelWidget; //for the pokemon being rendered
     private ContestMessagePane messageLog;
     private FixedImageButton particleEffectButton;
@@ -75,8 +77,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
     private ContestMoveGrid moveGrid;
     private ContestantStatsGrid contestantGrid;
     private ContestMenu contestInfoMenu;
-
-    private ClientParty clientParty;
+    private ResultsScreen resultsScreen;
 
 
 
@@ -127,6 +128,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         this.counter = this.addRenderableWidget(new DressUpCounter(this.leftPos + 231, this.topPos + 125, 16, 15, Component.literal("")));
         this.moveGrid = this.addRenderableWidget(new ContestMoveGrid(this.leftPos - 35, this.topPos + 140, 92, 24, Component.literal(""), playerId));
         this.contestantGrid = this.addRenderableWidget(new ContestantStatsGrid(this.leftPos - 35, this.topPos + 140, 92, 24, Component.literal(""), playerId));
+        this.resultsScreen = this.addRenderableWidget(new ResultsScreen(this.leftPos, this.topPos, this.imageWidth, this.imageHeight, Component.literal("")));
 
         isModelSet = false;
         ClientPlayNetworking.send(new SBUpdateContestInfo(playerId));
@@ -158,7 +160,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
 
         switch (phase){
             case WAITING:
-                guiGraphics.blit(CONTEST_PANEL_TEXTURE, this.leftPos, this.topPos, 152, 204, 116, 49, 948, 600);
+                //guiGraphics.blit(CONTEST_PANEL_TEXTURE, this.leftPos, this.topPos, 152, 204, 116, 49, 948, 600);
                 break;
             case DRESSUP:
                 this.renderTransparentBackground(guiGraphics);
@@ -170,8 +172,9 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
             case TALENT:
                 break;
             case RESULTS:
-                this.renderTransparentBackground(guiGraphics);
-                guiGraphics.blit(CONTEST_PANEL_TEXTURE, this.leftPos, this.topPos, 0, 337, this.imageWidth, this.imageHeight, 948, 600);
+                //this.renderTransparentBackground(guiGraphics);
+                this.renderMenuBackground(guiGraphics);
+                guiGraphics.blit(CONTEST_PANEL_TEXTURE, this.leftPos, this.topPos, 0, 337, this.imageWidth, 120, 948, 600);
                 break;
             default:
                 break;
@@ -189,6 +192,14 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
                 renderWaitingGUI(guiGraphics);
                 break;
             case DRESSUP:
+                drawScaledText(guiGraphics, pokeFont, Component.translatable("This screen is a placeholder for now,"),
+                        (Number) (this.leftPos + 103),
+                        (Number) (this.topPos + 44),
+                        1f, 1f, 2147483647, 0xFFFFFF, true, false, null, null);
+                drawScaledText(guiGraphics, pokeFont, Component.translatable("only lasts 5 seconds"),
+                        (Number) (this.leftPos + 103),
+                        (Number) (this.topPos + 50),
+                        1f, 1f, 2147483647, 0xFFFFFF, true, false, null, null);
                 if(modelWidget != null) {
                     modelWidget.visible = true;
                     modelWidget.render(guiGraphics, xMousePos, yMousePos, partialTick);
@@ -451,6 +462,8 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
     }
 
     protected void renderShowOffGUI(GuiGraphics guiGraphics){
+        guiGraphics.blit(HEARTS, (int) this.leftPos + 16, (int) this.topPos + 5, 0, 14, (5 * 12) + 1, 12, 61, 26);
+        guiGraphics.blit(HEARTS, (int) this.leftPos + 16, (int) this.topPos + 5, 0, 0, numApplause == 0? 0: 1 + numApplause * 12, 12, 61, 26);
         if(!isMoveChosen){
 
         }
@@ -482,11 +495,18 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
 
     }
 
-    public void setUpdatedInfo(UUID pokemonSlot, Contest.ContestPhase phase, int time, int round, boolean pickMoves){
+    public void setUpdatedInfo(UUID pokemonSlot, Contest.ContestPhase phase, int time, int round, boolean pickMoves, boolean allMovesPicked, int numApplause){
         this.pokemon = CobblemonClient.INSTANCE.getStorage().getMyParty().findByUUID(pokemonSlot);
         this.showcaseRound = round;
-        System.out.println("Can I Pick Moves?: " + pickMoves);
+        System.out.println("NUM APPLAUSE: " + numApplause);
+        if(numApplause == 0){
+            printStackTrace();
+        }
+        this.numApplause = numApplause;
+
         this.isMoveChosen = !pickMoves;
+        this.isRoundRunning = allMovesPicked;
+        System.out.println("ContestScreen: Can I Pick Moves?: " + pickMoves + " Is round running? " + allMovesPicked);
         if(pokemon == null){
             this.pokemon = CobblemonClient.INSTANCE.getStorage().getPcStores().get(playerId).findByUUID(pokemonSlot);
         }
@@ -499,6 +519,22 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
 
         moveGrid.initializeMoves(pokemon);
 
+    }
+
+    public static void printStackTrace() {
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+
+        for (StackTraceElement stackTraceElement : stackTraceElements) {
+            System.out.println(stackTraceElement);
+        }
+    }
+
+    public void setUpdatedRankResults(boolean didWin, NetworkablePokemonData data){
+        resultsScreen.UpdateRankedInfo(didWin, data);
+    }
+
+    public void setUpdatedResults(NetworkablePokemonData data){
+        resultsScreen.UpdateInfo(data);
     }
 
     public void setUpdatedContestantInfo(){
@@ -563,7 +599,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
             case RESULTS:
                 this.imageWidth = 291;
                 this.imageHeight = 194;
-                messageLog.visible = false;
+                messageLog.visible = true;
                 toggleButtonList(false, dressUpButtons);
                 //particleEffectButton.visible = false;
                 break;
@@ -573,10 +609,11 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
                 //particleEffectButton.visible = false;
                 break;
         }
-        this.counter.visible = (phase == Contest.ContestPhase.DRESSUP) || (phase == Contest.ContestPhase.TALENT && !isMoveChosen);
+        this.counter.visible = (phase == Contest.ContestPhase.DRESSUP) || (phase == Contest.ContestPhase.TALENT && !isRoundRunning);
         this.moveGrid.visible = phase == Contest.ContestPhase.TALENT && !isMoveChosen;
         this.contestantGrid.visible = phase == Contest.ContestPhase.TALENT;
         this.contestantGrid.setExpanded(phase == Contest.ContestPhase.TALENT && isMoveChosen);
+        this.resultsScreen.visible = phase == Contest.ContestPhase.RESULTS;
 
     }
 

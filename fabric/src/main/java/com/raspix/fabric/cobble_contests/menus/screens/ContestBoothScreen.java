@@ -347,14 +347,14 @@ public class ContestBoothScreen extends AbstractContainerScreen<ContestBoothMenu
             ContestType type = ContestType.None;
             int numContestants = 0;
             if(i < listTag.size()){ // if there is a contest to add
-                //hostContestPanels.get(i).visible = true;
+                hostContestPanels.get(i).visible = true;
                 CompoundTag singleContest = (CompoundTag) listTag.get(i);
                 hostConPanelsIDs.add(singleContest.getUUID("host_id"));
                 name = singleContest.getString("host_name");
                 type = ContestType.getFromInt(singleContest.getInt("contest_type"));
                 numContestants = singleContest.getInt("num_contestants");
             }else{
-                //hostContestPanels.get(i).visible = false;
+                hostContestPanels.get(i).visible = false;
             }
             pan.setUpVisuals(name, type, numContestants);
         }
