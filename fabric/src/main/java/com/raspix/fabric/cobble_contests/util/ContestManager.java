@@ -124,7 +124,7 @@ public class ContestManager {
                 // tell players results
                 ServerPlayer play = playerList.getPlayer(contestant);
                 if(play != null){
-                    notifyPlayerContestResults(contestant, endingContest, play);
+                    //notifyPlayerContestResults(contestant, endingContest, play);
                     activeContestents.remove(contestant);
                     ServerPlayNetworking.send((ServerPlayer) play, new CBClearMessageQueue(contestant));
                     //ContestManagerClient.INSTANCE.deleteContestantMessage(contestant);

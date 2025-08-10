@@ -86,6 +86,10 @@ public class MoveTile {
 
     }
 
+    public String getData(){
+        return name + " at " + x + " and " + y;
+    }
+
 
     /**public MoveActionResponse getResponse() {
         return new MoveActionResponse(move.getId(), getTargetPnx());
@@ -243,7 +247,6 @@ public class MoveTile {
     public void onClick() {
         if (!isSelectable()) return;
         playDownSound(Minecraft.getInstance().getSoundManager());
-        //System.out.println("Huh");
         //moveSelection.getBattleGUI().selectAction(moveSelection.getRequest(), getResponse());
     }
 

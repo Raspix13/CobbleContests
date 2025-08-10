@@ -93,16 +93,26 @@
   "cobble_contests.contest_showoff.contestant_and_poke": "%1$s & %2$s",
   "cobble_contests.contest_showoff.move_used": "%1$s used %2$s",
   "cobble_contests.contest_text.contest_running": "The Contest has Started",
-  "cobble_contests.contest_showoff.start_round": "Contestants have chosen, now starting round %1$s",
+  "cobble_contests.contest_showoff.start_round": "The contestants have chosen, now starting round %1$s",
+  "cobble_contests.contest_showoff.round_switch": "On to the next round.",
+  "cobble_contests.contest_showoff.showcase_end": "And that's the end of the Showcase Round! Amazing performances, now let's see those results",
   "cobble_contests.contest_showcase.reused_move": "The audience is less interested in that move a second time.",
   "cobble_contests.contest_showcase.good_appeal_type": "That move really appealed to the audience.",
   "cobble_contests.contest_showcase.bad_appeal_type": "That move didn't really appeal to the audience.",
+  "cobble_contests.contest_showcase.award_applause": "WOW! The audience went wild for that move.",
   "cobble_contests.contest_showoff.num_hearts": "%1$s earned %2$s hearts!",
 
   "cobble_contests.contest_result.not_implemented": "This feature is not yet implemented, sorry. Or I missed removing this",
   "cobble_contests.contest_result.won_ranked": "%1$s Won the %2$s %3$s Contest",
   "cobble_contests.contest_result.lost_ranked": "%1$s Lost the %2$s %3$s Contest",
   "cobble_contests.contest_result.maxed_ranked": "%1$s has already beaten all %2$s Contests",
+  "cobble_contests.contest_result.placed_first": "%1$s and %2$s won first place with %3$s hearts",
+  "cobble_contests.contest_result.placed_second": "%1$s and %2$s placed second with %3$s hearts",
+  "cobble_contests.contest_result.placed_third": "%1$s and %2$s placed third with %3$s hearts",
+  "cobble_contests.contest_result.your_placement": "You and %1$s placed at rank %2$s with %3$s hearts",
+  "cobble_contests.contest_result.your_placement_tied": "You and %1$s were tied at rank %2$s with %3$s hearts",
+  "cobble_contests.contest_result.failed_ranked": "%1$s and %2$s did not win the ranked contest with %3$s hearts",
+
 
 
 

@@ -928,9 +928,15 @@ public class ContestMoves {
         }
         
         if(typeMod == -1){
-            contest.scheduleAction(() -> contest.addContestantMessage(server, ChatFormatting.RED, "cobble_contests.contest_showcase.bad_appeal_type"), 15);
+            contest.scheduleAction(() -> {
+                contest.DecreaseApplause(server, contestant);
+                contest.addContestantMessage(server, ChatFormatting.RED, "cobble_contests.contest_showcase.bad_appeal_type");
+                }, 15);
         }else if(typeMod == 1){
-            contest.scheduleAction(() -> contest.addContestantMessage(server, ChatFormatting.AQUA, "cobble_contests.contest_showcase.good_appeal_type"), 15);
+            contest.scheduleAction(() -> {
+                contest.IncreaseApplause(server, contestant);
+                contest.addContestantMessage(server, ChatFormatting.AQUA, "cobble_contests.contest_showcase.good_appeal_type");
+                }, 15);
         }
 
     }
