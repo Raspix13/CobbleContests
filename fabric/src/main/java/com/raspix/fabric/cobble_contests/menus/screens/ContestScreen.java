@@ -462,8 +462,8 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
     }
 
     protected void renderShowOffGUI(GuiGraphics guiGraphics){
-        guiGraphics.blit(HEARTS, (int) this.leftPos + 16, (int) this.topPos + 5, 0, 14, (5 * 12) + 1, 12, 61, 26);
-        guiGraphics.blit(HEARTS, (int) this.leftPos + 16, (int) this.topPos + 5, 0, 0, numApplause == 0? 0: 1 + numApplause * 12, 12, 61, 26);
+        guiGraphics.blit(HEARTS, (int) minecraft.getWindow().getGuiScaledWidth() - 72, (int) 12, 0, 14, (5 * 12) + 1, 12, 61, 26);
+        guiGraphics.blit(HEARTS, (int) minecraft.getWindow().getGuiScaledWidth() - 72, (int) 12, 0, 0, numApplause == 0? 0: 1 + numApplause * 12, 12, 61, 26);
         if(!isMoveChosen){
 
         }
@@ -498,10 +498,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
     public void setUpdatedInfo(UUID pokemonSlot, Contest.ContestPhase phase, int time, int round, boolean pickMoves, boolean allMovesPicked, int numApplause){
         this.pokemon = CobblemonClient.INSTANCE.getStorage().getMyParty().findByUUID(pokemonSlot);
         this.showcaseRound = round;
-        System.out.println("NUM APPLAUSE: " + numApplause);
-        if(numApplause == 0){
-            printStackTrace();
-        }
+
         this.numApplause = numApplause;
 
         this.isMoveChosen = !pickMoves;
@@ -559,6 +556,10 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
         this.isMoveChosen = false;
         moveGrid.visible = true;
 
+    }
+
+    public void setNumApplause(int numApplause){
+        this.numApplause = numApplause;
     }
 
     public void setShowdownContestantsData(CompoundTag tag){

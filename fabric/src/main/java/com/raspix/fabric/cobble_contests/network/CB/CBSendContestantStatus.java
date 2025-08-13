@@ -17,6 +17,7 @@ public class CBSendContestantStatus implements CustomPacketPayload {
 
     public final UUID id;
     CompoundTag tag;
+    int applause;
     //public int round;
     //public boolean shouldPickMoves;
 
@@ -25,19 +26,21 @@ public class CBSendContestantStatus implements CustomPacketPayload {
         @Override
         public @NotNull CBSendContestantStatus decode(FriendlyByteBuf buf) {
             CompoundTag compoundTag = new CompoundTag();
-            return new CBSendContestantStatus(FriendlyByteBuf.readUUID(buf), FriendlyByteBuf.readNbt(buf));
+            return new CBSendContestantStatus(FriendlyByteBuf.readUUID(buf), FriendlyByteBuf.readNbt(buf), buf.readInt());
         }
 
         @Override
         public void encode(FriendlyByteBuf buf, CBSendContestantStatus contestInfo) {
             FriendlyByteBuf.writeUUID(buf, contestInfo.getId());
             FriendlyByteBuf.writeNbt(buf, contestInfo.getTag());
+            buf.writeInt(contestInfo.getApplause());
         }
     };
 
-    public CBSendContestantStatus(UUID id, CompoundTag buf) {
+    public CBSendContestantStatus(UUID id, CompoundTag buf, int numApplause) {
         this.id = id;
         this.tag = buf;
+        this.applause = numApplause;
     }
 
     public UUID getId(){
@@ -48,10 +51,15 @@ public class CBSendContestantStatus implements CustomPacketPayload {
         return tag;
     }
 
+    public int getApplause(){
+        return applause;
+    }
+
     public void recieve(Minecraft minecraft){
         System.out.println("Recieving CBSendContestants");
         if(Minecraft.getInstance().screen instanceof ContestScreen screen){
             screen.setShowdownContestantsData(tag);
+            screen.setNumApplause(applause);
         }else if (Minecraft.getInstance().screen instanceof ContestBoothScreen bScreen){
             bScreen.updateLobbyContestants(tag);
         }

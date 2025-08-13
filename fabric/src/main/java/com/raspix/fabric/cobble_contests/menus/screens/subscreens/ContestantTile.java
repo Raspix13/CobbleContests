@@ -36,6 +36,8 @@ public class ContestantTile {
     private final ResourceLocation contestTypeIcons = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/contest_type_icons.png");
     private final ResourceLocation hearts = ResourceLocation.fromNamespaceAndPath(CobbleContests.MOD_ID, "textures/gui/hearts.png");
 
+    private final int MAX_HEARTS_OF_TYPE = 8; // how many hearts can show before moving to next type
+
     private final ResourceLocation pokeFont = ResourceLocation.parse("uniform");
 
     private float x;
@@ -148,10 +150,19 @@ public class ContestantTile {
                  partialTicks = partialTicks
              )*/
 
-            context.blit(hearts, (int) (this.x + 35), (int) this.y + 10, 1, 1, 1 + appeal * 8, 9, 83, 33);
+            renderHearts(context, mouseX, mouseY, delta);
 
         }
 
+    }
+
+    private void renderHearts(GuiGraphics context, int mouseX, int mouseY, float delta){
+        int heartType = appeal / MAX_HEARTS_OF_TYPE;
+        int overflowHearts = appeal % MAX_HEARTS_OF_TYPE;
+        context.blit(hearts, (int) (this.x + 35), (int) this.y + 10, 1, 1, appeal == 0? 0: 1 + (Math.min(appeal, MAX_HEARTS_OF_TYPE) * 8), 9, 83, 44);
+        if(heartType > 0){
+            context.blit(hearts, (int) (this.x + 35), (int) this.y + 10, 1, 34, overflowHearts == 0? 0: 1 + (overflowHearts * 8), 9, 83, 44);
+        }
     }
 
     private void renderPortrait(GuiGraphics context, float delta){

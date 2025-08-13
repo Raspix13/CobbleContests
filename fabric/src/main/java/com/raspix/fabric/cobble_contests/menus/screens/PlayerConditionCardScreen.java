@@ -396,7 +396,7 @@ public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerCon
                 1f, 1f, 2147483647, 0x00FFFFFF, true, true, null, null);
         //System.out.println(lang("move", moveName));
         guiGraphics.blit(MOVE_PANELS, xPos + 75 - (1 + appeal * 8), yPos + 21, 1, 193, 1 + appeal * 8, 9, 291, 400);
-        guiGraphics.blit(HEARTS, xPos + 10, yPos + 21, 1, 23, jam == 0? 0: 1 + jam * 8, 9, 83, 33);
+        guiGraphics.blit(HEARTS, xPos + 10, yPos + 21, 1, 23, jam == 0? 0: 1 + jam * 8, 9, 83, 44);
 
         poses.pushPose();
         poses.scale(0.5f, 0.5f, 1F);

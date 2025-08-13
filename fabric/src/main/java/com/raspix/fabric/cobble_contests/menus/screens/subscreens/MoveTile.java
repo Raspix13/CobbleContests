@@ -123,8 +123,8 @@ public class MoveTile {
                 (Number) (this.y + 4),
                 1f, 1f, 2147483647, 0xFFFFFF, false, false, null, null);
 
-        context.blit(hearts, (int) (this.x + 90 - (1 + appeal * 8)), (int) this.y + 15, 1, 1, 1 + appeal * 8, 9, 83, 33);
-        context.blit(hearts, (int) this.x + 16, (int) this.y + 15, 1, 23, jam == 0? 0: 1 + jam * 8, 9, 83, 33);
+        context.blit(hearts, (int) (this.x + 90 - (1 + appeal * 8)), (int) this.y + 15, 1, 1, 1 + appeal * 8, 9, 83, 44);
+        context.blit(hearts, (int) this.x + 16, (int) this.y + 15, 1, 23, jam == 0? 0: 1 + jam * 8, 9, 83, 44);
 
         blitk(
                 context.pose(),

@@ -32,6 +32,7 @@ public class MessagesInit {
     public static final ResourceLocation USE_MOVE = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "use_move"); // a package to have a player choose a contest move
     public static final ResourceLocation ACCEPT_MOVE = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "accept_move"); // a package to let the player client know their move was used
     public static final ResourceLocation CLEAR_QUEUE = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "clear_message_queue"); // clears the message queue for a player
+    public static final ResourceLocation ALERT_START = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "alert_start"); // lets all contestants know contest is starting if in booth
 
     public static final ResourceLocation SEND_CONTESTANTS = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "send_contestants"); // sends the pokemon and contestant data to the client
     public static final ResourceLocation REQUEST_CONTESTANTS = ResourceLocation.fromNamespaceAndPath(CobbleContestsFabric.MOD_ID, "request_contestants"); // sends the pokemon and contestant data to the client
@@ -61,6 +62,7 @@ public class MessagesInit {
         PayloadTypeRegistry.playS2C().register(CBPlayerMoveAccepted.PACKET_ID, CBPlayerMoveAccepted.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(CBClearMessageQueue.PACKET_ID, CBClearMessageQueue.PACKET_CODEC);
         PayloadTypeRegistry.playS2C().register(CBSendContestantStatus.PACKET_ID, CBSendContestantStatus.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(CBAlertContestStarting.PACKET_ID, CBAlertContestStarting.PACKET_CODEC);
 
 
         ServerPlayNetworking.registerGlobalReceiver(SBWalletScreenParty.PACKET_ID, (payload, context) -> {
@@ -122,6 +124,9 @@ public class MessagesInit {
             payload.recieve(context.client());
         });
         ClientPlayNetworking.registerGlobalReceiver(CBSendContestantStatus.PACKET_ID, (payload, context) -> {
+            payload.recieve(context.client());
+        });
+        ClientPlayNetworking.registerGlobalReceiver(CBAlertContestStarting.PACKET_ID, (payload, context) -> {
             payload.recieve(context.client());
         });
 

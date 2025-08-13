@@ -61,6 +61,7 @@ public class SBCheckContestParticipation implements CustomPacketPayload {
 
         boolean isInContest = ContestManager.INSTANCE.IsAlreadyInContest(id);
         boolean isPlayerHost = false;
+        int applause = 0;
         Contest.ContestPhase phase = Contest.ContestPhase.IDLE;
 
         if(isInContest){
@@ -68,6 +69,7 @@ public class SBCheckContestParticipation implements CustomPacketPayload {
             phase = con.getRound();
             isPlayerHost = con.isPlayerHost(id);
             tagContestants = con.generateContestantDataTag(server);
+            applause = con.getApplause();
         }
 
         tag.putBoolean("in_contest", isInContest);
@@ -80,7 +82,7 @@ public class SBCheckContestParticipation implements CustomPacketPayload {
             ServerPlayNetworking.send(serverPlayer, new CBReplyContestParticipation(id, tag));
             if(isInContest){
 
-                ServerPlayNetworking.send(serverPlayer, new CBSendContestantStatus(id, tagContestants.copy()));
+                ServerPlayNetworking.send(serverPlayer, new CBSendContestantStatus(id, tagContestants.copy(), applause));
             }
         }
 
