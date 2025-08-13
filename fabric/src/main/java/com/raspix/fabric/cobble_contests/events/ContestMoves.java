@@ -921,21 +921,29 @@ public class ContestMoves {
         }
 
 
-        contestant.setTurnHearts(functionData.getAppeal() + typeMod + repMove);
+        contestant.setTurnHearts(functionData.getAppeal());
 
         if(repMove == -1){
-            contest.scheduleAction(() -> {contest.addContestantMessage(server, ChatFormatting.RED, "cobble_contests.contest_showcase.reused_move");}, 10);
+            contest.scheduleAction(() -> {
+                contestant.addTurnHearts(-1);
+                contest.addContestantMessage(server, ChatFormatting.RED, "cobble_contests.contest_showcase.reused_move");
+                contest.sendEveryoneContestants(server);
+                }, 10);
         }
         
         if(typeMod == -1){
             contest.scheduleAction(() -> {
+                contestant.addTurnHearts(-1);
                 contest.DecreaseApplause(server, contestant);
                 contest.addContestantMessage(server, ChatFormatting.RED, "cobble_contests.contest_showcase.bad_appeal_type");
+                contest.sendEveryoneContestants(server);
                 }, 15);
         }else if(typeMod == 1){
             contest.scheduleAction(() -> {
+                contestant.addTurnHearts(1);
                 contest.IncreaseApplause(server, contestant);
                 contest.addContestantMessage(server, ChatFormatting.AQUA, "cobble_contests.contest_showcase.good_appeal_type");
+                contest.sendEveryoneContestants(server);
                 }, 15);
         }
 

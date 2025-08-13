@@ -131,7 +131,7 @@ public class SBRunContest implements CustomPacketPayload {
         if(newCon != null && contestLevel != ContestLevel.Multiplayer.getIntValue()){
             System.out.println("Not multiplayer");
             //ContestManager.INSTANCE.startContest(ContestManager.INSTANCE.getPlayersContest(id));
-            newCon.startContest(id);
+            newCon.startContest(server, id);
         }
             //cbe.runStatAssesment(id, index, contestType, contestLevel, (ServerPlayer) player);
         //}

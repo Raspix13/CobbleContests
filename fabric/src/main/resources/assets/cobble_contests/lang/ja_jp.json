@@ -51,6 +51,8 @@
   "tooltip.cobble_contests.ball_swapper.tooltip.instructions1": "ボールを変更するには、新しいボールをオフハンドで使用してください。",
   "tooltip.cobble_contests.ball_swapper.tooltip.instructions2": "再度使用してポケモンのボールを変更します。",
   "cobble_contests.ball_swapper.same_ball": "これは現在のボールと同じです",
+  "tooltip.cobble_contests.seal_tester.tooltip.effect_type": "現在の設定は %1$s です。",
+  "tooltip.cobble_contests.seal_tester.tooltip.effect_used": "効果インデックス %1$s を使用しています。",
 
   "cobble_contests.poffin_pot_instructions": "ポフィン生地を鍋に入れ、燃料とベリー1～4個を加えます。ベリーを重複して使用すると、ポフィンは不味くなります。結果の統計は使用したベリーに基づきます。",
   "tooltip.cobble_contests.poffin_item.tooltip.poffin_stats": "辛さ: %1$s、辛口: %2$s、甘口: %3$s、苦味: %4$s、酸味: %5$s、滑らかさ: %6$s",
@@ -68,31 +70,48 @@
   "cobble_contests.contest_level.3": "ウルトラ",
   "cobble_contests.contest_level.4": "マスター",
 
-  "cobble_contests.contest_text.fac": "コンテストを見つける",
   "cobble_contests.contest_text.start": "始める",
   "cobble_contests.contest_text.host": "ホスト",
-  "cobble_contests.contest_text.join": "Join",
+  "cobble_contests.contest_text.join": "参加する",
   "cobble_contests.contest_text.host_lobby": "ホストロビー",
-  "cobble_contests.contest_text.select_type": "タイプの選択",
-  "cobble_contests.contest_text.pokemon_select": "ポケモンを選ぶ",
+  "cobble_contests.contest_text.start_contest": "コンテストを開始",
+  "cobble_contests.contest_text.start_hosting": "ホスティングを開始",
+  "cobble_contests.contest_text.wait_for_start": "ホストの開始を待っています",
   "cobble_contests.contest_text.select_no_pokemon": "ポケモンを入力しないでください",
+  "cobble_contests.contest_text.title.select_type": "タイプの選択",
+  "cobble_contests.contest_text.title.pokemon_select": "ポケモンを選ぶ",
+  "cobble_contests.contest_text.contestant_num": "%1$s / %2$s",
+  "cobble_contests.contest_text.title.fac": "コンテストを見つける",
+  "cobble_contests.contest_text.info.entering_pokemon": "ポケモンの入力: %1$s",
+  "cobble_contests.contest_text.info.contest_type": "コンテストタイプ: %1$s",
+  "cobble_contests.contest_text.info.instructions": "コンテストが開始されたらコンテストカードを使用してください。",
 
+
+  "cobble_contests.contest_text.timeout": "コンテストロビーのタイムアウト",
+  "cobble_contests.contest_showoff.start": "%1$s %2$sコンテストが始まります！ 参加者はポジションにつくべきです",
   "cobble_contests.contest_showoff.intro": "%1$s が %3$s に %2$s 入力しました",
   "cobble_contests.contest_showoff.contestant_and_poke": "%1$s & %2$s",
   "cobble_contests.contest_showoff.move_used": "%1$s が %2$s を使用しました",
   "cobble_contests.contest_text.contest_running": "コンテストが始まりました",
   "cobble_contests.contest_showoff.start_round": "参加者が選択しました、今ラウンド %1$s を開始します",
-  "cobble_contests.contest_showcase.reused_move": "The audience is less interested in that move a second time.",
-  "cobble_contests.contest_showcase.good_appeal_type": "That move really appealed to the audience.",
-  "cobble_contests.contest_showcase.bad_appeal_type": "That move didn't really appeal to the audience.",
+  "cobble_contests.contest_showoff.round_switch": "次のラウンドに移ります。",
+  "cobble_contests.contest_showoff.showcase_end": "これでショーケースラウンドの終わりです！ 素晴らしいパフォーマンス、さて結果を見ましょう",
+  "cobble_contests.contest_showcase.reused_move": "観客はその動きに2度目の関心を示しませんでした。",
+  "cobble_contests.contest_showcase.good_appeal_type": "その動きは本当に観客の心を掴みました。",
+  "cobble_contests.contest_showcase.bad_appeal_type": "その動きはあまり観客の心を掴みませんでした。",
+  "cobble_contests.contest_showcase.award_applause": "すごい！ 観客はその動きに大喝采を送りました。",
+  "cobble_contests.contest_showoff.num_hearts": "%1$s が %2$s ハートを獲得しました！",
 
   "cobble_contests.contest_result.not_implemented": "この機能はまだ実装されていません。",
   "cobble_contests.contest_result.won_ranked": "%1$sが%2$s %3$sコンテストで優勝しました",
   "cobble_contests.contest_result.lost_ranked": "%1$s は %2$s %3$s コンテストで負けました",
   "cobble_contests.contest_result.maxed_ranked": "%1$sはすでに%2$sコンテストすべてで優勝しています",
-
-
-
+  "cobble_contests.contest_result.placed_first": "%1$s と %2$s が %3$s ハートで1位に輝きました",
+  "cobble_contests.contest_result.placed_second": "%1$s と %2$s が %3$s ハートで2位に入りました",
+  "cobble_contests.contest_result.placed_third": "%1$s と %2$s が %3$s ハートで3位に入りました",
+  "cobble_contests.contest_result.your_placement": "あなたと %1$s は %2$s 位で %3$s ハートを獲得しました",
+  "cobble_contests.contest_result.your_placement_tied": "あなたと %1$s は %2$s 位で %3$s ハートで並びました",
+  "cobble_contests.contest_result.failed_ranked": "%1$s と %2$s は %3$s ハートでランク付けされたコンテストに勝利しませんでした",
 
 
 
@@ -145,7 +164,11 @@
 
   "cobble_contests.move_function_description.move_earlier": "次のターンにおいてユーザーを早く動かすようにします。",
   "cobble_contests.move_function_description.scramble": "次のターンにおいてポケモンが動く順番を入れ替えます。",
-  "cobble_contests.move_function_description.move_later": "次のターンにおいてユーザーを遅く動かすようにします。"
+  "cobble_contests.move_function_description.move_later": "次のターンにおいてユーザーを遅く動かすようにします。",
+
+
+
+
 
 
 

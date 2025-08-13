@@ -11,10 +11,7 @@ import com.cobblemon.mod.common.net.messages.client.effect.SpawnSnowstormParticl
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.mojang.authlib.GameProfile;
 import com.raspix.fabric.cobble_contests.events.ContestMoves;
-import com.raspix.fabric.cobble_contests.network.CB.CBLobRetReq;
-import com.raspix.fabric.cobble_contests.network.CB.CBSendContestantMessage;
-import com.raspix.fabric.cobble_contests.network.CB.CBSendContestantStatus;
-import com.raspix.fabric.cobble_contests.network.CB.CBUpdateContestInfo;
+import com.raspix.fabric.cobble_contests.network.CB.*;
 import com.raspix.fabric.cobble_contests.network.NetworkablePokemonData;
 import com.raspix.fabric.cobble_contests.pokemon.CVs;
 import com.raspix.fabric.cobble_contests.pokemon.Ribbons;
@@ -78,7 +75,7 @@ public class Contest {
     private static int NUM_SHOWCASE_ROUNDS = 3;
     private static int MAX_APPLAUSE = 5;
 
-    private int[] thresholds = {4, 8, 12, 14, 17 };// {5, 40, 100, 175, 245};
+    private int[] thresholds = {7, 11, 15, 18, 21 };// {5, 40, 100, 175, 245};
 
     private static int[][] INTRO_HEARTS = new int[][]{ // Max 8 hearts
             {0, 11, 21, 31, 41, 51, 61, 71, 81}, // Normal
@@ -193,6 +190,10 @@ public class Contest {
 
         public void setTurnHearts(int hearts) {
             this.turnHearts = hearts;
+        }
+
+        public void addTurnHearts(int hearts) {
+            this.turnHearts += hearts;
         }
 
         public int getTurnHearts(){
@@ -349,12 +350,13 @@ public class Contest {
      * @param playerID the assumed host
      * @return if the contest could be started
      */
-    public boolean startContest(UUID playerID){
+    public boolean startContest(MinecraftServer server, UUID playerID){
         if(playerID.equals(host)) {
             timer = 0L;
             this.contestantsOrdered = new ArrayList<>(contestants.keySet());
             this.round = ContestPhase.WAITING;
             ContestManager.INSTANCE.startContest(this);
+            updateContestantsStarting(server);
             return true;
         }
         return false;
@@ -687,7 +689,7 @@ public class Contest {
 
     }
 
-    private void sendEveryoneContestants(MinecraftServer server){// TODO: send out packet here?
+    public void sendEveryoneContestants(MinecraftServer server){
 
         PlayerList playerList = server.getPlayerList();
 
@@ -697,7 +699,7 @@ public class Contest {
             ServerPlayer serverPlayer = playerList.getPlayer(contestantID);
 
             if(serverPlayer != null){
-                ServerPlayNetworking.send(serverPlayer, new CBSendContestantStatus(serverPlayer.getUUID(), tag.copy()));
+                ServerPlayNetworking.send(serverPlayer, new CBSendContestantStatus(serverPlayer.getUUID(), tag.copy(), applause));
             }
         }
     }
@@ -711,7 +713,7 @@ public class Contest {
         if(!round.equals(ContestPhase.IDLE)) {
 
             if (serverPlayer != null) {
-                ServerPlayNetworking.send(serverPlayer, new CBSendContestantStatus(serverPlayer.getUUID(), tag.copy()));
+                ServerPlayNetworking.send(serverPlayer, new CBSendContestantStatus(serverPlayer.getUUID(), tag.copy(), applause));
             }
         }
 
@@ -889,7 +891,21 @@ public class Contest {
         }
     }
 
-    private void updateContestants(MinecraftServer server){
+    private void updateContestantsStarting(MinecraftServer server){
+        PlayerList playerList = server.getPlayerList();
+        for(Contestant conts: contestants.values()){
+            CompoundTag tag = new CompoundTag();
+            tag.putBoolean("in_contest", true);
+            round.toTag(tag, "phase");
+            tag.putBoolean("is_host", isPlayerHost(conts.playerId));
+            ServerPlayer play = playerList.getPlayer(conts.playerId);
+            if(play != null){
+                ServerPlayNetworking.send(play, new CBAlertContestStarting(conts.playerId, tag));
+            }
+        }
+    }
+
+    public void updateContestants(MinecraftServer server){
         PlayerList playerList = server.getPlayerList();
         for(Contestant conts: contestants.values()){
             CompoundTag tag = new CompoundTag();
@@ -932,7 +948,7 @@ public class Contest {
         for(UUID contestantID: contestants.keySet()){
             if( playerList.getPlayer(contestantID) != null){
                 ServerPlayer player = playerList.getPlayer(contestantID);
-                ServerPlayNetworking.send((ServerPlayer) player, new CBSendContestantStatus(contestantID, tag));
+                ServerPlayNetworking.send((ServerPlayer) player, new CBSendContestantStatus(contestantID, tag, applause));
             }
 
         }

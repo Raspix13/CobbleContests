@@ -55,7 +55,7 @@ public class SBRunHostedContest implements CustomPacketPayload{
         Contest con = ContestManager.INSTANCE.getPlayersContest(id);
         if (con != null){
             System.out.println("A Contest Was Found");
-            con.startContest(id);
+            con.startContest(server, id);
         }else{
             System.out.println("No Contest Was Found");
         }

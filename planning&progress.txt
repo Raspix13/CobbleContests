@@ -2,9 +2,6 @@ Planning:
 
 
 Beta 1.1.0 TODO:
-- Multiplayer win conditions
-- need to have booth screen update for contestants when contest starts
-
 
 Release 1.1.0 TODO:
 - Get neoforge caught up/ buildable
@@ -15,6 +12,7 @@ Release 1.1.0 TODO:
     - Pokemon already out during contests should play cry animation (Contest @SendOutPokemon)
 - More Showcase Mechanics
     - Contest Moves status effects
+    - jam
     - Combo Moves
 - Check to make sure configs don't crash servers (technically for beta but finalized with feedback)
 - Ability to kick participants and leave contest while in lobby, also for host to be able to end contest?
@@ -37,18 +35,24 @@ Current Bugs & Issues for Later:
 - Crashes:
     - Crashes when host (and maybe spectator) tries to not use pokemon/ selects no pokemon
     - Crashes or errors when player in contest leaves (Contest manager update)
-    - Selecting a lobby that does not have a player will crash
 - Other:
-    - Contestbooth lobby participant screens should be updated when contest starts
     - If player does not choose move the panel will not open
     - Timeout should remove anyone from lobby
-    - Need to fix timer not remaining until all moves chosen
     - Message log cant show words when transparent background
     - might need to clear message queue if player is offline
+    - replace "ERROR" contest type when looking back at booth
+    - cant drag scroll message log
 
 
 Progress:
 Things I have done:
+
+8/13
+- Changed showcase heart display method to account for overflow hearts
+- Fixed booth screen not updating for contestants when contest starts
+- Incremented heart change bonuses and applause
+- Moved applause gui
+- Added missing japanese translations
 
 8/4-8/10
 - Worked on displaying results
