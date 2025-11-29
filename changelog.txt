@@ -1,7 +1,22 @@
+
+Cobble Contests 1.1.0 Alpha/Beta (Fabric)
+New:
+- Added basic contests
+  - Contests have two parts: the introduction where pokemon's condition is evaluated, and the showcase battle
+  - Currently the only contest battle mechanics added are: appeal value, applause, bonus/demerits from move type, and repeating moves
+  - All moves that have contest data from gen VI should have data
+- Added multiplayer and hosting contests
+- Added config file
+- Added Japanese translation attempt
+
+- Things that are not yet added (not a full list): opponent ai, dressup/seals/stickers, jamming, move effects, combo moves, mega evolution, held items,
+
+
+
 Cobble Contests 1.1.0 (Fabric)
 - Added config file
 - Added bad Japanese translation
-- Added contest showcase
+- Added basic contest showcase
 - Added multiplayer and hosting contests
 
 Cobble Contests 1.0.5 (Fabric + Neoforge)
