@@ -5,10 +5,16 @@ import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState;
 import com.cobblemon.mod.common.pokemon.Gender;
 import com.cobblemon.mod.common.pokemon.Species;
 import com.cobblemon.mod.common.pokemon.status.PersistentStatus;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.util.*;
 
@@ -25,8 +31,9 @@ public class NetworkablePokemonData {
     private int statusFlag2;
     private int numHearts; // the number of solid hearts it should have
     private int numChangeHearts; // the number of hearts that should change
+    private ItemStack heldItem;
 
-    public NetworkablePokemonData(UUID pokeUuid, UUID playUuid, String pokeName, String playerName, int statusFlag1, int statusFlag2, int numHearts, int numChangeHearts, PokemonProperties properties, Set<String> aspects) {
+    public NetworkablePokemonData(UUID pokeUuid, UUID playUuid, String pokeName, String playerName, int statusFlag1, int statusFlag2, int numHearts, int numChangeHearts, PokemonProperties properties, Set<String> aspects, ItemStack heldItem) {
         this.pokeUuid = pokeUuid;
         this.playUuid = playUuid;
         this.pokeName = pokeName;
@@ -39,6 +46,7 @@ public class NetworkablePokemonData {
         this.aspects = aspects;
         this.state = new FloatingState();
         this.state.setCurrentAspects(aspects);
+        this.heldItem = heldItem;
 
     }
 
@@ -91,6 +99,10 @@ public class NetworkablePokemonData {
 
     public int getNumChangeHearts(){
         return numChangeHearts;
+    }
+
+    public ItemStack getHeldItem(){
+        return heldItem;
     }
 
     public Set<String> getAspects() {
@@ -161,6 +173,16 @@ public class NetworkablePokemonData {
         this.statusFlag2 = tag.getInt("status_flag_2");
         this.numHearts = tag.getInt("hearts");
         this.numChangeHearts = tag.getInt("hearts_change");
+        String itemTag = tag.getString("held_item");
+
+
+        String itemIdString = tag.getString(itemTag);
+        String[] itemStringSplit = itemIdString.split(":");
+        ResourceLocation itemId = new ResourceLocation(itemStringSplit[0], itemStringSplit[1]);
+
+        // 2. Look up the Item in the global registry
+        Item item = BuiltInRegistries.ITEM.get(itemId);
+        this.heldItem = new ItemStack(item);
 
         //System.out.println("Has " + numHearts + " with a change of " + numChangeHearts);
 
@@ -192,6 +214,8 @@ public class NetworkablePokemonData {
         tag.putInt("hearts", numHearts);
         tag.putInt("hearts_change", numChangeHearts);
 
+
+
         tag.putString("properties", properties.asString(","));
 
         tag.putInt("aspect_size", aspects.size());
@@ -201,8 +225,9 @@ public class NetworkablePokemonData {
             tag.putString("aspect" + i, iterator.next()); // Write each string element to the buffer
         }
 
+        tag.putString("held_item", BuiltInRegistries.ITEM.getKey(heldItem.getItem()).toString());
+
          return tag;
 
     }
-
 }

@@ -44,7 +44,7 @@ public class ContestBoothMenu extends AbstractContainerMenu {
         this.levelAccess = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
         UUID id = playerInv.player.getUUID();
         if(playerInv.player.level().isClientSide()){
-            playerPartyClient = CobblemonClient.INSTANCE.getStorage().getMyParty();
+            playerPartyClient = CobblemonClient.INSTANCE.getStorage().getParty();
         }
 
 
@@ -66,7 +66,7 @@ public class ContestBoothMenu extends AbstractContainerMenu {
     public ContestBoothMenu(int containerID, Inventory playerInv) {
         super(MenuInit.CONTEST_BOOTH_MENU, containerID); //MenuInit.CONTEST_MENU
         UUID id = playerInv.player.getUUID();
-        playerPartyClient = CobblemonClient.INSTANCE.getStorage().getMyParty();
+        playerPartyClient = CobblemonClient.INSTANCE.getStorage().getParty();
 
     }
 
@@ -74,7 +74,7 @@ public class ContestBoothMenu extends AbstractContainerMenu {
         System.out.println("Setting block entity");
         blockEntity = be;
         levelAccess = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
-        playerPartyClient = CobblemonClient.INSTANCE.getStorage().getMyParty();
+        playerPartyClient = CobblemonClient.INSTANCE.getStorage().getParty();
     }
 
     public ContestBoothMenu(int containerID, Inventory playerInv, PacketByteBufs bytes) {

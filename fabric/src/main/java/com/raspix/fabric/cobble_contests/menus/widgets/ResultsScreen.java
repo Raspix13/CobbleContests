@@ -98,7 +98,7 @@ public class ResultsScreen extends AbstractWidget {
     }
 
     private void setFirstRankedModel(NetworkablePokemonData data) {
-        RenderablePokemon renderablePokemon = new RenderablePokemon(data.getSpecies(), data.getAspects());
+        RenderablePokemon renderablePokemon = new RenderablePokemon(data.getSpecies(), data.getAspects(), data.getHeldItem());
         firstModelWidget = new ModelWidget(
                 this.getX() + 118,
                 this.getY() + 32,
@@ -112,7 +112,7 @@ public class ResultsScreen extends AbstractWidget {
     }
 
     private void setSecondRankedModel(NetworkablePokemonData data) {
-        RenderablePokemon renderablePokemon = new RenderablePokemon(data.getSpecies(), data.getAspects());
+        RenderablePokemon renderablePokemon = new RenderablePokemon(data.getSpecies(), data.getAspects(), data.getHeldItem());
         secondModelWidget = new ModelWidget(
                 this.getX() + 26 ,
                 this.getY() + 24,
@@ -126,7 +126,7 @@ public class ResultsScreen extends AbstractWidget {
     }
 
     private void setThirdRankedModel(NetworkablePokemonData data) {
-        RenderablePokemon renderablePokemon = new RenderablePokemon(data.getSpecies(), data.getAspects());
+        RenderablePokemon renderablePokemon = new RenderablePokemon(data.getSpecies(), data.getAspects(), data.getHeldItem());
         thirdModelWidget = new ModelWidget(
                 this.getX() + 6 + 145,
                 this.getY() + 24,

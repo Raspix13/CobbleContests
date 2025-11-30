@@ -480,7 +480,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
     }
 
     public void setUpdatedInfo(UUID pokemonSlot, Contest.ContestPhase phase, int time){
-        this.pokemon = CobblemonClient.INSTANCE.getStorage().getMyParty().findByUUID(pokemonSlot);
+        this.pokemon = CobblemonClient.INSTANCE.getStorage().getParty().findByUUID(pokemonSlot);
         if(pokemon == null){
             this.pokemon = CobblemonClient.INSTANCE.getStorage().getPcStores().get(playerId).findByUUID(pokemonSlot);
         }
@@ -496,7 +496,7 @@ public class ContestScreen extends AbstractContainerScreen<ContestMenu> {
     }
 
     public void setUpdatedInfo(UUID pokemonSlot, Contest.ContestPhase phase, int time, int round, boolean pickMoves, boolean allMovesPicked, int numApplause){
-        this.pokemon = CobblemonClient.INSTANCE.getStorage().getMyParty().findByUUID(pokemonSlot);
+        this.pokemon = CobblemonClient.INSTANCE.getStorage().getParty().findByUUID(pokemonSlot);
         this.showcaseRound = round;
 
         this.numApplause = numApplause;

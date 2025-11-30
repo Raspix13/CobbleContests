@@ -441,7 +441,7 @@ public class Contest {
 
                 assert poke != null;
                 //addContestantMessage(player.getDisplayName().getString() + " entered " + poke.getDisplayName().getString() + " the " + poke.getSpecies().getName());
-                addContestantMessage(server, null, "cobble_contests.contest_showoff.intro", playerName, poke.getDisplayName().getString(), poke.getSpecies().getName());
+                addContestantMessage(server, null, "cobble_contests.contest_showoff.intro", playerName, poke.getDisplayName(false).getString(), poke.getSpecies().getName());
                 //addContestantMessage(Component.translatable("cobble_contests.contest_showoff.intro", player.getDisplayName().getString(), poke.getDisplayName().getString(), poke.getSpecies().getName()));
 
                 sendOutPokemon(server, contestantIdx);
@@ -646,13 +646,13 @@ public class Contest {
             NetworkablePokemonData data = new NetworkablePokemonData(
                     poke.getUuid(),
                     contestantID,
-                    poke.getDisplayName().getString(),
+                    poke.getDisplayName(false).getString(),
                     playerName,
                     0, 0,
                     contestant.getTurnHearts(),
                     0,
                     poke.createPokemonProperties(PokemonPropertyExtractor.SPECIES, PokemonPropertyExtractor.GENDER, PokemonPropertyExtractor.SHINY, PokemonPropertyExtractor.FORM),
-                    poke.getAspects());
+                    poke.getAspects(), poke.heldItem());
 
             //data.getAsBuf(buf);
             tag.put("contestant" + i, data.getAsTag());
@@ -677,13 +677,13 @@ public class Contest {
         NetworkablePokemonData data = new NetworkablePokemonData(
                 poke.getUuid(),
                 playerUUID,
-                poke.getDisplayName().getString(),
+                poke.getDisplayName(false).getString(),
                 playerName,
                 0, 0,
                 contestant.getTurnHearts(),
                 0,
                 poke.createPokemonProperties(PokemonPropertyExtractor.SPECIES, PokemonPropertyExtractor.GENDER, PokemonPropertyExtractor.SHINY, PokemonPropertyExtractor.FORM),
-                poke.getAspects());
+                poke.getAspects(), poke.heldItem());
 
         return data;
 
@@ -786,7 +786,7 @@ public class Contest {
         String playerName = profile.getName();
         String translatableString = result ? "cobble_contests.contest_result.placed_first" :
                 "cobble_contests.contest_result.failed_ranked";
-        addContestantMessage(server, null, translatableString, playerName, getPokemonFromID(server, contestant.playerId, contestant.pokemon).getDisplayName().getString(), numHearts);
+        addContestantMessage(server, null, translatableString, playerName, getPokemonFromID(server, contestant.playerId, contestant.pokemon).getDisplayName(false).getString(), numHearts);
         updateContestantsWithRankedResults(server, contestant, result);
 
     }
@@ -807,12 +807,12 @@ public class Contest {
         String translatableString = contestantsRank == 0? "cobble_contests.contest_result.placed_first" :
                 (contestantsRank == 1? "cobble_contests.contest_result.placed_second":
                         (contestantsRank == 2 ? "cobble_contests.contest_result.placed_third" : "cobble_contests.contest_result.your_placement"));
-        addContestantMessage(server, null, translatableString, playerName, getPokemonFromID(server, contestant.playerId, contestant.pokemon).getDisplayName().getString(), numHearts);
+        addContestantMessage(server, null, translatableString, playerName, getPokemonFromID(server, contestant.playerId, contestant.pokemon).getDisplayName(false).getString(), numHearts);
         for(int i = 1; i < contestantsRanked.size(); i ++){ // If more than one won a placement
             contestant = contestantsRanked.get(i);
             profile = server.getProfileCache().get(contestant.playerId).get();
             playerName = profile.getName();
-            addContestantMessage(server, null, translatableString, playerName, getPokemonFromID(server, contestant.playerId, contestant.pokemon).getDisplayName().getString() + " also ", numHearts);
+            addContestantMessage(server, null, translatableString, playerName, getPokemonFromID(server, contestant.playerId, contestant.pokemon).getDisplayName(false).getString() + " also ", numHearts);
         }
         updateContestantsWithResults(server);
 
@@ -826,7 +826,7 @@ public class Contest {
             for(Contestant contestant: finalRankedContestantList.get(i)){
                 GameProfile profile = server.getProfileCache().get(contestant.playerId).get();
                 String playerName = profile.getName();
-                sendClientChatMessage(server, contestant.playerId, Component.translatable("cobble_contests.contest_result.your_placement" + (numInRank > 1? "_tied": ""), getPokemonFromID(server, contestant.playerId, contestant.pokemon).getDisplayName().getString(), i + 1, contestant.getHearts()));
+                sendClientChatMessage(server, contestant.playerId, Component.translatable("cobble_contests.contest_result.your_placement" + (numInRank > 1? "_tied": ""), getPokemonFromID(server, contestant.playerId, contestant.pokemon).getDisplayName(false).getString(), i + 1, contestant.getHearts()));
             }
         }
         updateContestantsWithResults(server);
@@ -1112,7 +1112,7 @@ public class Contest {
 
     public void runContestantMove(MinecraftServer server, Contestant contestant, Pokemon pokemon){
 
-        addContestantMessage(server, null, "cobble_contests.contest_showoff.move_used", pokemon.getDisplayName().getString(), lang("move." + contestant.getCurrentMove()));
+        addContestantMessage(server, null, "cobble_contests.contest_showoff.move_used", pokemon.getDisplayName(false).getString(), lang("move." + contestant.getCurrentMove()));
 
         //contestant.useMove(ContestType.getFromInt(contestType));
         ContestMoves.MoveData moveData = ContestMoves.instance.getMoveData(contestant.currentMove);
@@ -1231,13 +1231,13 @@ public class Contest {
         ServerPlayer player = server.getPlayerList().getPlayer(uuid);
         //Pokemon pokemon = Cobblemon.INSTANCE.getStorage().getParty(player).get(contestant.pokemon);
         Pokemon pokemon = getPokemonFromID(server, uuid, contestant.pokemon);
-        addContestantMessage(server, ChatFormatting.GOLD, "cobble_contests.contest_showoff.num_hearts", pokemon.getDisplayName(), totalHearts);
+        addContestantMessage(server, ChatFormatting.GOLD, "cobble_contests.contest_showoff.num_hearts", pokemon.getDisplayName(false), totalHearts);
         Component componentOutput;
 
         if (result) {
-            componentOutput = Component.translatable("cobble_contests.contest_result.won_ranked", pokemon.getDisplayName(), ContestLevel.getFromInt(contestTier).name(), getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
+            componentOutput = Component.translatable("cobble_contests.contest_result.won_ranked", pokemon.getDisplayName(false), ContestLevel.getFromInt(contestTier).name(), getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
         } else {
-            componentOutput = Component.translatable("cobble_contests.contest_result.lost_ranked", pokemon.getDisplayName(), ContestLevel.getFromInt(contestTier).name(), getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
+            componentOutput = Component.translatable("cobble_contests.contest_result.lost_ranked", pokemon.getDisplayName(false), ContestLevel.getFromInt(contestTier).name(), getContestTypeString(contestType)).withStyle(ChatFormatting.LIGHT_PURPLE);
         }
 
         if(result){
@@ -1293,11 +1293,11 @@ public class Contest {
             tag.put(key, value);
         });
         // basically a vanilla "markAsDirty"
-        if (pokemon.getChangeObservable() instanceof SimpleObservable<Pokemon>) { //TODO
+       /** if (pokemon.getChangeObservable() instanceof SimpleObservable<Pokemon>) { //TODO
             ((SimpleObservable<Pokemon>) pokemon.getChangeObservable()).emit(pokemon);
         }else {
             System.out.println("error, not simple observable (ContestBlockEntity)");
-        }
+        }*/
     }
 
     public Component tempRunContestResults(UUID playerId){

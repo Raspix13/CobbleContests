@@ -32,7 +32,7 @@ public class CobbleContestsDataProvider implements DataProvider {
 
     public void registerDefaults(){
         CobbleContestsFabric.LOGGER.info("Registering Defaults");
-        this.register(CobbleContestsMoves.INSTANCE);
+        this.register(CobbleContestsMoves.INSTANCE, false);
 
         //Cobblemon.implementation.registerResourceReloader(cobblemonResource("client_resources"), new SimpleResourceReloader(PackType.CLIENT_RESOURCES), PackType.CLIENT_RESOURCES, emptyList());
 
@@ -61,7 +61,7 @@ public class CobbleContestsDataProvider implements DataProvider {
 
     @NotNull
     @Override
-    public <T extends DataRegistry> T register(@NotNull T registry) {
+    public <T extends DataRegistry> T register(@NotNull T registry, boolean b) {
         if (this.registries.isEmpty()) {
             //CobbleContestsForge.LOGGER.info("Note: Hello.");
         }

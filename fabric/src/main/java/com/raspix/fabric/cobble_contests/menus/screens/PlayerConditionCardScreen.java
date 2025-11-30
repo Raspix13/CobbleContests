@@ -1,6 +1,6 @@
 package com.raspix.fabric.cobble_contests.menus.screens;
 
-import com.cobblemon.mod.common.api.berry.Flavor;
+import com.cobblemon.mod.common.api.cooking.Flavour;
 import com.cobblemon.mod.common.api.gui.ColourLibrary;
 import com.cobblemon.mod.common.api.gui.MultiLineLabelK;
 import com.cobblemon.mod.common.api.moves.Move;
@@ -137,7 +137,7 @@ public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerCon
         int startingY = this.topPos + 10;
         int yOffset = 30;
 
-        clientParty = CobblemonClient.INSTANCE.getStorage().getMyParty();
+        clientParty = CobblemonClient.INSTANCE.getStorage().getParty();
         List<Pokemon> partyPoke = this.clientParty.getSlots();//playerPartyStore.toGappyList();// contestInfoMenu.getPartyStore().toGappyList(); //
         for(int i = 0; i < 6; i++){
             Pokemon poke = partyPoke.get(i);
@@ -488,8 +488,8 @@ public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerCon
     }
 
     private void writeFlavors(GuiGraphics guiGraphics, Pokemon pokemon){
-        Flavor fav = pokemon.getNature().getFavoriteFlavor();
-        Flavor dis = pokemon.getNature().getDislikedFlavor();
+        Flavour fav = pokemon.getNature().getFavouriteFlavour();
+        Flavour dis = pokemon.getNature().getDislikedFlavour();
         drawScaledText(guiGraphics, Component.literal("Favorite: " + ((fav != null)? fav.name(): "none")).getVisualOrderText(),
                 (Number) (this.leftPos + 15),
                 (Number) (this.topPos + 135),

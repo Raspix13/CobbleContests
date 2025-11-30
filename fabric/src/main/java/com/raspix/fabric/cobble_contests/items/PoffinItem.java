@@ -5,7 +5,8 @@ import com.cobblemon.mod.common.advancement.CobblemonCriteria;
 import com.cobblemon.mod.common.advancement.criterion.PokemonInteractContext;
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle;
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor;
-import com.cobblemon.mod.common.api.berry.Flavor;
+//import com.cobblemon.mod.common.api.berry.Flavor;
+import com.cobblemon.mod.common.api.cooking.Flavour;
 import com.cobblemon.mod.common.api.callback.PartySelectCallbacks;
 import com.cobblemon.mod.common.api.item.PokemonSelectingItem;
 import com.cobblemon.mod.common.api.reactive.SimpleObservable;
@@ -67,6 +68,11 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
     public BagItem getBagItem() {
         return new BagItem() {
             @Override
+            public boolean canUse(@NotNull ItemStack itemStack, @NotNull PokemonBattle pokemonBattle, @NotNull BattlePokemon battlePokemon) {
+                return true;
+            }
+
+            @Override
             public @NotNull Item getReturnItem() {
                 return ItemInit.DRY_POFFIN;
             }
@@ -77,10 +83,6 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
                 return "item.cobblemon.poffin";
             }
 
-            @Override
-            public boolean canUse(@NotNull PokemonBattle pokemonBattle, @NotNull BattlePokemon battlePokemon) {
-                return true;
-            }
 
             @NotNull
             @Override
@@ -88,10 +90,10 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
                 return null;
             }
 
-            @Override
+            /**@Override
             public boolean canStillUse(@NotNull ServerPlayer serverPlayer, @NotNull PokemonBattle pokemonBattle, @NotNull BattleActor battleActor, @NotNull BattlePokemon battlePokemon, @NotNull ItemStack itemStack) {
                 return  itemStack.getCount() > 0 && canUse(pokemonBattle, battlePokemon) && battleActor.canFitForcedAction();
-            }
+            }*/
         };
     }
 
@@ -137,8 +139,8 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
             System.out.println("Applying: " + Arrays.toString(flavors));*/
 
             Nature nature = pokemon.getNature();
-            int disliked = getIndexFromFlavor(nature.getDislikedFlavor());
-            int liked = getIndexFromFlavor(nature.getFavoriteFlavor());
+            int disliked = getIndexFromFlavor(nature.getDislikedFlavour());
+            int liked = getIndexFromFlavor(nature.getFavouriteFlavour());
             float valMultiplier = 1.0f;
             if(this.mainFlavor == liked && mainFlavor >= 0 && mainFlavor != secFlavor){ //liked and has 2 flavors
                 //System.out.println("liked flavor");
@@ -170,7 +172,7 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
             }
             return InteractionResultHolder.success(itemStack);
         }else {
-            serverPlayer.displayClientMessage(Component.literal(pokemon.getDisplayName().getString() + " already has max sheen and can not eat any more").withStyle(ChatFormatting.LIGHT_PURPLE), false);
+            serverPlayer.displayClientMessage(Component.literal(pokemon.getDisplayName(false).getString() + " already has max sheen and can not eat any more").withStyle(ChatFormatting.LIGHT_PURPLE), false);
         }
         return InteractionResultHolder.fail(itemStack);
     }
@@ -182,11 +184,11 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
             tag.put(key, IntTag.valueOf(value));
         });
         // basically a vanilla "markAsDirty"
-        if (pokemon.getChangeObservable() instanceof SimpleObservable<Pokemon>) { //TODO
+        /**if (pokemon.getChangeObservable() instanceof SimpleObservable<Pokemon>) { //TODO
             ((SimpleObservable<Pokemon>) pokemon.getChangeObservable()).emit(pokemon);
         }else {
             System.out.println("error, not simple observable (PoffinItem)");
-        }
+        }*/
     }
 
     private void saveCVs(final Pokemon pokemon, final Map<String, CompoundTag> myData) {
@@ -195,18 +197,18 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
             tag.put(key, value);
         });
         // basically a vanilla "markAsDirty"
-        if (pokemon.getChangeObservable() instanceof SimpleObservable<Pokemon>) { //TODO
+       /** if (pokemon.getChangeObservable() instanceof SimpleObservable<Pokemon>) { //TODO
             ((SimpleObservable<Pokemon>) pokemon.getChangeObservable()).emit(pokemon);
         }else {
             System.out.println("error, not simple observable (PoffinItem)");
-        }
+        }*/
     }
 
     private void getMyData(Pokemon pokemon, String key){
 
     }
 
-    private int getIndexFromFlavor(Flavor flavor){
+    private int getIndexFromFlavor(Flavour flavor){
         int idx = -1;
         if(flavor != null){
             switch (flavor) {
@@ -235,12 +237,12 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
 
 
     @Override
-    public boolean canUseOnBattlePokemon(@NotNull BattlePokemon battlePokemon) {
+    public boolean canUseOnBattlePokemon(ItemStack itemstack, @NotNull BattlePokemon battlePokemon) {
         return false;
     }
 
     @Override
-    public boolean canUseOnPokemon(@NotNull Pokemon pokemon) {
+    public boolean canUseOnPokemon(ItemStack itemstack, @NotNull Pokemon pokemon) {
         return true;
     }
 
@@ -301,11 +303,11 @@ public class PoffinItem extends CobblemonItem implements PokemonSelectingItem {
         PartySelectCallbacks.INSTANCE.createFromPokemon(
                 serverPlayer,
                 pokeList,
-                this::canUseOnPokemon,
+                pk -> canUseOnPokemon(itemStack, pk),
                 pk -> {
                     if (true) {
                         applyToPokemon(serverPlayer, itemStack, pk);
-                        CobblemonCriteria.INSTANCE.getPOKEMON_INTERACT().trigger(serverPlayer,
+                        CobblemonCriteria.POKEMON_INTERACT.trigger(serverPlayer,
                                 new PokemonInteractContext(
                                         pk.getSpecies().resourceIdentifier, Registries.ITEM.registry()));// Registries.ITEM.getId(itemStack.getItem())  itemStack.getItem().
                     }

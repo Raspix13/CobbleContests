@@ -77,7 +77,7 @@ public class ContestMoveGrid extends ParentWidget {
     }
 
     public void initializeMoves(Pokemon pokemon){
-        ClientParty clientParty = CobblemonClient.INSTANCE.getStorage().getMyParty();
+        ClientParty clientParty = CobblemonClient.INSTANCE.getStorage().getParty();
         List<Move> moves = pokemon.getMoveSet().getMoves();
 
         ArrayList<MoveTile> tiles = new ArrayList<>(Arrays.asList(move1, move2, move3, move4));

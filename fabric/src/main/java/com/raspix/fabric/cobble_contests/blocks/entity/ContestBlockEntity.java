@@ -1,7 +1,9 @@
 package com.raspix.fabric.cobble_contests.blocks.entity;
 
 import com.cobblemon.mod.common.Cobblemon;
+import com.cobblemon.mod.common.api.reactive.SettableObservable;
 import com.cobblemon.mod.common.api.reactive.SimpleObservable;
+import com.cobblemon.mod.common.api.storage.StoreCoordinates;
 import com.cobblemon.mod.common.pokemon.Pokemon;
 import com.raspix.common.cobble_contests.CobbleContests;
 //import com.raspix.fabric.cobble_contests.menus.ContestMenu;
@@ -297,11 +299,12 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider, Ext
             tag.put(key, value);
         });
         // basically a vanilla "markAsDirty"
-        if (pokemon.getChangeObservable() instanceof SimpleObservable<Pokemon>) { //TODO
-            ((SimpleObservable<Pokemon>) pokemon.getChangeObservable()).emit(pokemon);
+        //((SettableObservable)pokemon.getStoreCoordinates()).emit(pokemon);
+ /**       if (pokemon.getStoreCoordinates() instanceof SettableObservable<StoreCoordinates<?>>) { //TODO
+            ((SettableObservable<Pokemon>) pokemon.getStoreCoordinates()).emit(pokemon);
         }else {
             System.out.println("error, not simple observable (ContestBlockEntity)");
-        }
+        }*/
     }
 
     private boolean runAppContest(Pokemon poke, int level, int typeVal){

@@ -71,7 +71,7 @@ public class SealTester extends Item {
                 PokemonEntity pokeEnt = poke.getEntity();
                 if(pokeEnt != null){
                     ((ServerPlayer) pPlayer).displayClientMessage(Component.translatable("tooltip.cobble_contests.seal_tester.tooltip.effect_used", effect).withStyle(ChatFormatting.GRAY), true);
-                    new SpawnSnowstormEntityParticlePacket(particles.get(effect), pokeEnt.getId(), Arrays.asList("middle"))
+                    new SpawnSnowstormEntityParticlePacket(particles.get(effect), pokeEnt.getId(), Arrays.asList("middle"), null, null)
                             .sendToPlayersAround(pokeEnt.getX(), pokeEnt.getY(), pokeEnt.getZ(), 64.0, pokeEnt.level().dimension(), serverPlayer -> {
                                 return false;
                             });

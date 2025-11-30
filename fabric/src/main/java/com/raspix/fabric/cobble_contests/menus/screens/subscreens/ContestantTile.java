@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
-import com.cobblemon.mod.common.client.render.models.blockbench.repository.PokemonModelRepository;
 
 import java.util.HashMap;
 
@@ -191,13 +190,13 @@ public class ContestantTile {
 
 
         Species species = pokemon.getSpecies();
-        drawPosablePortrait(species.getResourceIdentifier(), matrixStack, 13F, species.getForm(pokemon.getState().getCurrentAspects()).getBaseScale(), false, pokemon.getState(), PokemonModelRepository.INSTANCE, delta,
+        drawPosablePortrait(species.getResourceIdentifier(), matrixStack, 13F, species.getForm(pokemon.getState().getCurrentAspects()).getBaseScale(), false, pokemon.getState(), delta,
                 0F,
                 0F,
                 0F,
                 0F,
                 0F,
-                1F,
+                true,
                 1F,
                 1F,
                 1F);

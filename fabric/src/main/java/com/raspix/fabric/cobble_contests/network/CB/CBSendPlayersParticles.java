@@ -63,7 +63,7 @@ public class CBSendPlayersParticles implements CustomPacketPayload {
 
     public void recieve(Minecraft minecraft){
         System.out.println("Recieving particleSender");
-        new SpawnSnowstormEntityParticlePacket(cobblemonResource(getLoc()), getId(), Arrays.asList())
+        new SpawnSnowstormEntityParticlePacket(cobblemonResource(getLoc()), getId(), Arrays.asList(), null, null)
                 .sendToPlayersAround(position.x, position.y, position.z, 64.0, minecraft.level.dimension(), serverPlayer -> {
                     return false;
                 });
