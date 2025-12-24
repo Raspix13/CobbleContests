@@ -152,7 +152,7 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
         Component componentOutput;
         Pokemon poke = Cobblemon.INSTANCE.getStorage().getParty(player).get(pokeIdx);
         CompoundTag ribbonTag = poke.getPersistentData().getCompound("Ribbons");
-        String pokeName = poke.getDisplayName().getString();
+        String pokeName = poke.getDisplayName(false).getString();
         int contestLevel = getNextContestLevel(ribbonTag, contestType);
         if(contestLevel < 5) {
             boolean result = runContest(poke, contestType, contestLevel);
@@ -267,11 +267,11 @@ public class ContestBlockEntity extends BlockEntity implements MenuProvider {
             tag.put(key, value);
         });
         // basically a vanilla "markAsDirty"
-        if (pokemon.getChangeObservable() instanceof SimpleObservable<Pokemon>) { //TODO
+        /**if (pokemon.getChangeObservable() instanceof SimpleObservable<Pokemon>) { //TODO
             ((SimpleObservable<Pokemon>) pokemon.getChangeObservable()).emit(pokemon);
         }else {
             System.out.println("error, not simple observable (ContestBlockEntity)");
-        }
+        }*/
     }
 
 

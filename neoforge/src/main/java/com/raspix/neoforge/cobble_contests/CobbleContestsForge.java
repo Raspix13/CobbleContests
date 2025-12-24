@@ -152,7 +152,7 @@ public class CobbleContestsForge {
     }*/
 
 
-    @EventBusSubscriber(modid = CobbleContestsForge.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = CobbleContestsForge.MOD_ID, value = Dist.CLIENT)
     public class ClientEventBusSubscriber {
         @SubscribeEvent
         public static void clientSetup(FMLClientSetupEvent event) {
@@ -174,7 +174,7 @@ public class CobbleContestsForge {
     }
 
 
-    @EventBusSubscriber(modid = MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
     public static class ClientModEvents{
 
         private ClientModEvents(){}

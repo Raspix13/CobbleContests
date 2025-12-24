@@ -1,6 +1,6 @@
 package com.raspix.neoforge.cobble_contests.menus.screens;
 
-import com.cobblemon.mod.common.api.berry.Flavor;
+import com.cobblemon.mod.common.api.cooking.Flavour;
 import com.cobblemon.mod.common.api.gui.ColourLibrary;
 import com.cobblemon.mod.common.api.gui.MultiLineLabelK;
 import com.cobblemon.mod.common.api.moves.Move;
@@ -138,7 +138,7 @@ public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerCon
         int startingY = this.topPos + 10;
         int yOffset = 30;
 
-        clientParty = CobblemonClient.INSTANCE.getStorage().getMyParty();
+        clientParty = CobblemonClient.INSTANCE.getStorage().getParty();
         List<Pokemon> partyPoke = this.clientParty.getSlots();//playerPartyStore.toGappyList();// contestInfoMenu.getPartyStore().toGappyList(); //
         for(int i = 0; i < 6; i++){
             Pokemon poke = partyPoke.get(i);
@@ -184,7 +184,7 @@ public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerCon
                 assert poke != null;
 
                 drawStatHexagon(new Vector3f(45f/255f, 237f/255f, 96f/255f), cvList.get(pokemonIndex), guiGraphics);
-                writeFlavors(guiGraphics, poke);
+                writeFlavours(guiGraphics, poke);
                 drawFriendshipHeart(guiGraphics, poke);
             }
         }else if (pageIndex == 1){// moves page
@@ -479,9 +479,9 @@ public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerCon
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
     }
 
-    private void writeFlavors(GuiGraphics guiGraphics, Pokemon pokemon){
-        Flavor fav = pokemon.getNature().getFavoriteFlavor();
-        Flavor dis = pokemon.getNature().getDislikedFlavor();
+    private void writeFlavours(GuiGraphics guiGraphics, Pokemon pokemon){
+        Flavour fav = pokemon.getNature().getFavouriteFlavour();
+        Flavour dis = pokemon.getNature().getDislikedFlavour();
         drawScaledText(guiGraphics, Component.literal("Favorite: " + ((fav != null)? fav.name(): "none")).getVisualOrderText(),
                 (Number) (this.leftPos + 15),
                 (Number) (this.topPos + 135),
