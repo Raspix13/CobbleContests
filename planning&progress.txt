@@ -47,6 +47,10 @@ Current Bugs & Issues for Later:
 Progress:
 Things I have done:
 
+12/24
+
+Is something missing here?
+
 8/13
 - Changed showcase heart display method to account for overflow hearts
 - Fixed booth screen not updating for contestants when contest starts
