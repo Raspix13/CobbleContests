@@ -477,9 +477,9 @@ public class PlayerConditionCardScreen extends AbstractContainerScreen<PlayerCon
         BufferBuilder bufferBuilder = tessellator.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION);//getBuilder();
 
         //bufferBuilder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION);
-        bufferBuilder.addVertex(v1.x, v1.y, 10.0F);//.color(0x2d, 0xed, 0x60, 0x99)
-        bufferBuilder.addVertex(v2.x, v2.y, 10.0F);
-        bufferBuilder.addVertex(v3.x, v3.y, 10.0F);
+        bufferBuilder.addVertex(v1.x, v1.y, 10.0F);//.setColor(colour.x, colour.y, colour.z, 0.6F);//.color(0x2d, 0xed, 0x60, 0x99)
+        bufferBuilder.addVertex(v2.x, v2.y, 10.0F);//.setColor(colour.x, colour.y, colour.z, 0.6F);
+        bufferBuilder.addVertex(v3.x, v3.y, 10.0F);//.setColor(colour.x, colour.y, colour.z, 0.6F);
 
         //bufferBuilder.nextElement();
         BufferUploader.drawWithShader(bufferBuilder.buildOrThrow());

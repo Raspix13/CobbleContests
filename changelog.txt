@@ -1,4 +1,11 @@
 
+Cobble Contests 1.1.0 (Fabric) for 1.7.+
+New:
+Fixes:
+- Fixed shiny particle issue
+
+
+
 Cobble Contests 1.1.0 Alpha/Beta (Fabric)
 New:
 - Added basic contests

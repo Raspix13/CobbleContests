@@ -7,12 +7,14 @@ import static com.cobblemon.mod.common.util.MiscUtilsKt.cobblemonResource;
 
 public class ParticleEffectList {
 
-    public static ResourceLocation RAINBOW = cobblemonResource("rainbow");
-    public static ResourceLocation SNOW_SWIRL = cobblemonResource("snow_swirl");
-    public static ResourceLocation SNOW_SWIRL_TWO = cobblemonResource("snow_swirl_two");
-    public static ResourceLocation LOADING = cobblemonResource("loading");
-    public static ResourceLocation SHINY_RING = cobblemonResource("shiny_ring");
-    public static ResourceLocation IMPACT_DRAGON = cobblemonResource("impact_dragon");
-    public static ResourceLocation HEART_SMOKEBURST = cobblemonResource("heart_smokeburst");
+    public static ResourceLocation RAINBOW = new ResourceLocation(CobbleContests.MOD_ID,"rainbow");
+    public static ResourceLocation SNOW_SWIRL = new ResourceLocation(CobbleContests.MOD_ID,"snow_swirl");
+    public static ResourceLocation SNOW_SWIRL_TWO = new ResourceLocation(CobbleContests.MOD_ID,"snow_swirl_two");
+    public static ResourceLocation LOADING = new ResourceLocation(CobbleContests.MOD_ID,"loading");
+    public static ResourceLocation SHINY_RING = new ResourceLocation(CobbleContests.MOD_ID,"shiny_ring");
+    public static ResourceLocation IMPACT_DRAGON = new ResourceLocation(CobbleContests.MOD_ID,"impact_dragon");
+    public static ResourceLocation HEART_SMOKEBURST = new ResourceLocation(CobbleContests.MOD_ID,"heart_smokeburst");
+
+    public static ResourceLocation RAINBOW2 = new ResourceLocation(CobbleContests.MOD_ID, "rainbow");
 
 }

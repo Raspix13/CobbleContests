@@ -18,6 +18,10 @@ import net.minecraft.world.level.Level;
 
 import java.util.*;
 
+/**
+ * A container class for all the data on pokemon that might be needed to be sent over a network
+ */
+
 public class NetworkablePokemonData {
     private UUID pokeUuid;
     private UUID playUuid;
@@ -46,6 +50,7 @@ public class NetworkablePokemonData {
         this.aspects = aspects;
         this.state = new FloatingState();
         this.state.setCurrentAspects(aspects);
+
         this.heldItem = heldItem;
 
     }
@@ -175,9 +180,7 @@ public class NetworkablePokemonData {
         this.numChangeHearts = tag.getInt("hearts_change");
         String itemTag = tag.getString("held_item");
 
-
-        String itemIdString = tag.getString(itemTag);
-        String[] itemStringSplit = itemIdString.split(":");
+        String[] itemStringSplit = itemTag.split(":");
         ResourceLocation itemId = new ResourceLocation(itemStringSplit[0], itemStringSplit[1]);
 
         // 2. Look up the Item in the global registry
@@ -214,8 +217,6 @@ public class NetworkablePokemonData {
         tag.putInt("hearts", numHearts);
         tag.putInt("hearts_change", numChangeHearts);
 
-
-
         tag.putString("properties", properties.asString(","));
 
         tag.putInt("aspect_size", aspects.size());
@@ -224,7 +225,6 @@ public class NetworkablePokemonData {
         for (int i = 0; i < aspects.size(); i++) {
             tag.putString("aspect" + i, iterator.next()); // Write each string element to the buffer
         }
-
         tag.putString("held_item", BuiltInRegistries.ITEM.getKey(heldItem.getItem()).toString());
 
          return tag;

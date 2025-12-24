@@ -2,7 +2,7 @@
 	"format_version": "1.10.0",
 	"particle_effect": {
 		"description": {
-			"identifier": "cobblemon:snow_swirl",
+			"identifier": "cobble_contests:snow_swirl_two",
 			"basic_render_parameters": {
 				"material": "particles_alpha",
 				"texture": "textures/particles/particles"
@@ -10,29 +10,26 @@
 		},
 		"components": {
 			"minecraft:emitter_initialization": {
-				"creation_expression": "variable.size = 0.03;variable.lifetime = 2.2;"
-			},
-			"minecraft:emitter_local_space": {
-				"position": true,
-				"rotation": true
+				"creation_expression": "variable.size = 0.03;variable.lifetime = 2.6;"
 			},
 			"minecraft:emitter_rate_steady": {
-				"spawn_rate": 300,
-				"max_particles": 2000
+				"spawn_rate": 900,
+				"max_particles": 3000
 			},
 			"minecraft:emitter_lifetime_looping": {
 				"active_time": 4
 			},
 			"minecraft:emitter_shape_point": {
-				"offset": ["math.sin(variable.emitter_age*180)*1", "math.sin(variable.emitter_age*90-90) * 0.5 + 0.5", "math.sin(variable.emitter_age*180-90)*1"]
+				"offset": ["math.sin(variable.emitter_age*180)*1 + (variable.particle_random_1 * 0.1)", "math.sin(variable.emitter_age*90-90) * 0.8 + (variable.particle_random_2 * 0.1)", "math.sin(variable.emitter_age*180-90)*1 + (variable.particle_random_3 * 0.1)"],
+				"direction": ["math.random(-0.45,0.45)*(v.emitter_age*3)", "math.random(-0.45,0.45)*(v.emitter_age*3)", "math.random(-0.45,0.45)*(v.emitter_age*3)"]
 			},
 			"minecraft:particle_lifetime_expression": {
 				"max_lifetime": "variable.particle_random_1*variable.lifetime"
 			},
 			"minecraft:particle_initial_speed": 0.4,
 			"minecraft:particle_motion_dynamic": {
-				"linear_acceleration": ["(variable.particle_random_3*2-0.5)", -1.5, "(variable.particle_random_4*2-0.5)"],
-				"linear_drag_coefficient": 0.2
+				"linear_acceleration": ["(variable.particle_random_3*3-0.5)", -2, "(variable.particle_random_4*3-0.5)"],
+				"linear_drag_coefficient": 0.05
 			},
 			"minecraft:particle_appearance_billboard": {
 				"size": ["variable.size*(variable.particle_random_1*variable.lifetime-variable.particle_age)", "variable.size*(variable.particle_random_1*variable.lifetime-variable.particle_age)"],
